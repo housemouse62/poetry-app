@@ -1,0 +1,83 @@
+/* HaikuLine.css */
+.line-group {
+  margin-bottom: 20px;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.line-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.line-label {
+  font-weight: bold;
+  color: #333;
+}
+
+.syllable-count {
+  font-size: 0.9em;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.syllable-count.correct {
+  background: #10b981;
+  color: white;
+}
+
+.syllable-count.under {
+  background: #fbbf24;
+  color: #78350f;
+}
+
+.syllable-count.over {
+  background: #ef4444;
+  color: white;
+}
+
+.line-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "Georgia", serif;
+  font-size: 1.1em;
+  resize: none;
+  transition: border-color 0.3s;
+}
+
+.line-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.line-input.correct {
+  border-color: #10b981;
+}
+
+.line-input.over {
+  border-color: #ef4444;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition:
+    width 0.3s,
+    background-color 0.3s;
+  border-radius: 3px;
+}
