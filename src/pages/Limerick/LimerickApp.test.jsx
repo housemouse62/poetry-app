@@ -472,4 +472,11 @@ describe("App Component", () => {
     const downloadModal = screen.queryByRole("dialog");
     expect(downloadModal).not.toBeInTheDocument();
   });
+
+  it("example doesn't show before user presses show button", () => {
+    renderWithRouter(<LimerickApp />);
+
+    const example = screen.queryByText(/There was an Old Man in a tree/i);
+    expect(example).not.toBeInTheDocument();
+  });
 });

@@ -28,6 +28,7 @@ function LimerickApp() {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
+  const [showExample, setShowExample] = useState(false);
 
   const targetSyllables = [7, 7, 5, 5, 7];
 
@@ -86,11 +87,11 @@ function LimerickApp() {
   };
 
   return (
-    <div className="app">
-      <div className="container">
+    <div className="limerick-app">
+      <div className="limerick-container">
         <aside>
           <button
-            className="back"
+            className="limerick-back"
             onClick={() => {
               navigate(-1);
             }}
@@ -99,38 +100,48 @@ function LimerickApp() {
           </button>
         </aside>
         <header>
-          <h1>🎭 Let's Limerick! 🍀</h1>
+          <h1 class="limerick-h1">🎭 Let's Limerick! 🍀</h1>
           <p className="subtitle">
-            Lines 1, 2 & 5 have 7 - 10 syllables and rhyme together.
-            <br />
-            Lines 3 & 4 have 5 - 7 syllables and rhyme together.
+            Lines with matching borders rhyme together.
+          </p>
+          <p className="sr-only">
+            This limerick has an AABBA rhyme scheme. Lines 1, 2, and 5 rhyme
+            together (shown with green borders). Lines 3 and 4 rhyme together
+            (shown with orange borders).
           </p>
         </header>
         <LimerickLine
+          aria-label="Line 1, rhymes with lines 2 and 5"
           lineNumber={1}
           targetSyllables={targetSyllables[0]}
           value={lines.line1}
           onChange={(value) => updateLine("line1", value)}
         />
         <LimerickLine
+          aria-label="Line 2, rhymes with lines 1 and 5"
           lineNumber={2}
           targetSyllables={targetSyllables[1]}
           value={lines.line2}
           onChange={(value) => updateLine("line2", value)}
         />
         <LimerickLine
+          aria-label="Line 3, rhymes with line 4"
+          className="less-syllables"
           lineNumber={3}
           targetSyllables={targetSyllables[2]}
           value={lines.line3}
           onChange={(value) => updateLine("line3", value)}
         />
         <LimerickLine
+          aria-label="Line 4, rhymes with line 5"
+          className="less-syllables"
           lineNumber={4}
           targetSyllables={targetSyllables[3]}
           value={lines.line4}
           onChange={(value) => updateLine("line4", value)}
         />
         <LimerickLine
+          aria-label="Line 5, rhymes with lines 1 and 2"
           lineNumber={5}
           targetSyllables={targetSyllables[4]}
           value={lines.line5}
@@ -205,8 +216,21 @@ function LimerickApp() {
             Clear
           </button>
         </div>
+        <div className="showExample">
+          <button
+            onClick={() => {
+              if (showExample) {
+                setShowExample(false);
+              } else {
+                setShowExample(true);
+              }
+            }}
+          >
+            {showExample ? "hide example" : "show example"}
+          </button>
+        </div>
         {/* Example Limerickss Area */}
-        {!showLimericks ? (
+        {!showLimericks && showExample ? (
           <div className="example" key={`view-${showLimericks}`}>
             <div className="example-title">Example:</div>
             <div className="example-text">
@@ -222,7 +246,7 @@ function LimerickApp() {
               <br />- Edward Lear
             </div>
           </div>
-        ) : (
+        ) : showLimericks ? (
           <div className="savedLimericks" key={`view-${showLimericks}`}>
             <h2 className="savedLimericks-title">Saved Limericks</h2>
             {savedLimericks.length <= 0 ? (
@@ -266,6 +290,8 @@ function LimerickApp() {
               ))
             )}
           </div>
+        ) : (
+          <div></div>
         )}
       </div>
       {showDownloadModal && (

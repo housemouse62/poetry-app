@@ -1,4 +1,4 @@
-/* App.css */
+/* HaikuApp.css */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,7 +9,7 @@ body {
   font-family: Georgia, sans-serif;
 }
 
-.app {
+.haiku-app {
   background: linear-gradient(135deg, #7954f2 0%, #d193fb 100%);
   min-height: 100vh;
   display: flex;

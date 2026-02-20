@@ -1,15 +1,27 @@
-/* App.css */
+/* LimerickApp.css */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 body {
   font-family: Georgia, sans-serif;
 }
 
-.app {
+.limerick-app {
   background: linear-gradient(135deg, #4a6e4a 0%, #7fa67f 100%);
   min-height: 100vh;
   display: flex;
@@ -18,7 +30,7 @@ body {
   padding: 20px;
 }
 
-.container {
+.limerick-container {
   background: white;
   border-radius: 20px;
   padding: 0 30px 40px 30px;
@@ -27,7 +39,7 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.back {
+.limerick-back {
   background-color: rgb(212, 222, 231);
   font-size: 16px;
   font-family: Georgia, sans-serif;
@@ -39,8 +51,8 @@ body {
   cursor: pointer;
 }
 
-h1 {
-  color: #667eea;
+.limerick-h1 {
+  color: #10b981;
   margin-bottom: 10px;
   font-size: clamp(1.2rem, 5.5vw, 2rem);
 }

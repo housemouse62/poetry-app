@@ -72,7 +72,7 @@ function HaikuApp() {
   };
 
   return (
-    <div className="app">
+    <div className="haiku-app">
       <div className="container">
         <aside>
           <button
