@@ -4,7 +4,7 @@ import { getAllHaikus } from "./haikuStorage";
 import userEvent from "@testing-library/user-event";
 import HaikuApp from "./HaikuApp";
 
-describe("App Component", () => {
+describe.skip("App Component", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();

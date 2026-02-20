@@ -1,4 +1,4 @@
-// App.jsx
+// HaikuApp.jsx
 import { useState } from "react";
 import HaikuLine from "./HaikuLine";
 import { countSyllables } from "./syllableCounter";
