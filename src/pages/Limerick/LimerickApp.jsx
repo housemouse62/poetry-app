@@ -1,9 +1,13 @@
-// HaikuApp.jsx
+// LimerickApp.jsx
 import { useState } from "react";
 import LimerickLine from "./LimerickLine";
 import { countSyllables } from "./syllableCounter";
-import "./HaikuApp.css";
-// import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
+import "./LimerickApp.css";
+import {
+  saveLimerick,
+  getAllLimericks,
+  deleteLimerick,
+} from "./limericksStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
 
@@ -19,21 +23,21 @@ function LimerickApp() {
   });
 
   const [saved, setSaved] = useState(false);
-  const [showHaikus, setShowHaikus] = useState(false);
-  const [savedHaikus, setSavedHaikus] = useState("");
+  const [showLimericks, setShowLimericks] = useState(false);
+  const [savedLimericks, setSavedLimericks] = useState("");
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
 
-  const targetSyllables = [8, 8, 5, 5, 8];
+  const targetSyllables = [7, 7, 5, 5, 7];
 
-  // Check if haiku is complete
+  // Check if Limericks is complete
   const isComplete =
-    countSyllables(lines.line1) === 8 &&
-    countSyllables(lines.line2) === 8 &&
-    countSyllables(lines.line3) === 5 &&
-    countSyllables(lines.line4) === 5 &&
-    countSyllables(lines.line5) === 8;
+    countSyllables(lines.line1) > 6 &&
+    countSyllables(lines.line2) > 6 &&
+    countSyllables(lines.line3) > 4 &&
+    countSyllables(lines.line4) > 4 &&
+    countSyllables(lines.line5) > 6;
 
   const fieldsEmpty =
     lines.line1 === "" &&
@@ -49,9 +53,11 @@ function LimerickApp() {
     }));
   };
 
-  const shareAsImage = async (haikuId) => {
+  const shareAsImage = async (limerickId) => {
     // Find the specific card element
-    const cardElement = document.querySelector(`[data-haiku-id="${haikuId}"]`);
+    const cardElement = document.querySelector(
+      `[data-limerick-id="${limerickId}"]`,
+    );
     if (!cardElement) return;
 
     // hide buttons before screenshot
@@ -73,7 +79,7 @@ function LimerickApp() {
       // Create download link
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = "haiku.png";
+      link.download = "Limericks.png";
       link.href = url;
       link.click();
     });
@@ -93,32 +99,46 @@ function LimerickApp() {
           </button>
         </aside>
         <header>
-          <h1>🌸 Do You Do Haiku? 🪷</h1>
+          <h1>🎭 Let's Limerick! 🍀</h1>
           <p className="subtitle">
-            Write a haiku following the 5-7-5 syllable pattern
+            Lines 1, 2 & 5 have 7 - 10 syllables and rhyme together.
+            <br />
+            Lines 3 & 4 have 5 - 7 syllables and rhyme together.
           </p>
         </header>
-        <HaikuLine
+        <LimerickLine
           lineNumber={1}
           targetSyllables={targetSyllables[0]}
           value={lines.line1}
           onChange={(value) => updateLine("line1", value)}
         />
-        <HaikuLine
+        <LimerickLine
           lineNumber={2}
           targetSyllables={targetSyllables[1]}
           value={lines.line2}
           onChange={(value) => updateLine("line2", value)}
         />
-        <HaikuLine
+        <LimerickLine
           lineNumber={3}
           targetSyllables={targetSyllables[2]}
           value={lines.line3}
           onChange={(value) => updateLine("line3", value)}
         />
+        <LimerickLine
+          lineNumber={4}
+          targetSyllables={targetSyllables[3]}
+          value={lines.line4}
+          onChange={(value) => updateLine("line4", value)}
+        />
+        <LimerickLine
+          lineNumber={5}
+          targetSyllables={targetSyllables[4]}
+          value={lines.line5}
+          onChange={(value) => updateLine("line5", value)}
+        />
         {(isComplete || saved) && (
           <div className={`complete-message ${isFading ? "fade-out" : ""}`}>
-            {saved ? "✨ Saved! ✨" : "✨ You do haiku! ✨"}
+            {saved ? "✨ Saved! ✨" : "✨ You do limerick! ✨"}
           </div>
         )}
 
@@ -129,12 +149,14 @@ function LimerickApp() {
             disabled={!isComplete || saved}
             className="save-btn"
             onClick={() => {
-              saveHaiku(lines);
+              saveLimerick(lines);
               setSaved(true);
               setLines({
                 line1: "",
                 line2: "",
                 line3: "",
+                line4: "",
+                line5: "",
               });
               setTimeout(() => {
                 setIsFading(true); //Start Fade Out
@@ -143,27 +165,27 @@ function LimerickApp() {
                   setIsFading(false);
                 }, 500);
               }, 2000);
-              const newSavedHaikus = getAllHaikus();
-              setSavedHaikus(newSavedHaikus);
+              const newSavedLimericks = getAllLimericks();
+              setSavedLimericks(newSavedLimericks);
             }}
           >
             Save
           </button>
 
-          {/* View Haikus/Hide Haikus button */}
+          {/* View Limericks/Hide Limericks button */}
           <button
-            className="view-haikus-btn"
+            className="view-limericks-btn"
             onClick={() => {
-              if (showHaikus) {
-                setShowHaikus(false);
+              if (showLimericks) {
+                setShowLimericks(false);
               } else {
-                const newSavedHaikus = getAllHaikus();
-                setSavedHaikus(newSavedHaikus);
-                setShowHaikus(true);
+                const newSavedLimericks = getAllLimericks();
+                setSavedLimericks(newSavedLimericks);
+                setShowLimericks(true);
               }
             }}
           >
-            {showHaikus ? "Hide Saved Haikus" : "View Saved Haikus"}
+            {showLimericks ? "Hide Saved Limericks" : "View Saved Limericks"}
           </button>
 
           {/* clear the fields button*/}
@@ -175,38 +197,50 @@ function LimerickApp() {
                 line1: "",
                 line2: "",
                 line3: "",
+                line4: "",
+                line5: "",
               });
             }}
           >
             Clear
           </button>
         </div>
-        {/* Example Haikus Area */}
-        {!showHaikus ? (
-          <div className="example" key={`view-${showHaikus}`}>
-            <div className="example-title">Example Haiku:</div>
+        {/* Example Limerickss Area */}
+        {!showLimericks ? (
+          <div className="example" key={`view-${showLimericks}`}>
+            <div className="example-title">Example:</div>
             <div className="example-text">
-              Do you do haiku (5)
+              There was an Old Man in a tree, (8)
               <br />
-              Yes I do I do haiku (7)
-              <br />I haiku for you (5)
+              Who was horribly bored by a bee. (8)
+              <br />
+              When they said, "Does it buzz?" (5)
+              <br />
+              He replied, "Yes, it does! (5)
+              <br />
+              It's a regular brute of a bee!" (8)
+              <br />- Edward Lear
             </div>
           </div>
         ) : (
-          <div className="savedHaikus" key={`view-${showHaikus}`}>
-            <h2 className="savedHaikus-title">Saved Haikus</h2>
-            {savedHaikus.length <= 0 ? (
-              <p>No saved haikus, waiting for words of wisdom</p>
+          <div className="savedLimericks" key={`view-${showLimericks}`}>
+            <h2 className="savedLimericks-title">Saved Limericks</h2>
+            {savedLimericks.length <= 0 ? (
+              <p>No saved limericks, waiting for words of wisdom</p>
             ) : (
-              savedHaikus.map((h) => (
-                <article key={h.id} className="haiku-card" data-haiku-id={h.id}>
-                  <p className="haiku-line">{h.line1}</p>
-                  <p className="haiku-line">{h.line2}</p>
-                  <p className="haiku-line">{h.line3}</p>
+              savedLimericks.map((h) => (
+                <article
+                  key={h.id}
+                  className="limerick-card"
+                  data-limerick-id={h.id}
+                >
+                  <p className="limerick-line">{h.line1}</p>
+                  <p className="limerick-line">{h.line2}</p>
+                  <p className="limerick-line">{h.line3}</p>
 
                   <div className="card-buttons">
                     <button
-                      aria-label={`Download haiku: ${h.line1}`}
+                      aria-label={`Download limerick: ${h.line1}`}
                       className="download-btn"
                       onClick={() => {
                         setShowDownloadModal(true);
@@ -216,13 +250,13 @@ function LimerickApp() {
                       Download
                     </button>
                     <button
-                      aria-label={`Delete haiku: ${h.line1}`}
+                      aria-label={`Delete limerick: ${h.line1}`}
                       className="delete-btn"
                       onClick={() => {
                         console.log(h.id);
-                        deleteHaiku(h.id);
-                        const newSavedHaikus = getAllHaikus();
-                        setSavedHaikus(newSavedHaikus);
+                        deleteLimerick(h.id);
+                        const newSavedLimericks = getAllLimericks();
+                        setSavedLimericks(newSavedLimericks);
                       }}
                     >
                       Delete
@@ -265,4 +299,4 @@ function LimerickApp() {
   );
 }
 
-export default HaikuApp;
+export default LimerickApp;

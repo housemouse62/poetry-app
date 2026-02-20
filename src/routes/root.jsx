@@ -6,6 +6,7 @@ export default function Root() {
       <div id="container">
         <h2>hello world. we do poetry.</h2>
         <Link to="/haiku">haiku</Link>
+        <Link to="/limerick">limerick</Link>
       </div>
     </>
   );

@@ -28,6 +28,18 @@ describe("Poetry-App", () => {
     expect(doyou).toBeVisible();
   });
 
+  it("the limerick route (/limerick) renders", () => {
+    // Create a test router starting at "/haiku"
+    const router = createMemoryRouter(routes, {
+      initialEntries: ["/limerick"],
+    });
+
+    render(<RouterProvider router={router} />);
+
+    const limerick = screen.getByText("🎭 Let's Limerick! 🍀");
+    expect(limerick).toBeVisible();
+  });
+
   it("when user click haiku link, the haiku route (/haiku) renders", async () => {
     // Create a test router starting at "/"
     const router = createMemoryRouter(routes, { initialEntries: ["/"] });
@@ -38,6 +50,19 @@ describe("Poetry-App", () => {
     await user.click(haikuLink);
 
     const doyou = screen.getByText("🌸 Do You Do Haiku? 🪷");
+    expect(doyou).toBeVisible();
+  });
+
+  it("when user click limerick link, the limerick route (/limerick) renders", async () => {
+    // Create a test router starting at "/"
+    const router = createMemoryRouter(routes, { initialEntries: ["/"] });
+    const user = userEvent.setup();
+    render(<RouterProvider router={router} />);
+
+    const limerickLink = screen.getByRole("link", { name: "limerick" });
+    await user.click(limerickLink);
+
+    const doyou = screen.getByText("🎭 Let's Limerick! 🍀");
     expect(doyou).toBeVisible();
   });
 

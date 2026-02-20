@@ -10,7 +10,7 @@ body {
 }
 
 .app {
-  background: linear-gradient(135deg, #7954f2 0%, #d193fb 100%);
+  background: linear-gradient(135deg, #4a6e4a 0%, #7fa67f 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -21,7 +21,7 @@ body {
 .container {
   background: white;
   border-radius: 20px;
-  padding: 0 40px 40px 40px;
+  padding: 0 30px 40px 30px;
   max-width: 500px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -47,8 +47,8 @@ h1 {
 
 .subtitle {
   color: #666;
-  margin-bottom: 30px;
-  font-size: 0.9em;
+  margin-bottom: 15px;
+  font-size: 0.85em;
 }
 
 .complete-message {
@@ -90,10 +90,10 @@ h1 {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
-.view-haikus-btn,
+.view-limericks-btn,
 .clear-btn,
 .save-btn {
   color: white;
@@ -143,20 +143,20 @@ h1 {
   opacity: 0.6;
 }
 
-.view-haikus-btn {
+.view-limericks-btn {
   background-color: #667eea;
 }
 
-.view-haikus-btn:hover {
+.view-limericks-btn:hover {
   background-color: #5568d3;
 }
 
-.view-haikus-btn:focus-visible {
+.view-limericks-btn:focus-visible {
   outline: 3px solid #667eea;
   outline-offset: 2px;
 }
 
-.savedHaikus-title {
+.savedLimericks-title {
   color: #667eea;
   font-size: 1.5em;
   font-weight: 700;
@@ -185,7 +185,7 @@ h1 {
   line-height: 1.8;
 }
 
-.savedHaikus {
+.savedLimericks {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,7 +201,7 @@ h1 {
   }
 }
 
-.haiku-card {
+.limerick-card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -215,7 +215,7 @@ h1 {
   /* box-shadow: -5px 5px 4px 2px rgba(0, 0, 0, 0.3); */
 }
 
-.haiku-line {
+.limerick-line {
   font-family: "Georgia", serif;
 }
 

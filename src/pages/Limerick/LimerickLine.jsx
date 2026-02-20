@@ -1,19 +1,12 @@
-// HaikuLine.jsx
+// LimerickLine.jsx
 import { countSyllables } from "./syllableCounter";
-import "./HaikuLine.css";
+import "./LimerickLine.css";
 
-function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
+function LimerickLine({ lineNumber, targetSyllables, value, onChange }) {
   const currentSyllables = countSyllables(value);
 
   // Determine status for styling
-  let status = "under";
-  if (currentSyllables < targetSyllables) {
-    status = "under";
-  } else if (currentSyllables === targetSyllables) {
-    status = "correct";
-  } else if (currentSyllables > targetSyllables) {
-    status = "over";
-  }
+  let status = "correct";
 
   // Calculate progress percentage
   const progressPercentage = Math.min(
@@ -25,9 +18,7 @@ function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
     <div className="line-group">
       <div className="line-header">
         <span className="line-label">Line {lineNumber}</span>
-        <span className={`syllable-count ${status}`}>
-          {currentSyllables}/{targetSyllables}
-        </span>
+        <span className={`syllable-count ${status}`}>{currentSyllables} </span>
       </div>
 
       <textarea
@@ -56,4 +47,4 @@ function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
   );
 }
 
-export default HaikuLine;
+export default LimerickLine;
