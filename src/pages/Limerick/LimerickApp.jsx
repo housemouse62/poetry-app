@@ -1,19 +1,21 @@
 // HaikuApp.jsx
 import { useState } from "react";
-import HaikuLine from "./HaikuLine";
+import LimerickLine from "./LimerickLine";
 import { countSyllables } from "./syllableCounter";
 import "./HaikuApp.css";
-import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
+// import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
 
-function HaikuApp() {
+function LimerickApp() {
   const navigate = useNavigate();
 
   const [lines, setLines] = useState({
     line1: "",
     line2: "",
     line3: "",
+    line4: "",
+    line5: "",
   });
 
   const [saved, setSaved] = useState(false);
@@ -23,16 +25,22 @@ function HaikuApp() {
   const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
 
-  const targetSyllables = [5, 7, 5];
+  const targetSyllables = [8, 8, 5, 5, 8];
 
   // Check if haiku is complete
   const isComplete =
-    countSyllables(lines.line1) === 5 &&
-    countSyllables(lines.line2) === 7 &&
-    countSyllables(lines.line3) === 5;
+    countSyllables(lines.line1) === 8 &&
+    countSyllables(lines.line2) === 8 &&
+    countSyllables(lines.line3) === 5 &&
+    countSyllables(lines.line4) === 5 &&
+    countSyllables(lines.line5) === 8;
 
   const fieldsEmpty =
-    lines.line1 === "" && lines.line2 === "" && lines.line3 === "";
+    lines.line1 === "" &&
+    lines.line2 === "" &&
+    lines.line3 === "" &&
+    lines.line4 === "" &&
+    lines.line5 === "";
 
   const updateLine = (lineKey, value) => {
     setLines((prev) => ({

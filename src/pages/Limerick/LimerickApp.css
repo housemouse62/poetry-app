@@ -21,10 +21,22 @@ body {
 .container {
   background: white;
   border-radius: 20px;
-  padding: 40px;
+  padding: 0 40px 40px 40px;
   max-width: 500px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.back {
+  background-color: rgb(212, 222, 231);
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: #666666;
+  padding: 5px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
 }
 
 h1 {

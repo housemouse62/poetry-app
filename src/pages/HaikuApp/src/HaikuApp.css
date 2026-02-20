@@ -1,0 +1,302 @@
+/* App.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Georgia, sans-serif;
+}
+
+.app {
+  background: linear-gradient(135deg, #7954f2 0%, #d193fb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  border-radius: 20px;
+  padding: 0 40px 40px 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.back {
+  background-color: rgb(212, 222, 231);
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: #666666;
+  padding: 5px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+h1 {
+  color: #667eea;
+  margin-bottom: 10px;
+  font-size: clamp(1.2rem, 5.5vw, 2rem);
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 0.9em;
+}
+
+.complete-message {
+  margin-top: 30px;
+  padding: 20px;
+  background: #10b981;
+  color: white;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: bold;
+  animation: slideIn 0.5s;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.complete-message.fade-out {
+  animation: fadeOut 0.5s;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.view-haikus-btn,
+.clear-btn,
+.save-btn {
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-btn {
+  background-color: #10b981;
+}
+
+.save-btn:hover {
+  background-color: #059669;
+}
+
+.save-btn:focus-visible {
+  outline: 3px solid #10b981;
+  outline-offset: 2px;
+}
+
+.save-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.clear-btn {
+  background-color: #f59e0b;
+}
+
+.clear-btn:hover {
+  background-color: #d97706;
+}
+
+.clear-btn:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.clear-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.view-haikus-btn {
+  background-color: #667eea;
+}
+
+.view-haikus-btn:hover {
+  background-color: #5568d3;
+}
+
+.view-haikus-btn:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.savedHaikus-title {
+  color: #667eea;
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 10px 0 0 0;
+  text-align: center;
+}
+
+.example {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgb(212, 222, 231);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+  animation: fadeIn 0.3s;
+}
+
+.example-title {
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.example-text {
+  font-style: italic;
+  color: #666;
+  line-height: 1.8;
+}
+
+.savedHaikus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.haiku-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 300px;
+  background-color: rgb(212, 222, 231);
+  padding: 20px;
+  margin: 15px;
+  border-radius: 15px;
+  border-left: 4px solid #667eea;
+
+  /* box-shadow: -5px 5px 4px 2px rgba(0, 0, 0, 0.3); */
+}
+
+.haiku-line {
+  font-family: "Georgia", serif;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.download-btn,
+.confirm-button {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: #667eea;
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.download-btn:hover,
+.confirm-button:hover {
+  background-color: #5568d3;
+}
+
+.download-btn:focus-visible,
+.confirm-button:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.delete-btn,
+.cancel-button {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: aliceblue;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(245, 50, 89, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.delete-btn:hover,
+.cancel-button:hover {
+  background-color: rgba(219, 35, 72, 1);
+}
+
+.delete-btn:focus-visible,
+.cancel-button:focus-visible {
+  outline: 3px solid rgba(245, 50, 89, 0.8);
+  outline-offset: 2px;
+}
+
+.dialog-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  animation: fadeIn 0.3s;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 30rem;
+  padding: 30px;
+  background-color: white;
+  border-radius: 35px;
+}
+
+.modal-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
