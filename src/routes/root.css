@@ -19,10 +19,60 @@ body {
 }
 
 .root-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background: white;
   border-radius: 20px;
-  padding: 0 40px 40px 40px;
+  padding: 20px;
   max-width: 500px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.root-title-div {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  margin-bottom: 30px;
+}
+
+.poem-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.poem-card {
+  display: flex;
+  justify-content: center;
+  padding: 10px 20px;
+  min-width: 150px;
+  min-height: 150px;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.poem-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
+.poem-card.limerick {
+  background-color: #10b981;
+}
+
+.poem-card.haiku {
+  background-color: #667eea;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: white;
 }
