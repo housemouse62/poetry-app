@@ -193,6 +193,7 @@ function LimerickApp() {
                 const newSavedLimericks = getAllLimericks();
                 setSavedLimericks(newSavedLimericks);
                 setShowLimericks(true);
+                setShowExample(false);
               }
             }}
           >
@@ -223,6 +224,7 @@ function LimerickApp() {
               if (showExample) {
                 setShowExample(false);
               } else {
+                setShowLimericks(false);
                 setShowExample(true);
               }
             }}

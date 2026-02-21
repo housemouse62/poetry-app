@@ -154,6 +154,7 @@ function HaikuApp() {
                 const newSavedHaikus = getAllHaikus();
                 setSavedHaikus(newSavedHaikus);
                 setShowHaikus(true);
+                setShowExample(false);
               }
             }}
           >
@@ -183,6 +184,7 @@ function HaikuApp() {
                 setShowExample(false);
               } else {
                 setShowExample(true);
+                setShowHaikus(false);
               }
             }}
           >
