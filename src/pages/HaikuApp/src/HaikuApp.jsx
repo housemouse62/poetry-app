@@ -44,10 +44,12 @@ function HaikuApp() {
   const shareAsImage = async (haikuId) => {
     // Find the specific card element
     const cardElement = document.querySelector(`[data-haiku-id="${haikuId}"]`);
+    console.log(haikuId);
+    console.log(cardElement);
     if (!cardElement) return;
 
     // hide buttons before screenshot
-    const buttons = cardElement.querySelector(".card-buttons");
+    const buttons = cardElement.querySelector(".haiku-card-buttons");
     const originalDisplay = buttons.style.display;
     buttons.style.display = "none";
 
@@ -64,6 +66,7 @@ function HaikuApp() {
     canvas.toBlob((blob) => {
       // Create download link
       const url = URL.createObjectURL(blob);
+      console.log(url);
       const link = document.createElement("a");
       link.download = "haiku.png";
       link.href = url;
