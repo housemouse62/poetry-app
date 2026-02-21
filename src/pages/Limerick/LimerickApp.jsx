@@ -62,7 +62,7 @@ function LimerickApp() {
     if (!cardElement) return;
 
     // hide buttons before screenshot
-    const buttons = cardElement.querySelector(".card-buttons");
+    const buttons = cardElement.querySelector(".limerick-card-buttons");
     const originalDisplay = buttons.style.display;
     buttons.style.display = "none";
 
@@ -101,7 +101,7 @@ function LimerickApp() {
         </aside>
         <header>
           <h1 class="limerick-h1">🎭 Let's Limerick! 🍀</h1>
-          <p className="subtitle">
+          <p className="limerick-subtitle">
             Lines with matching borders rhyme together.
           </p>
           <p className="sr-only">
@@ -126,7 +126,6 @@ function LimerickApp() {
         />
         <LimerickLine
           aria-label="Line 3, rhymes with line 4"
-          className="less-syllables"
           lineNumber={3}
           targetSyllables={targetSyllables[2]}
           value={lines.line3}
@@ -134,7 +133,6 @@ function LimerickApp() {
         />
         <LimerickLine
           aria-label="Line 4, rhymes with line 5"
-          className="less-syllables"
           lineNumber={4}
           targetSyllables={targetSyllables[3]}
           value={lines.line4}
@@ -148,17 +146,19 @@ function LimerickApp() {
           onChange={(value) => updateLine("line5", value)}
         />
         {(isComplete || saved) && (
-          <div className={`complete-message ${isFading ? "fade-out" : ""}`}>
+          <div
+            className={`limerick-complete-message ${isFading ? "fade-out" : ""}`}
+          >
             {saved ? "✨ Saved! ✨" : "✨ You do limerick! ✨"}
           </div>
         )}
 
         {/* button row */}
-        <div className="button-row">
+        <div className="limerick-button-row">
           {/* Save Button */}
           <button
             disabled={!isComplete || saved}
-            className="save-btn"
+            className="save-limerick-btn"
             onClick={() => {
               saveLimerick(lines);
               setSaved(true);
@@ -202,7 +202,7 @@ function LimerickApp() {
           {/* clear the fields button*/}
           <button
             disabled={fieldsEmpty}
-            className="clear-btn"
+            className="clear-limerick-btn"
             onClick={() => {
               setLines({
                 line1: "",
@@ -216,8 +216,9 @@ function LimerickApp() {
             Clear
           </button>
         </div>
-        <div className="showExample">
+        <div className="show-limerick-example-div">
           <button
+            className="show-limerick-example-button"
             onClick={() => {
               if (showExample) {
                 setShowExample(false);
@@ -231,9 +232,9 @@ function LimerickApp() {
         </div>
         {/* Example Limerickss Area */}
         {!showLimericks && showExample ? (
-          <div className="example" key={`view-${showLimericks}`}>
-            <div className="example-title">Example:</div>
-            <div className="example-text">
+          <div className="example-limerick" key={`view-${showLimericks}`}>
+            <div className="example-limerick-title">Example:</div>
+            <div className="example-limerick-text">
               There was an Old Man in a tree, (8)
               <br />
               Who was horribly bored by a bee. (8)
@@ -262,10 +263,10 @@ function LimerickApp() {
                   <p className="limerick-line">{h.line2}</p>
                   <p className="limerick-line">{h.line3}</p>
 
-                  <div className="card-buttons">
+                  <div className="limerick-card-buttons">
                     <button
                       aria-label={`Download limerick: ${h.line1}`}
-                      className="download-btn"
+                      className="download-limerick-btn"
                       onClick={() => {
                         setShowDownloadModal(true);
                         setDownloadID(h.id);
@@ -275,7 +276,7 @@ function LimerickApp() {
                     </button>
                     <button
                       aria-label={`Delete limerick: ${h.line1}`}
-                      className="delete-btn"
+                      className="delete-limerick-btn"
                       onClick={() => {
                         console.log(h.id);
                         deleteLimerick(h.id);
@@ -295,12 +296,16 @@ function LimerickApp() {
         )}
       </div>
       {showDownloadModal && (
-        <div className="dialog-container">
-          <div className="dialog" role="dialog" aria-labelledby="dialogTitle">
+        <div className="limerick-dialog-container">
+          <div
+            className="limerick-dialog"
+            role="dialog"
+            aria-labelledby="dialogTitle"
+          >
             <h2 id="dialogTitle">Confirm Download</h2>
-            <div className="modal-button-row">
+            <div className="limerick-modal-button-row">
               <button
-                className="confirm-button"
+                className="confirm-limerick-button"
                 onClick={() => {
                   shareAsImage(downloadID);
                   setShowDownloadModal(false);
@@ -310,7 +315,7 @@ function LimerickApp() {
                 Confirm
               </button>
               <button
-                className="cancel-button"
+                className="cancel-limerick-button"
                 onClick={() => {
                   setShowDownloadModal(false);
                 }}

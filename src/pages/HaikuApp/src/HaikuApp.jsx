@@ -73,10 +73,10 @@ function HaikuApp() {
 
   return (
     <div className="haiku-app">
-      <div className="container">
+      <div className="haiku-container">
         <aside>
           <button
-            className="back"
+            className="haiku-back"
             onClick={() => {
               navigate(-1);
             }}
@@ -85,8 +85,8 @@ function HaikuApp() {
           </button>
         </aside>
         <header>
-          <h1>🌸 Do You Do Haiku? 🪷</h1>
-          <p className="subtitle">
+          <h1 className="haiku-h1">🌸 Do You Do Haiku? 🪷</h1>
+          <p className="haiku-subtitle">
             Write a haiku following the 5-7-5 syllable pattern
           </p>
         </header>
@@ -109,17 +109,19 @@ function HaikuApp() {
           onChange={(value) => updateLine("line3", value)}
         />
         {(isComplete || saved) && (
-          <div className={`complete-message ${isFading ? "fade-out" : ""}`}>
+          <div
+            className={`haiku-complete-message ${isFading ? "fade-out" : ""}`}
+          >
             {saved ? "✨ Saved! ✨" : "✨ You do haiku! ✨"}
           </div>
         )}
 
         {/* button row */}
-        <div className="button-row">
+        <div className="haiku-button-row">
           {/* Save Button */}
           <button
             disabled={!isComplete || saved}
-            className="save-btn"
+            className="save-haikus-btn"
             onClick={() => {
               saveHaiku(lines);
               setSaved(true);
@@ -161,7 +163,7 @@ function HaikuApp() {
           {/* clear the fields button*/}
           <button
             disabled={fieldsEmpty}
-            className="clear-btn"
+            className="clear-haikus-btn"
             onClick={() => {
               setLines({
                 line1: "",
@@ -175,9 +177,9 @@ function HaikuApp() {
         </div>
         {/* Example Haikus Area */}
         {!showHaikus ? (
-          <div className="example" key={`view-${showHaikus}`}>
-            <div className="example-title">Example Haiku:</div>
-            <div className="example-text">
+          <div className="example-haiku" key={`view-${showHaikus}`}>
+            <div className="example-haiku-title">Example Haiku:</div>
+            <div className="example-haiku-text">
               Do you do haiku (5)
               <br />
               Yes I do I do haiku (7)
@@ -196,10 +198,10 @@ function HaikuApp() {
                   <p className="haiku-line">{h.line2}</p>
                   <p className="haiku-line">{h.line3}</p>
 
-                  <div className="card-buttons">
+                  <div className="haiku-card-buttons">
                     <button
                       aria-label={`Download haiku: ${h.line1}`}
-                      className="download-btn"
+                      className="download-haiku-btn"
                       onClick={() => {
                         setShowDownloadModal(true);
                         setDownloadID(h.id);
@@ -209,7 +211,7 @@ function HaikuApp() {
                     </button>
                     <button
                       aria-label={`Delete haiku: ${h.line1}`}
-                      className="delete-btn"
+                      className="delete-haiku-btn"
                       onClick={() => {
                         console.log(h.id);
                         deleteHaiku(h.id);
@@ -227,12 +229,16 @@ function HaikuApp() {
         )}
       </div>
       {showDownloadModal && (
-        <div className="dialog-container">
-          <div className="dialog" role="dialog" aria-labelledby="dialogTitle">
+        <div className="haiku-dialog-container">
+          <div
+            className="haiku-dialog"
+            role="dialog"
+            aria-labelledby="dialogTitle"
+          >
             <h2 id="dialogTitle">Confirm Download</h2>
-            <div className="modal-button-row">
+            <div className="haiku-modal-button-row">
               <button
-                className="confirm-button"
+                className="confirm-haiku-button"
                 onClick={() => {
                   shareAsImage(downloadID);
                   setShowDownloadModal(false);
@@ -242,7 +248,7 @@ function HaikuApp() {
                 Confirm
               </button>
               <button
-                className="cancel-button"
+                className="cancel-haiku-button"
                 onClick={() => {
                   setShowDownloadModal(false);
                 }}

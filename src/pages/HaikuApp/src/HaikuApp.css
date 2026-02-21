@@ -18,7 +18,7 @@ body {
   padding: 20px;
 }
 
-.container {
+.haiku-container {
   background: white;
   border-radius: 20px;
   padding: 0 40px 40px 40px;
@@ -27,7 +27,7 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.back {
+.haiku-back {
   background-color: rgb(212, 222, 231);
   font-size: 16px;
   font-family: Georgia, sans-serif;
@@ -39,19 +39,19 @@ body {
   cursor: pointer;
 }
 
-h1 {
+.haiku-h1 {
   color: #667eea;
   margin-bottom: 10px;
   font-size: clamp(1.2rem, 5.5vw, 2rem);
 }
 
-.subtitle {
+.haiku-subtitle {
   color: #666;
   margin-bottom: 30px;
   font-size: 0.9em;
 }
 
-.complete-message {
+.haiku-complete-message {
   margin-top: 30px;
   padding: 20px;
   background: #10b981;
@@ -73,7 +73,7 @@ h1 {
   }
 }
 
-.complete-message.fade-out {
+.haiku-complete-message.fade-out {
   animation: fadeOut 0.5s;
 }
 
@@ -86,7 +86,7 @@ h1 {
   }
 }
 
-.button-row {
+.haiku-button-row {
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -94,8 +94,8 @@ h1 {
 }
 
 .view-haikus-btn,
-.clear-btn,
-.save-btn {
+.clear-haikus-btn,
+.save-haikus-btn {
   color: white;
   padding: 12px 24px;
   border: none;
@@ -105,39 +105,39 @@ h1 {
   transition: background-color 0.2s;
 }
 
-.save-btn {
+.save-haikus-btn {
   background-color: #10b981;
 }
 
-.save-btn:hover {
+.save-haikus-btn:hover {
   background-color: #059669;
 }
 
-.save-btn:focus-visible {
+.save-haikus-btn:focus-visible {
   outline: 3px solid #10b981;
   outline-offset: 2px;
 }
 
-.save-btn:disabled {
+.save-haikus-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.clear-btn {
+.clear-haikus-btn {
   background-color: #f59e0b;
 }
 
-.clear-btn:hover {
+.clear-haikus-btn:hover {
   background-color: #d97706;
 }
 
-.clear-btn:focus-visible {
+.clear-haikus-btn:focus-visible {
   outline: 3px solid #f59e0b;
   outline-offset: 2px;
 }
 
-.clear-btn:disabled {
+.clear-haikus-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.6;
@@ -164,7 +164,7 @@ h1 {
   text-align: center;
 }
 
-.example {
+.example-haiku {
   margin-top: 30px;
   padding: 20px;
   background-color: rgb(212, 222, 231);
@@ -173,13 +173,13 @@ h1 {
   animation: fadeIn 0.3s;
 }
 
-.example-title {
+.example-haiku-title {
   font-weight: bold;
   color: #667eea;
   margin-bottom: 10px;
 }
 
-.example-text {
+.example-haiku-text {
   font-style: italic;
   color: #666;
   line-height: 1.8;
@@ -219,14 +219,14 @@ h1 {
   font-family: "Georgia", serif;
 }
 
-.card-buttons {
+.haiku-card-buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
 
-.download-btn,
-.confirm-button {
+.download-haiku-btn,
+.confirm-haiku-button {
   padding: 5px 10px;
   margin: 10px 0 0 0;
   color: white;
@@ -238,19 +238,19 @@ h1 {
   cursor: pointer;
 }
 
-.download-btn:hover,
-.confirm-button:hover {
+.download-haiku-btn:hover,
+.confirm-haiku-button:hover {
   background-color: #5568d3;
 }
 
-.download-btn:focus-visible,
-.confirm-button:focus-visible {
+.download-haiku-btn:focus-visible,
+.confirm-haiku-button:focus-visible {
   outline: 3px solid #667eea;
   outline-offset: 2px;
 }
 
-.delete-btn,
-.cancel-button {
+.delete-haiku-btn,
+.cancel-haiku-button {
   padding: 5px 10px;
   margin: 10px 0 0 0;
   color: aliceblue;
@@ -262,18 +262,18 @@ h1 {
   cursor: pointer;
 }
 
-.delete-btn:hover,
-.cancel-button:hover {
+.delete-haiku-btn:hover,
+.cancel-haiku-button:hover {
   background-color: rgba(219, 35, 72, 1);
 }
 
-.delete-btn:focus-visible,
-.cancel-button:focus-visible {
+.delete-haiku-btn:focus-visible,
+.cancel-haiku-button:focus-visible {
   outline: 3px solid rgba(245, 50, 89, 0.8);
   outline-offset: 2px;
 }
 
-.dialog-container {
+.haiku-dialog-container {
   position: fixed;
   top: 0;
   right: 0;
@@ -285,7 +285,7 @@ h1 {
   animation: fadeIn 0.3s;
 }
 
-.dialog {
+.haiku-dialog {
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -295,7 +295,7 @@ h1 {
   border-radius: 35px;
 }
 
-.modal-button-row {
+.haiku-modal-button-row {
   display: flex;
   justify-content: center;
   gap: 10px;

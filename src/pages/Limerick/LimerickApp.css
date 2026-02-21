@@ -33,7 +33,7 @@ body {
 .limerick-container {
   background: white;
   border-radius: 20px;
-  padding: 0 30px 40px 30px;
+  padding: 0 40px 40px 40px;
   max-width: 500px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -57,13 +57,13 @@ body {
   font-size: clamp(1.2rem, 5.5vw, 2rem);
 }
 
-.subtitle {
+.limerick-subtitle {
   color: #666;
   margin-bottom: 15px;
-  font-size: 0.85em;
+  font-size: 0.9 em;
 }
 
-.complete-message {
+.limerick-complete-message {
   margin-top: 30px;
   padding: 20px;
   background: #10b981;
@@ -85,7 +85,7 @@ body {
   }
 }
 
-.complete-message.fade-out {
+.limerick-complete-message.fade-out {
   animation: fadeOut 0.5s;
 }
 
@@ -98,7 +98,7 @@ body {
   }
 }
 
-.button-row {
+.limerick-button-row {
   display: flex;
   justify-content: center;
   gap: 10px;
@@ -106,8 +106,8 @@ body {
 }
 
 .view-limericks-btn,
-.clear-btn,
-.save-btn {
+.clear-limerick-btn,
+.save-limerick-btn {
   color: white;
   padding: 12px 24px;
   border: none;
@@ -117,39 +117,39 @@ body {
   transition: background-color 0.2s;
 }
 
-.save-btn {
+.save-limerick-btn {
   background-color: #10b981;
 }
 
-.save-btn:hover {
+.save-limerick-btn:hover {
   background-color: #059669;
 }
 
-.save-btn:focus-visible {
+.save-limerick-btn:focus-visible {
   outline: 3px solid #10b981;
   outline-offset: 2px;
 }
 
-.save-btn:disabled {
+.save-limerick-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.clear-btn {
+.clear-limerick-btn {
   background-color: #f59e0b;
 }
 
-.clear-btn:hover {
+.clear-limerick-btn:hover {
   background-color: #d97706;
 }
 
-.clear-btn:focus-visible {
+.clear-limerick-btn:focus-visible {
   outline: 3px solid #f59e0b;
   outline-offset: 2px;
 }
 
-.clear-btn:disabled {
+.clear-limerick-btn:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
   opacity: 0.6;
@@ -176,7 +176,22 @@ body {
   text-align: center;
 }
 
-.example {
+.show-limerick-example-div {
+  display: flex;
+  justify-content: center;
+}
+.show-limerick-example-button {
+  background-color: rgb(212, 222, 231);
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: #666666;
+  padding: 5px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+.example-limerick {
   margin-top: 30px;
   padding: 20px;
   background-color: rgb(212, 222, 231);
@@ -185,13 +200,13 @@ body {
   animation: fadeIn 0.3s;
 }
 
-.example-title {
+.example-limerick-title {
   font-weight: bold;
   color: #667eea;
   margin-bottom: 10px;
 }
 
-.example-text {
+.example-limerick-text {
   font-style: italic;
   color: #666;
   line-height: 1.8;
@@ -223,22 +238,20 @@ body {
   margin: 15px;
   border-radius: 15px;
   border-left: 4px solid #667eea;
-
-  /* box-shadow: -5px 5px 4px 2px rgba(0, 0, 0, 0.3); */
 }
 
 .limerick-line {
   font-family: "Georgia", serif;
 }
 
-.card-buttons {
+.card-limerick-buttons {
   display: flex;
   gap: 10px;
   margin-top: 15px;
 }
 
-.download-btn,
-.confirm-button {
+.download-limerick-btn,
+.confirm-limerick-button {
   padding: 5px 10px;
   margin: 10px 0 0 0;
   color: white;
@@ -250,19 +263,19 @@ body {
   cursor: pointer;
 }
 
-.download-btn:hover,
-.confirm-button:hover {
+.download-limerick-btn:hover,
+.confirm-limerick-button:hover {
   background-color: #5568d3;
 }
 
-.download-btn:focus-visible,
-.confirm-button:focus-visible {
+.download-limerick-btn:focus-visible,
+.confirm-limerick-button:focus-visible {
   outline: 3px solid #667eea;
   outline-offset: 2px;
 }
 
-.delete-btn,
-.cancel-button {
+.delete-limerick-btn,
+.cancel-limerick-button {
   padding: 5px 10px;
   margin: 10px 0 0 0;
   color: aliceblue;
@@ -274,18 +287,18 @@ body {
   cursor: pointer;
 }
 
-.delete-btn:hover,
-.cancel-button:hover {
+.delete-limerick-btn:hover,
+.cancel-limerick-button:hover {
   background-color: rgba(219, 35, 72, 1);
 }
 
-.delete-btn:focus-visible,
-.cancel-button:focus-visible {
+.delete-limerick-btn:focus-visible,
+.cancel-limerick-button:focus-visible {
   outline: 3px solid rgba(245, 50, 89, 0.8);
   outline-offset: 2px;
 }
 
-.dialog-container {
+.limerick-dialog-container {
   position: fixed;
   top: 0;
   right: 0;
@@ -297,7 +310,7 @@ body {
   animation: fadeIn 0.3s;
 }
 
-.dialog {
+.limerick-dialog {
   display: flex;
   flex-direction: column;
   margin: auto;
@@ -307,7 +320,7 @@ body {
   border-radius: 35px;
 }
 
-.modal-button-row {
+.limerick-modal-button-row {
   display: flex;
   justify-content: center;
   gap: 10px;
