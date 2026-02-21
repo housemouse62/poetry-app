@@ -264,6 +264,8 @@ function LimerickApp() {
                   <p className="limerick-line">{h.line1}</p>
                   <p className="limerick-line">{h.line2}</p>
                   <p className="limerick-line">{h.line3}</p>
+                  <p className="limerick-line">{h.line4}</p>
+                  <p className="limerick-line">{h.line5}</p>
 
                   <div className="limerick-card-buttons">
                     <button
