@@ -52,7 +52,9 @@ export function countSyllables(text) {
       if (vowelGroups) {
         syllables = vowelGroups.length;
       }
-
+      if (word.endsWith("some") && syllables > 1) {
+        syllables--;
+      }
       if (word.endsWith("e") && syllables > 1) {
         syllables--;
       }
