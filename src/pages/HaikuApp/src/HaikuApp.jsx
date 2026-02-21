@@ -22,7 +22,7 @@ function HaikuApp() {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
-
+  const [showExample, setShowExample] = useState(false);
   const targetSyllables = [5, 7, 5];
 
   // Check if haiku is complete
@@ -175,8 +175,22 @@ function HaikuApp() {
             Clear
           </button>
         </div>
+        <div className="show-haiku-example-div">
+          <button
+            className="show-haiku-example-button"
+            onClick={() => {
+              if (showExample) {
+                setShowExample(false);
+              } else {
+                setShowExample(true);
+              }
+            }}
+          >
+            {showExample ? "hide example" : "show example"}
+          </button>
+        </div>
         {/* Example Haikus Area */}
-        {!showHaikus ? (
+        {!showHaikus && showExample ? (
           <div className="example-haiku" key={`view-${showHaikus}`}>
             <div className="example-haiku-title">Example Haiku:</div>
             <div className="example-haiku-text">
@@ -186,7 +200,7 @@ function HaikuApp() {
               <br />I haiku for you (5)
             </div>
           </div>
-        ) : (
+        ) : showHaikus ? (
           <div className="savedHaikus" key={`view-${showHaikus}`}>
             <h2 className="savedHaikus-title">Saved Haikus</h2>
             {savedHaikus.length <= 0 ? (
@@ -226,6 +240,8 @@ function HaikuApp() {
               ))
             )}
           </div>
+        ) : (
+          <div></div>
         )}
       </div>
       {showDownloadModal && (

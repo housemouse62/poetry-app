@@ -164,6 +164,22 @@ body {
   text-align: center;
 }
 
+.show-haiku-example-div {
+  display: flex;
+  justify-content: center;
+}
+.show-haiku-example-button {
+  background-color: rgb(212, 222, 231);
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: #666666;
+  padding: 5px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
 .example-haiku {
   margin-top: 30px;
   padding: 20px;
