@@ -232,7 +232,7 @@ function LimerickApp() {
             {showExample ? "hide example" : "show example"}
           </button>
         </div>
-        {/* Example Limerickss Area */}
+        {/* Example Limericks & Saved Limericks Area */}
         {!showLimericks && showExample ? (
           <div className="example-limerick" key={`view-${showLimericks}`}>
             <div className="example-limerick-title">Example:</div>

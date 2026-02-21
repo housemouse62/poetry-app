@@ -7,19 +7,25 @@ export default function Root() {
       <div className="root-app">
         <div class="root-container">
           <div className="root-title-div">
-            <h1 class-Name="root-title">let's make poetry.</h1>
+            <h1 class-Name="root-title">make poetry.</h1>
           </div>
           <div className="poem-cards">
-            <div className="poem-card haiku">
-              <Link to="/haiku" className="link">
-                haiku
-              </Link>
-            </div>
-            <div className="poem-card limerick">
-              <Link to="/limerick" className="link">
-                limerick
-              </Link>
-            </div>
+            <Link to="/haiku" className="link">
+              <div className="poem-card haiku">
+                <h2>🌸</h2>
+                <p className="card-title">haiku</p>
+                <p className="card-tagline">5 - 7 - 5</p>
+                <p className="saved-count">__ saved</p>
+              </div>
+            </Link>
+            <Link to="/limerick" className="link">
+              <div className="poem-card limerick">
+                <h2>🍀</h2>
+                <p className="card-title">limerick</p>
+                <p className="card-tagline">playful rhymes</p>
+                <p className="saved-count">__ saved</p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

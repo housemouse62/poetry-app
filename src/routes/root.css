@@ -39,22 +39,37 @@ body {
 
 .poem-cards {
   display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 15px;
+}
+
+.link {
+  display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  flex: 1 1 0;
+  max-width: 200px;
+  min-width: 150px;
+  text-decoration: none;
+  gap: 20px;
 }
 
 .poem-card {
   display: flex;
-  justify-content: center;
-  padding: 10px 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
   min-width: 150px;
-  min-height: 150px;
+  min-height: 180px;
   border-radius: 15px;
   font-size: 20px;
   font-weight: bold;
 }
 
 .poem-card:hover {
+  cursor: pointer;
   transform: scale(1.05);
   transition: transform 0.2s;
 }
@@ -67,12 +82,28 @@ body {
   background-color: #667eea;
 }
 
-.link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  text-decoration: none;
+.poem-card h2 {
+  font-size: 48px;
+  margin: 0;
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
   color: white;
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.card-tagline {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.saved-count {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+  font-weight: 300;
 }
