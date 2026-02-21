@@ -1,0 +1,28 @@
+/* root.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Georgia, sans-serif;
+}
+
+.root-app {
+  background: linear-gradient(135deg, #514ed2 0%, #7fa67f 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.root-container {
+  background: white;
+  border-radius: 20px;
+  padding: 0 40px 40px 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}

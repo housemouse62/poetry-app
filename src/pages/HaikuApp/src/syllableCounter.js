@@ -1,5 +1,5 @@
 export function countSyllables(text) {
-  if (!text.trim()) return 0;
+  if (!text.trim() || !text) return 0;
 
   text = text.toLowerCase().replace(/[^a-z\s]/g, "");
   const words = text.split(/\s+/).filter((word) => word.length > 0);
@@ -15,10 +15,8 @@ export function countSyllables(text) {
       const rootVowels = root.match(/[aeiouy]+/g);
       syllables = rootVowels ? rootVowels.length : 0;
 
-      // Add 1 for the 'ing' suffix
       syllables += 1;
 
-      // NEW: Don't subtract for silent e in -eing words (seeing, being, freeing)
       if (
         root.endsWith("e") &&
         !root.endsWith("ee") &&
@@ -27,19 +25,38 @@ export function countSyllables(text) {
       ) {
         syllables--;
       }
+    }
+    // Special handling for -ed words
+    else if (word.endsWith("ed") && word.length > 2) {
+      const root = word.slice(0, -2);
+      const rootVowels = root.match(/[aeiouy]+/g);
+      syllables = rootVowels ? rootVowels.length : 0;
+
+      // Check if root ends in 'l' or 'r' - if so, -ed is silent
+      if (root.endsWith("l") || root.endsWith("r")) {
+        // -ed is silent, don't add anything
+      }
+      // Check if root ends in 't' or 'd' - -ed adds a syllable
+      else if (root.endsWith("t") || root.endsWith("d")) {
+        syllables += 1;
+      }
+      // For other endings, -ed is usually silent
+
+      // Handle silent 'e' in root if present
+      if (root.endsWith("e") && syllables > 1) {
+        syllables--;
+      }
     } else {
-      // Normal syllable counting for non-ing words
+      // Normal syllable counting for non-ing, non-ed words
       const vowelGroups = word.match(/[aeiouy]+/g);
       if (vowelGroups) {
         syllables = vowelGroups.length;
       }
 
-      // Subtract for silent 'e' at the end
       if (word.endsWith("e") && syllables > 1) {
         syllables--;
       }
 
-      // Special case for 'le' endings
       if (
         word.endsWith("le") &&
         word.length > 2 &&
@@ -49,7 +66,6 @@ export function countSyllables(text) {
       }
     }
 
-    // Every word has at least 1 syllable
     if (syllables === 0) {
       syllables = 1;
     }
