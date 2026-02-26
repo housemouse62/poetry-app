@@ -1,13 +1,16 @@
 import { Link } from "react-router";
+import { useWordData } from "../pages/HaikuApp/src/pages/WordFind";
 import "./root.css";
 
 export default function Root() {
+  const { wordData, loading, error } = useWordData("hello");
+  console.log(wordData);
   return (
     <>
       <div className="root-app">
-        <div class="root-container">
+        <div className="root-container">
           <div className="root-title-div">
-            <h1 class-Name="root-title">make poetry.</h1>
+            <h1 className="root-title">make poetry.</h1>
           </div>
           <div className="poem-cards">
             <Link to="/haiku" className="link">

@@ -6,9 +6,12 @@ import "./HaikuApp.css";
 import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
+import { useWordData } from "./WordFind";
 
 function HaikuApp() {
   const navigate = useNavigate();
+  const { wordData, loading, error } = useWordData("hello");
+  if (wordData) console.log(wordData.syllables.count);
 
   const [lines, setLines] = useState({
     line1: "",

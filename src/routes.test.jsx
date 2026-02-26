@@ -12,8 +12,8 @@ describe("Poetry-App", () => {
     render(<RouterProvider router={router} />);
 
     const helloWorld = screen.getByRole("heading", {
-      name: /hello world. we do poetry/i,
-      level: 2,
+      name: /make poetry./i,
+      level: 1,
     });
     expect(helloWorld).toBeVisible();
   });
@@ -46,7 +46,7 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     render(<RouterProvider router={router} />);
 
-    const haikuLink = screen.getByRole("link", { name: "haiku" });
+    const haikuLink = screen.getByRole("link", { name: /haiku/i });
     await user.click(haikuLink);
 
     const doyou = screen.getByText("🌸 Do You Do Haiku? 🪷");
@@ -59,7 +59,7 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     render(<RouterProvider router={router} />);
 
-    const limerickLink = screen.getByRole("link", { name: "limerick" });
+    const limerickLink = screen.getByRole("link", { name: /limerick/i });
     await user.click(limerickLink);
 
     const doyou = screen.getByText("🎭 Let's Limerick! 🍀");
@@ -81,15 +81,15 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     render(<RouterProvider router={router} />);
 
-    const haikuLink = screen.getByRole("link", { name: "haiku" });
+    const haikuLink = screen.getByRole("link", { name: /haiku/i });
     await user.click(haikuLink);
 
     const backButton = screen.getByRole("button", { name: /dashboard/i });
     await user.click(backButton);
 
     const helloWorld = screen.getByRole("heading", {
-      name: /hello world. we do poetry/i,
-      level: 2,
+      name: "make poetry.",
+      level: 1,
     });
     expect(helloWorld).toBeVisible();
   });
