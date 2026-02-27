@@ -163,6 +163,7 @@ describe("wordCache", () => {
       },
       frequency: 5.83,
     });
+
     expect(flippant).toEqual({
       word: "flippant",
       results: [
@@ -182,6 +183,64 @@ describe("wordCache", () => {
         all: "'flɪpənt",
       },
       frequency: 2.33,
+    });
+  });
+
+  it("doesn't overwrite exising word data when word exists in cache", () => {
+    saveWordToCache("hello", {
+      word: "hello",
+      results: [
+        {
+          definition: "an expression of greeting",
+          partOfSpeech: "noun",
+          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
+          typeOf: ["greeting", "salutation"],
+          examples: ["every morning they exchanged polite hellos"],
+        },
+      ],
+      syllables: {
+        count: 2,
+        list: ["hel", "lo"],
+      },
+      pronunciation: {
+        all: "hɛ'loʊ",
+      },
+      frequency: 5.83,
+    });
+    saveWordToCache("hello", {
+      word: "hello",
+      results: [
+        {
+          definition: "an expression of greeting",
+          partOfSpeech: "noun",
+          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
+          typeOf: ["greeting", "salutation"],
+          examples: ["every morning they exchanged polite hellos"],
+        },
+      ],
+    });
+
+    const hello = getWordFromCache("hello");
+
+    expect(hello).toEqual({
+      word: "hello",
+      results: [
+        {
+          definition: "an expression of greeting",
+          partOfSpeech: "noun",
+          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
+          typeOf: ["greeting", "salutation"],
+          examples: ["every morning they exchanged polite hellos"],
+        },
+      ],
+      syllables: {
+        count: 2,
+        list: ["hel", "lo"],
+      },
+      pronunciation: {
+        all: "hɛ'loʊ",
+      },
+      frequency: 5.83,
     });
   });
 });
