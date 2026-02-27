@@ -17,26 +17,6 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Next Phases (Begin Feb 26, 2026)
 
-Phase 1: Cache Utility
-
-Save a second word
-
-Save "yellow" with data
-
-"wordCache" should now have both keys
-
-Each word’s data should match
-
-Test 3 — Save a word that already exists
-
-Save "hello" again with different data
-
-"wordCache" should not overwrite the original (or overwrite, if that’s your policy)
-
-Test 4 — Get existing word
-
-getWordFromCache("hello") → returns just the data object, not nested under hello
-
 Test 5 — Get non-existing word
 
 getWordFromCache("goodbye") → returns {}

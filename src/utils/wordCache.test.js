@@ -207,6 +207,7 @@ describe("wordCache", () => {
       },
       frequency: 5.83,
     });
+
     saveWordToCache("hello", {
       word: "hello",
       results: [
@@ -242,5 +243,32 @@ describe("wordCache", () => {
       },
       frequency: 5.83,
     });
+  });
+
+  it("returns '{}' when search for non-existinng word", () => {
+    saveWordToCache("hello", {
+      word: "hello",
+      results: [
+        {
+          definition: "an expression of greeting",
+          partOfSpeech: "noun",
+          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
+          typeOf: ["greeting", "salutation"],
+          examples: ["every morning they exchanged polite hellos"],
+        },
+      ],
+      syllables: {
+        count: 2,
+        list: ["hel", "lo"],
+      },
+      pronunciation: {
+        all: "hɛ'loʊ",
+      },
+      frequency: 5.83,
+    });
+
+    const goodbye = getWordFromCache("goodbye");
+
+    expect(goodbye).toEqual({});
   });
 });
