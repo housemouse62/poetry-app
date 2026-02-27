@@ -19,45 +19,27 @@ If you are developing a production application, we recommend using TypeScript wi
 
 Phase 1: Cache Utility
 
-- Test 1: Cache stores word data
-- Write test: save word "hello" and all data to cache
-- Run test → fails (no cache utility yet)
-- Write saveWordToCache(cash, word) function
-- Test passes
+Save a second word
 
-Test 2: Cache retrieves stored data
+Save "yellow" with data
 
-Write test: get "hello" from cache, expect count 2
-Run test → fails
-Write getWordFromCache(word) function
-Test passes
+"wordCache" should now have both keys
 
-Test 3: Cache returns null for missing words
+Each word’s data should match
 
-Write test: get "nonexistent" from cache, expect null
-Run test → should pass if implemented correctly
+Test 3 — Save a word that already exists
 
-Phase 2: Hybrid Hook
-Test 4: Hook checks cache first
+Save "hello" again with different data
 
-Write test: mock cache with "hello", call hook, verify no API call made
-Run test → fails
-Modify hook to check cache before API
-Test passes
+"wordCache" should not overwrite the original (or overwrite, if that’s your policy)
 
-Test 5: Hook calls API when cache misses
+Test 4 — Get existing word
 
-Write test: cache empty, call hook, verify API called
-Run test → fails
-Keep existing API logic
-Test passes
+getWordFromCache("hello") → returns just the data object, not nested under hello
 
-Test 6: Hook caches successful API results
+Test 5 — Get non-existing word
 
-Write test: API returns data, verify it's saved to cache
-Run test → fails
-Add cache save after successful fetch
-Test passes
+getWordFromCache("goodbye") → returns {}
 
 Test 7: Hook returns confidence level
 
