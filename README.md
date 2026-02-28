@@ -17,10 +17,6 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Next Phases (Begin Feb 26, 2026)
 
-Test 5 — Get non-existing word
-
-getWordFromCache("goodbye") → returns {}
-
 Test 7: Hook returns confidence level
 
 Write test: cached result returns confidence: "verified", fallback returns confidence: "estimated"

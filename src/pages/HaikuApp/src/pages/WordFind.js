@@ -17,8 +17,9 @@ export const useWordData = (wordToFetch) => {
 
       // Check Cache for word
       const cached = getWordFromCache(wordToFetch);
+      console.log(cached);
       if (Object.keys(cached).length > 0) {
-        setWordData(caches);
+        setWordData(cached);
         setLoading(false);
         return;
       }
