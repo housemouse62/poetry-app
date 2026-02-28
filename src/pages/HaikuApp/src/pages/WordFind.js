@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { getWordFromCache, saveWordToCache } from "../../../../utils/wordCache";
+import { countSyllables } from "./syllableCounter";
 
 const apiKey = import.meta.env.VITE_WORDS_API_KEY;
 
 export const useWordData = (wordToFetch) => {
   const [wordData, setWordData] = useState(null);
+  const [confidence, setConfidence] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,6 +22,7 @@ export const useWordData = (wordToFetch) => {
       console.log(cached);
       if (Object.keys(cached).length > 0) {
         setWordData(cached);
+        setConfidence("verified");
         setLoading(false);
         return;
       }
@@ -50,9 +53,17 @@ export const useWordData = (wordToFetch) => {
         // Save to Cache
         saveWordToCache(wordToFetch, data);
         setWordData(data);
+        setConfidence("verified");
       } catch (error) {
         setError(error.message);
-        setWordData(null);
+        const fallBackSyllables = countSyllables(wordToFetch);
+        const fallbackData = {
+          word: wordToFetch,
+          syllables: { count: fallBackSyllables }, // from countSyllables
+          source: "fallback",
+        };
+        setWordData(fallbackData);
+        setConfidence("estimated");
       } finally {
         setLoading(false);
       }
@@ -60,5 +71,5 @@ export const useWordData = (wordToFetch) => {
     fetchWordData();
   }, [wordToFetch]);
 
-  return { wordData, loading, error };
+  return { wordData, confidence, loading, error };
 };
