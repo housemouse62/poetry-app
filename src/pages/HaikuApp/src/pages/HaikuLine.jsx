@@ -1,9 +1,15 @@
 // HaikuLine.jsx
-import { countSyllables } from "./syllableCounter";
+// import { countSyllables } from "./syllableCounter";
+import { useState } from "react";
+import { useWordData } from "./WordFind";
 import "./HaikuLine.css";
 
 function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
-  const currentSyllables = countSyllables(value);
+  const [currentWord, setCurrentWord] = useState(null);
+
+  useWordData(currentWord);
+
+  const currentSyllables = 0;
 
   // Determine status for styling
   let status = "under";
@@ -36,6 +42,14 @@ function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
         placeholder={`Line ${lineNumber} (${targetSyllables} syllables)`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === " ") {
+            const words = value.split(" ").filter((word) => word.length > 0);
+            const lastWord = words[words.length - 1];
+            const cleanWord = lastWord.trim();
+            setCurrentWord(cleanWord);
+          }
+        }}
       />
 
       <div className="progress-bar">

@@ -1,9 +1,13 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useWordData } from "./WordFind";
 import { saveWordToCache, getWordFromCache } from "../../../../utils/wordCache";
 import { renderHook, waitFor } from "@testing-library/react";
 
 describe("WordFind hook", () => {
+  beforeEach(() => {
+    //Clear localStorage before each test
+    localStorage.clear();
+  });
   it("returns cached word data without calling API", () => {
     // Save "hello" data to cache
     saveWordToCache("hello", {

@@ -3,8 +3,23 @@ import { render, screen } from "@testing-library/react";
 import { getAllHaikus } from "./haikuStorage";
 import userEvent from "@testing-library/user-event";
 import HaikuApp from "./HaikuApp";
+import { createMemoryRouter, RouterProvider } from "react-router";
+import { vi } from "vitest";
 
-describe.skip("App Component", () => {
+vi.mock("html2canvas", () => ({
+  default: vi.fn(() =>
+    Promise.resolve({
+      toDataURL: () => "data:image/png;base64,mock",
+    }),
+  ),
+}));
+
+const renderWithRouter = (component) => {
+  const router = createMemoryRouter([{ path: "/", element: component }]);
+  return render(<RouterProvider router={router} />);
+};
+
+describe("App Component", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
@@ -12,7 +27,8 @@ describe.skip("App Component", () => {
 
   it("save button appears when haiku is complete", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
+
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -27,7 +43,7 @@ describe.skip("App Component", () => {
 
   it("displays 'You do Haiku!' when the the syllable requirements are met", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -42,7 +58,7 @@ describe.skip("App Component", () => {
   });
   it("saves a haiku to local storage when the save button is clicked", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -64,7 +80,7 @@ describe.skip("App Component", () => {
 
   it("doesn't display 'saved' before the haiku is saved", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -80,7 +96,7 @@ describe.skip("App Component", () => {
 
   it("displays 'saved' after the haiku is saved", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -99,7 +115,7 @@ describe.skip("App Component", () => {
 
   it("clears the inputs fields after saving", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -117,7 +133,7 @@ describe.skip("App Component", () => {
 
   it("clear button appears when the user types into one of the fields", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
 
@@ -129,7 +145,7 @@ describe.skip("App Component", () => {
 
   it("all fields clear when user clicks clear button", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -148,7 +164,7 @@ describe.skip("App Component", () => {
   });
 
   it("view haikus button is visible", () => {
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     const buttonNode = screen.getByRole("button", {
       name: /view saved haikus/i,
     });
@@ -157,7 +173,7 @@ describe.skip("App Component", () => {
 
   it("saved haikus div appears when button is clicked", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     const buttonNode = screen.getByRole("button", {
       name: /view saved haikus/i,
     });
@@ -169,7 +185,7 @@ describe.skip("App Component", () => {
 
   it("returns a 'no haikus' message when the localStorage contains no haikus", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     const buttonNode = screen.getByRole("button", {
       name: /view saved haikus/i,
     });
@@ -181,7 +197,7 @@ describe.skip("App Component", () => {
 
   it("displays the saved haiku when the view saved haikus button is pressed", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -205,7 +221,7 @@ describe.skip("App Component", () => {
 
   it("show delete button with each haiku", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -229,7 +245,7 @@ describe.skip("App Component", () => {
 
   it("delete button removes haiku from stored haikus", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -260,7 +276,7 @@ describe.skip("App Component", () => {
 
   it("confirm download modal pops up when user clicks download", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -291,7 +307,7 @@ describe.skip("App Component", () => {
 
   it("confirm confirm button and cancel button render on modal dialog", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -324,7 +340,7 @@ describe.skip("App Component", () => {
 
   it("confirm download modal goes away when user clicks cancel", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -359,7 +375,7 @@ describe.skip("App Component", () => {
 
   it("confirm download modal goes away when user clicks cancel", async () => {
     const user = userEvent.setup();
-    render(<HaikuApp />);
+    renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);

@@ -4,6 +4,15 @@ import { getAllLimericks } from "./limericksStorage";
 import userEvent from "@testing-library/user-event";
 import LimerickApp from "./LimerickApp";
 import { createMemoryRouter, RouterProvider } from "react-router";
+import { vi } from "vitest";
+
+vi.mock("html2canvas", () => ({
+  default: vi.fn(() =>
+    Promise.resolve({
+      toDataURL: () => "data:image/png;base64,mock",
+    }),
+  ),
+}));
 
 const renderWithRouter = (component) => {
   const router = createMemoryRouter([

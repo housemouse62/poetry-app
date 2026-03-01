@@ -10,7 +10,7 @@ import { useWordData } from "./WordFind";
 
 function HaikuApp() {
   const navigate = useNavigate();
-  const { wordData, loading, error } = useWordData("hello");
+  const { wordData, loading, error } = useWordData(null);
   if (wordData) console.log(wordData.syllables.count);
 
   const [lines, setLines] = useState({

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { saveHaiku, deleteHaiku, getAllHaikus } from "./haikuStorage";
 
-describe.skip("haikuStorage", () => {
+describe("haikuStorage", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();

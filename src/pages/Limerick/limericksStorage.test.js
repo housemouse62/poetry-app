@@ -5,7 +5,7 @@ import {
   getAllLimericks,
 } from "./limericksStorage";
 
-describe.skip("limerickStorage", () => {
+describe("limerickStorage", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
