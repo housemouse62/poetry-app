@@ -1,11 +1,18 @@
 // HaikuLine.jsx
 // import { countSyllables } from "./syllableCounter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWordData } from "./WordFind";
 import "./HaikuLine.css";
 import { getWordFromCache } from "../../../../utils/wordCache";
+import { countSyllables } from "./syllableCounter";
 
-function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
+function HaikuLine({
+  lineNumber,
+  targetSyllables,
+  value,
+  onChange,
+  onSyllableChange,
+}) {
   const [currentWord, setCurrentWord] = useState(null);
   // const [syllableCount, setSyllableCount] = useState(0);
 
@@ -17,8 +24,27 @@ function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
   const currentSyllables = words.reduce((total, word) => {
     const cached = getWordFromCache(word);
     console.log(`cache for "${word}":`, cached);
-    return total + (cached?.syllables?.count || 0);
+    return total + (cached?.syllables?.count || countSyllables(word));
   }, 0);
+
+  let confidence = "neutral";
+
+  if (words.length <= 0) {
+    confidence = "neutral";
+  } else
+    for (const word of words) {
+      const cached = getWordFromCache(word);
+      if (cached?.source === "fallback") {
+        confidence = "estimated";
+        break;
+      } else if (cached?.syllables) {
+        confidence = "verified";
+      }
+    }
+
+  useEffect(() => {
+    onSyllableChange?.(currentSyllables);
+  }, [currentSyllables]);
 
   console.log("total syllables:", currentSyllables);
 
@@ -42,7 +68,11 @@ function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
     <div className="line-group">
       <div className="line-header">
         <span className="line-label">Line {lineNumber}</span>
-        <span className={`syllable-count ${status}`}>
+        <span
+          data-testid="syllable-counter"
+          data-confidence={confidence}
+          className={`syllable-count ${confidence}`}
+        >
           {currentSyllables}/{targetSyllables}
         </span>
       </div>

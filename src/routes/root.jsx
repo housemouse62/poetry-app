@@ -3,7 +3,7 @@ import { useWordData } from "../pages/HaikuApp/src/pages/WordFind";
 import "./root.css";
 
 export default function Root() {
-  const { wordData, loading, error } = useWordData("cherry");
+  const { wordData, loading, error } = useWordData("");
   console.log(wordData);
   return (
     <>

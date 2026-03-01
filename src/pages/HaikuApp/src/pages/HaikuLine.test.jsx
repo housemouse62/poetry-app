@@ -97,6 +97,82 @@ const mockCherryResponse = {
   }),
 };
 
+const mockBlossomResponse = {
+  ok: true,
+  json: async () => ({
+    word: "blossom",
+    results: [
+      {
+        definition: "develop or come to a promising stage",
+        partOfSpeech: "verb",
+        synonyms: ["blossom forth", "blossom out", "unfold"],
+        typeOf: ["develop"],
+        examples: ["Youth blossomed into maturity"],
+      },
+      {
+        definition: "produce or yield flowers",
+        partOfSpeech: "verb",
+        synonyms: ["bloom", "flower"],
+        typeOf: ["develop"],
+        hasTypes: ["effloresce", "burst forth"],
+      },
+      {
+        definition:
+          "reproductive organ of angiosperm plants especially one having showy or colorful parts",
+        partOfSpeech: "noun",
+        synonyms: ["bloom", "flower"],
+        typeOf: ["reproductive structure"],
+        hasTypes: [
+          "ray flower",
+          "floweret",
+          "chrysanthemum",
+          "inflorescence",
+          "apetalous flower",
+          "bud",
+          "floret",
+          "ray floret",
+        ],
+        hasParts: [
+          "perianth",
+          "carpel",
+          "chlamys",
+          "floral envelope",
+          "floral leaf",
+          "ovary",
+          "perigone",
+          "perigonium",
+          "pistil",
+          "stamen",
+        ],
+        partOf: ["flowering plant", "angiosperm"],
+      },
+      {
+        definition: "the period of greatest prosperity or productivity",
+        partOfSpeech: "noun",
+        synonyms: [
+          "bloom",
+          "efflorescence",
+          "flower",
+          "flush",
+          "heyday",
+          "peak",
+          "prime",
+        ],
+        typeOf: ["time period", "period", "period of time"],
+        hasTypes: ["golden age"],
+      },
+    ],
+    syllables: {
+      count: 2,
+      list: ["blos", "som"],
+    },
+    pronunciation: {
+      all: "'blɑsəm",
+    },
+    frequency: 3.63,
+  }),
+};
+
 const renderWithRouter = (component) => {
   const router = createMemoryRouter([{ path: "/", element: component }]);
   return render(<RouterProvider router={router} />);
@@ -114,9 +190,9 @@ describe("Haiku Line Word Validation", () => {
   });
 
   it("extracts word when user types word + space bar", async () => {
-    // Spy on useWordData
     renderWithRouter(<HaikuApp />);
 
+    // Spy on useWordData
     const useWordDataSpy = vi.spyOn(WordFind, "useWordData");
 
     const user = userEvent.setup();
@@ -209,6 +285,181 @@ describe("Haiku Line Word Validation", () => {
     await waitFor(() => {
       const newCount = screen.getByText("2/5");
       expect(newCount).toBeVisible();
+    });
+  });
+
+  it("aggregates syllables for multiple words correctly", async () => {
+    //test component to handle state
+    function TestWrapper() {
+      const [inputValue, setInputValue] = useState("");
+
+      return (
+        <HaikuLine
+          lineNumber={1}
+          targetSyllables={5}
+          value={inputValue}
+          onChange={setInputValue}
+        />
+      );
+    }
+
+    renderWithRouter(<TestWrapper />);
+    const user = userEvent.setup();
+
+    // mock fetch
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(mockCherryResponse);
+
+    const initialCount = screen.getByText("0/5");
+    expect(initialCount).toBeVisible();
+
+    // User types 'cherry blossom '
+    const line1 = screen.getByPlaceholderText(/line 1/i);
+    await user.type(line1, "cherry blossom ");
+
+    await waitFor(() => {
+      const newCount = screen.getByText("4/5");
+      expect(newCount).toBeVisible();
+    });
+  });
+
+  it("aggregates syllables for verified/estimated words correctly", async () => {
+    //test component to handle state
+    function TestWrapper() {
+      const [inputValue, setInputValue] = useState("");
+      return (
+        <HaikuLine
+          lineNumber={1}
+          targetSyllables={5}
+          value={inputValue}
+          onChange={setInputValue}
+        />
+      );
+    }
+
+    renderWithRouter(<TestWrapper />);
+    const user = userEvent.setup();
+
+    // mock spy with a pass for cherry and fail for anything else
+    vi.spyOn(globalThis, "fetch").mockImplementation((url) => {
+      if (url.includes("cherry")) {
+        return Promise.resolve(mockCherryResponse);
+      } else {
+        return Promise.resolve({ ok: false, status: 404 });
+      }
+    });
+
+    const initialCount = screen.getByText("0/5");
+    expect(initialCount).toBeVisible();
+
+    // User types 'cherry blossom '
+    const line1 = screen.getByPlaceholderText(/line 1/i);
+    await user.type(line1, "cherry blossom ");
+
+    await waitFor(() => {
+      const newCount = screen.getByText("4/5");
+      expect(newCount).toBeVisible();
+    });
+  });
+
+  it("syllable verification indication is blue = no words typed", () => {
+    function TestWrapper() {
+      const [inputValue, setInputValue] = useState("");
+      return (
+        <HaikuLine
+          lineNumber={1}
+          targetSyllables={5}
+          value={inputValue}
+          onChange={setInputValue}
+        />
+      );
+    }
+
+    renderWithRouter(<TestWrapper />);
+
+    const initialCount = screen.getByText("0/5");
+    expect(initialCount).toBeVisible();
+
+    const counter = screen.getByTestId("syllable-counter");
+    expect(counter).toHaveAttribute("data-confidence", "neutral");
+  });
+
+  it("syllable verification indication is yellow = >0 words not from API", async () => {
+    //test component to handle state
+    function TestWrapper() {
+      const [inputValue, setInputValue] = useState("");
+      return (
+        <HaikuLine
+          lineNumber={1}
+          targetSyllables={5}
+          value={inputValue}
+          onChange={setInputValue}
+        />
+      );
+    }
+
+    renderWithRouter(<TestWrapper />);
+    const user = userEvent.setup();
+
+    // mock fetch fail
+    vi.spyOn(globalThis, "fetch").mockImplementation((url) => {
+      if (url.includes("cherry")) {
+        return Promise.resolve(mockCherryResponse);
+      } else {
+        return Promise.resolve({ ok: false, status: 404 });
+      }
+    });
+
+    const initialCount = screen.getByText("0/5");
+    expect(initialCount).toBeVisible();
+
+    // User types 'cherry blossom '
+    const line1 = screen.getByPlaceholderText(/line 1/i);
+    await user.type(line1, "cherry blossom ");
+
+    await waitFor(() => {
+      const newCount = screen.getByText("4/5");
+      expect(newCount).toBeVisible();
+
+      const counter = screen.getByTestId("syllable-counter");
+      expect(counter).toHaveAttribute("data-confidence", "estimated");
+    });
+  });
+
+  it("syllable verification indication is green = all words from API", async () => {
+    //test component to handle state
+    function TestWrapper() {
+      const [inputValue, setInputValue] = useState("");
+      return (
+        <HaikuLine
+          lineNumber={1}
+          targetSyllables={5}
+          value={inputValue}
+          onChange={setInputValue}
+        />
+      );
+    }
+
+    renderWithRouter(<TestWrapper />);
+    const user = userEvent.setup();
+
+    // mock fetch
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(mockCherryResponse);
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(mockBlossomResponse);
+
+    const initialCount = screen.getByText("0/5");
+    expect(initialCount).toBeVisible();
+
+    // User types 'cherry blossom '
+    const line1 = screen.getByPlaceholderText(/line 1/i);
+    await user.type(line1, "cherry blossom ");
+
+    await waitFor(() => {
+      const newCount = screen.getByText("4/5");
+      expect(newCount).toBeVisible();
+
+      const counter = screen.getByTestId("syllable-counter");
+      expect(counter).toHaveAttribute("data-confidence", "verified");
     });
   });
 });

@@ -28,18 +28,18 @@ header {
   font-weight: bold;
 }
 
-.syllable-count.correct {
-  background: #10b981;
+.syllable-count.neutral {
+  background: rgb(121, 109, 255);
   color: white;
 }
 
-.syllable-count.under {
+.syllable-count.estimated {
   background: #fbbf24;
   color: #78350f;
 }
 
-.syllable-count.over {
-  background: #ef4444;
+.syllable-count.verified {
+  background: #10b981;
   color: white;
 }
 

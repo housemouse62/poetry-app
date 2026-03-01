@@ -26,13 +26,18 @@ function HaikuApp() {
   const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
   const [showExample, setShowExample] = useState(false);
+  const [syllableCounts, setSyllableCounts] = useState({
+    line1: 0,
+    line2: 0,
+    line3: 0,
+  });
   const targetSyllables = [5, 7, 5];
 
   // Check if haiku is complete
   const isComplete =
-    countSyllables(lines.line1) === 5 &&
-    countSyllables(lines.line2) === 7 &&
-    countSyllables(lines.line3) === 5;
+    syllableCounts.line1 === 5 &&
+    syllableCounts.line2 === 7 &&
+    syllableCounts.line3 === 5;
 
   const fieldsEmpty =
     lines.line1 === "" && lines.line2 === "" && lines.line3 === "";
@@ -101,18 +106,27 @@ function HaikuApp() {
           targetSyllables={targetSyllables[0]}
           value={lines.line1}
           onChange={(value) => updateLine("line1", value)}
+          onSyllableChange={(count) =>
+            setSyllableCounts((prev) => ({ ...prev, line1: count }))
+          }
         />
         <HaikuLine
           lineNumber={2}
           targetSyllables={targetSyllables[1]}
           value={lines.line2}
           onChange={(value) => updateLine("line2", value)}
+          onSyllableChange={(count) =>
+            setSyllableCounts((prev) => ({ ...prev, line1: count }))
+          }
         />
         <HaikuLine
           lineNumber={3}
           targetSyllables={targetSyllables[2]}
           value={lines.line3}
           onChange={(value) => updateLine("line3", value)}
+          onSyllableChange={(count) =>
+            setSyllableCounts((prev) => ({ ...prev, line1: count }))
+          }
         />
         {(isComplete || saved) && (
           <div
