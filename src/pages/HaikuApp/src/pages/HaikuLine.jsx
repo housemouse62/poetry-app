@@ -3,13 +3,24 @@
 import { useState } from "react";
 import { useWordData } from "./WordFind";
 import "./HaikuLine.css";
+import { getWordFromCache } from "../../../../utils/wordCache";
 
 function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
   const [currentWord, setCurrentWord] = useState(null);
+  // const [syllableCount, setSyllableCount] = useState(0);
 
-  useWordData(currentWord);
+  const { wordData } = useWordData(currentWord);
 
-  const currentSyllables = 0;
+  const words = value.split(" ").filter((w) => w.length > 0);
+
+  console.log("words array", words);
+  const currentSyllables = words.reduce((total, word) => {
+    const cached = getWordFromCache(word);
+    console.log(`cache for "${word}":`, cached);
+    return total + (cached?.syllables?.count || 0);
+  }, 0);
+
+  console.log("total syllables:", currentSyllables);
 
   // Determine status for styling
   let status = "under";
@@ -46,8 +57,11 @@ function HaikuLine({ lineNumber, targetSyllables, value, onChange }) {
           if (e.key === " ") {
             const words = value.split(" ").filter((word) => word.length > 0);
             const lastWord = words[words.length - 1];
-            const cleanWord = lastWord.trim();
-            setCurrentWord(cleanWord);
+
+            if (lastWord) {
+              const cleanWord = lastWord.trim();
+              setCurrentWord(cleanWord);
+            }
           }
         }}
       />
