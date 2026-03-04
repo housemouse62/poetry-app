@@ -1,5 +1,5 @@
 // LimerickApp.jsx
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import LimerickLine from "./LimerickLine";
 import { countSyllables } from "./syllableCounter";
 import "./LimerickApp.css";
@@ -31,6 +31,43 @@ function LimerickApp() {
   const [showExample, setShowExample] = useState(false);
 
   const targetSyllables = [7, 7, 5, 5, 7];
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    if (!showDownloadModal) return;
+    const dialog = dialogRef.current;
+    const focusable = dialog
+      ? Array.from(
+          dialog.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          ),
+        )
+      : [];
+    if (focusable.length) focusable[0].focus();
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setShowDownloadModal(false);
+        return;
+      }
+      if (e.key === "Tab" && focusable.length) {
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showDownloadModal]);
 
   // Check if Limericks is complete
   const isComplete =
@@ -88,7 +125,7 @@ function LimerickApp() {
 
   return (
     <div className="limerick-app">
-      <div className="limerick-container">
+      <main className="limerick-container">
         <aside>
           <button
             className="limerick-back"
@@ -100,7 +137,7 @@ function LimerickApp() {
           </button>
         </aside>
         <header>
-          <h1 class="limerick-h1">🎭 Let's Limerick! 🍀</h1>
+          <h1 className="limerick-h1"><span aria-hidden="true">🎭</span> Let's Limerick! <span aria-hidden="true">🍀</span></h1>
           <p className="limerick-subtitle">
             Lines with matching borders rhyme together.
           </p>
@@ -148,17 +185,30 @@ function LimerickApp() {
         {(isComplete || saved) && (
           <div
             className={`limerick-complete-message ${isFading ? "fade-out" : ""}`}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
           >
-            {saved ? "✨ Saved! ✨" : "✨ You do limerick! ✨"}
+            {saved ? (
+              <><span aria-hidden="true">✨</span> Saved! <span aria-hidden="true">✨</span></>
+            ) : (
+              <><span aria-hidden="true">✨</span> You do limerick! <span aria-hidden="true">✨</span></>
+            )}
           </div>
         )}
 
         {/* button row */}
         <div className="limerick-button-row">
           {/* Save Button */}
+          {!isComplete && !saved && (
+            <span id="save-limerick-help" className="sr-only">
+              Complete all five lines with correct syllable counts to save
+            </span>
+          )}
           <button
             disabled={!isComplete || saved}
             className="save-limerick-btn"
+            aria-describedby={!isComplete && !saved ? "save-limerick-help" : undefined}
             onClick={() => {
               saveLimerick(lines);
               setSaved(true);
@@ -186,6 +236,7 @@ function LimerickApp() {
           {/* View Limericks/Hide Limericks button */}
           <button
             className="view-limericks-btn"
+            aria-expanded={showLimericks}
             onClick={() => {
               if (showLimericks) {
                 setShowLimericks(false);
@@ -220,6 +271,7 @@ function LimerickApp() {
         <div className="show-limerick-example-div">
           <button
             className="show-limerick-example-button"
+            aria-expanded={showExample}
             onClick={() => {
               if (showExample) {
                 setShowExample(false);
@@ -295,16 +347,16 @@ function LimerickApp() {
               ))
             )}
           </div>
-        ) : (
-          <div></div>
-        )}
-      </div>
+        ) : null}
+      </main>
       {showDownloadModal && (
         <div className="limerick-dialog-container">
           <div
             className="limerick-dialog"
             role="dialog"
+            aria-modal="true"
             aria-labelledby="dialogTitle"
+            ref={dialogRef}
           >
             <h2 id="dialogTitle">Confirm Download</h2>
             <div className="limerick-modal-button-row">

@@ -39,6 +39,11 @@ body {
   cursor: pointer;
 }
 
+.haiku-back:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
 .haiku-h1 {
   color: #667eea;
   margin-bottom: 10px;
@@ -180,6 +185,11 @@ body {
   cursor: pointer;
 }
 
+.show-haiku-example-button:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
 .example-haiku {
   margin-top: 30px;
   padding: 20px;
@@ -269,7 +279,7 @@ body {
 .cancel-haiku-button {
   padding: 5px 10px;
   margin: 10px 0 0 0;
-  color: aliceblue;
+  color: white;
   font-weight: 600;
   border-radius: 5px;
   background-color: rgba(245, 50, 89, 0.8);
@@ -315,4 +325,17 @@ body {
   display: flex;
   justify-content: center;
   gap: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .haiku-complete-message,
+  .example-haiku,
+  .savedHaikus,
+  .haiku-dialog-container {
+    animation: none;
+  }
+
+  .progress-fill {
+    transition: none;
+  }
 }

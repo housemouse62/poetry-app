@@ -1,5 +1,5 @@
 // HaikuApp.jsx
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import HaikuLine from "./HaikuLine";
 import { countSyllables } from "./syllableCounter";
 import "./HaikuApp.css";
@@ -32,6 +32,43 @@ function HaikuApp() {
     line3: 0,
   });
   const targetSyllables = [5, 7, 5];
+  const dialogRef = useRef(null);
+
+  useEffect(() => {
+    if (!showDownloadModal) return;
+    const dialog = dialogRef.current;
+    const focusable = dialog
+      ? Array.from(
+          dialog.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          ),
+        )
+      : [];
+    if (focusable.length) focusable[0].focus();
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        setShowDownloadModal(false);
+        return;
+      }
+      if (e.key === "Tab" && focusable.length) {
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showDownloadModal]);
 
   // Check if haiku is complete
   const isComplete =
@@ -84,7 +121,7 @@ function HaikuApp() {
 
   return (
     <div className="haiku-app">
-      <div className="haiku-container">
+      <main className="haiku-container">
         <aside>
           <button
             className="haiku-back"
@@ -96,7 +133,7 @@ function HaikuApp() {
           </button>
         </aside>
         <header>
-          <h1 className="haiku-h1">🌸 Do You Do Haiku? 🪷</h1>
+          <h1 className="haiku-h1"><span aria-hidden="true">🌸</span> Do You Do Haiku? <span aria-hidden="true">🪷</span></h1>
           <p className="haiku-subtitle">
             Write a haiku following the 5-7-5 syllable pattern
           </p>
@@ -116,7 +153,7 @@ function HaikuApp() {
           value={lines.line2}
           onChange={(value) => updateLine("line2", value)}
           onSyllableChange={(count) =>
-            setSyllableCounts((prev) => ({ ...prev, line1: count }))
+            setSyllableCounts((prev) => ({ ...prev, line2: count }))
           }
         />
         <HaikuLine
@@ -125,23 +162,36 @@ function HaikuApp() {
           value={lines.line3}
           onChange={(value) => updateLine("line3", value)}
           onSyllableChange={(count) =>
-            setSyllableCounts((prev) => ({ ...prev, line1: count }))
+            setSyllableCounts((prev) => ({ ...prev, line3: count }))
           }
         />
         {(isComplete || saved) && (
           <div
             className={`haiku-complete-message ${isFading ? "fade-out" : ""}`}
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
           >
-            {saved ? "✨ Saved! ✨" : "✨ You do haiku! ✨"}
+            {saved ? (
+              <><span aria-hidden="true">✨</span> Saved! <span aria-hidden="true">✨</span></>
+            ) : (
+              <><span aria-hidden="true">✨</span> You do haiku! <span aria-hidden="true">✨</span></>
+            )}
           </div>
         )}
 
         {/* button row */}
         <div className="haiku-button-row">
           {/* Save Button */}
+          {!isComplete && !saved && (
+            <span id="save-haiku-help" className="sr-only">
+              Complete all three lines with correct syllable counts to save
+            </span>
+          )}
           <button
             disabled={!isComplete || saved}
             className="save-haikus-btn"
+            aria-describedby={!isComplete && !saved ? "save-haiku-help" : undefined}
             onClick={() => {
               saveHaiku(lines);
               setSaved(true);
@@ -167,6 +217,7 @@ function HaikuApp() {
           {/* View Haikus/Hide Haikus button */}
           <button
             className="view-haikus-btn"
+            aria-expanded={showHaikus}
             onClick={() => {
               if (showHaikus) {
                 setShowHaikus(false);
@@ -199,6 +250,7 @@ function HaikuApp() {
         <div className="show-haiku-example-div">
           <button
             className="show-haiku-example-button"
+            aria-expanded={showExample}
             onClick={() => {
               if (showExample) {
                 setShowExample(false);
@@ -262,16 +314,16 @@ function HaikuApp() {
               ))
             )}
           </div>
-        ) : (
-          <div></div>
-        )}
-      </div>
+        ) : null}
+      </main>
       {showDownloadModal && (
         <div className="haiku-dialog-container">
           <div
             className="haiku-dialog"
             role="dialog"
+            aria-modal="true"
             aria-labelledby="dialogTitle"
+            ref={dialogRef}
           >
             <h2 id="dialogTitle">Confirm Download</h2>
             <div className="haiku-modal-button-row">

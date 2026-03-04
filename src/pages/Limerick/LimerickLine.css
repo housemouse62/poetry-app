@@ -39,9 +39,13 @@ header {
   transition: border-color 0.3s;
 }
 
-.limerick-input-row:focus {
+.limerick-line-input:focus {
   outline: none;
-  border-color: #667eea;
+}
+
+.limerick-line-input:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
 }
 
 .limerick-progress-bar {

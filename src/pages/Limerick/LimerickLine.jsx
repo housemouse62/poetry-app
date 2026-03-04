@@ -2,7 +2,7 @@
 import { countSyllables } from "./syllableCounter";
 import "./LimerickLine.css";
 
-function LimerickLine({ lineNumber, targetSyllables, value, onChange }) {
+function LimerickLine({ lineNumber, targetSyllables, value, onChange, ...rest }) {
   const currentSyllables = countSyllables(value);
 
   // Determine status for styling
@@ -33,8 +33,14 @@ function LimerickLine({ lineNumber, targetSyllables, value, onChange }) {
           placeholder={`Line ${lineNumber} (${numSyllables} syllables)`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          {...rest}
         />
-        <span className={`limerick-syllable-count ${status}`}>
+        <span
+          className={`limerick-syllable-count ${status}`}
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label={`${currentSyllables} syllables`}
+        >
           {currentSyllables}{" "}
         </span>
       </div>

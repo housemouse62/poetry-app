@@ -204,7 +204,7 @@ describe("Haiku Line Word Validation", () => {
     expect(useWordDataSpy).toHaveBeenCalledWith("cherry");
   });
 
-  it.skip("doesn't check the word when space bar not pressed", async () => {
+  it("doesn't check the word when space bar not pressed", async () => {
     // Spy on useWordData
     const useWordDataSpy = vi.spyOn(WordFind, "useWordData");
 
@@ -218,7 +218,7 @@ describe("Haiku Line Word Validation", () => {
     expect(useWordDataSpy).not.toHaveBeenCalledWith("cherry");
   });
 
-  it.skip("extracts multiple words correctly on space bar keydown", async () => {
+  it("extracts multiple words correctly on space bar keydown", async () => {
     // Spy on useWordData
     renderWithRouter(<HaikuApp />);
 
@@ -236,7 +236,7 @@ describe("Haiku Line Word Validation", () => {
     expect(useWordDataSpy).toHaveBeenCalledWith("blossom");
   });
 
-  it.skip("same word typed twice doesn't refetch", async () => {
+  it("same word typed twice doesn't refetch", async () => {
     renderWithRouter(<HaikuApp />);
 
     // const fetchSpy = vi.spyOn(globalThis, "fetch");

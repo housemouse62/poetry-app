@@ -72,6 +72,9 @@ function HaikuLine({
           data-testid="syllable-counter"
           data-confidence={confidence}
           className={`syllable-count ${confidence}`}
+          aria-live="polite"
+          aria-atomic="true"
+          aria-label={`${currentSyllables} of ${targetSyllables} syllables`}
         >
           {currentSyllables}/{targetSyllables}
         </span>
@@ -80,6 +83,7 @@ function HaikuLine({
       <textarea
         className={`line-input ${status}`}
         rows="1"
+        aria-label={`Line ${lineNumber}, ${targetSyllables} syllables`}
         placeholder={`Line ${lineNumber} (${targetSyllables} syllables)`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
