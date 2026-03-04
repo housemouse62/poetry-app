@@ -1,112 +1,183 @@
-Poetry App
-An accessible poetry composition tool built to explore the intersection of traditional poetic forms and modern assistive technology.
-Why This Exists
-Poetry is inherently multisensory - rhythm, sound, pattern - but most digital writing tools flatten these dimensions into plain text. This app treats accessibility not as compliance, but as an opportunity to enhance the poetic experience through alternative sensory channels.
+# Poetry App
+
+An accessible poetry composition tool built to explore the intersection of traditional poetic forms and modern web technology.
+
+---
+
+## Screenshots
+
+> _Add screenshots here_
+
+---
+
+## Why This Exists
+
+Poetry is inherently multisensory — rhythm, sound, pattern — but most digital writing tools flatten these dimensions into plain text. This app treats accessibility not as compliance, but as an opportunity to enhance the poetic experience through alternative sensory channels.
+
 Currently focused on haiku and limerick composition with real-time syllable counting and pattern validation. The long-term vision includes aural scansion (dynamic text-to-speech with metrical stress), haptic rhythm feedback for tactile meter awareness, and voice-to-meter dictation.
-Current Status
-Working:
 
-Haiku and limerick writers with real-time syllable counting
-Syllable validation using custom fallback algorithm + WordsAPI integration
-Smart caching layer (localStorage) to minimize API calls
-Poem persistence and viewing of saved work
-Keyboard navigation and screen reader support
+---
 
-In Development:
+## Features
 
-Database migration for permanent, cross-user word cache
-Enhanced ARIA patterns for rhyme scheme awareness
-API error handling and offline graceful degradation
+### Haiku (`/haiku`) — 5-7-5
+- Three-line editor enforcing the 5-7-5 syllable pattern
+- Real-time syllable counter and progress bar per line
+- Save, view, and delete haikus — persisted to `localStorage`
+- Download any saved haiku as a PNG image
 
-Planned:
+### Limerick (`/limerick`) — AABBA
+- Five-line editor with color-coded borders showing which lines rhyme
+- ARIA labels and screen-reader-only text describe the rhyme relationships
+- Same save / view / download / delete flow as haiku
 
-Expanding poetic forms progressively: Adding sonnets, villanelles, and pantoums as the syllable-counting and pattern-validation architecture proves stable
-SSML-based "aural scansion" engine (text-to-speech with dynamic metrical stress)
-Haptic rhythm feedback for tactile meter awareness on mobile devices
-Voice-to-meter composition with real-time syllable feedback
-User authentication and persistent poem ownership
-Social discovery features (following poets, curated feeds)
+### Syllable Counting
 
-Tech Stack
-Frontend: React 18, Vite, React Router
-Testing: Vitest, React Testing Library (84% coverage)
-API Integration: WordsAPI (syllable verification)
-Data Persistence: localStorage (transitioning to database)
-Accessibility: ARIA labels, semantic HTML, keyboard navigation
-Development Approach
-This project is built using Test-Driven Development from the ground up. Every component is tested before implementation, ensuring reliability and making refactoring safer as the architecture evolves.
-Accessibility is a first-class concern, not an afterthought. The app uses ARIA patterns where semantic HTML isn't sufficient, implements screen-reader-only instructions for complex interactions, and uses color coding with non-visual alternatives (e.g., rhyme scheme indicators in limericks).
-AI-assisted learning: I'm using Claude as a technical mentor throughout development - asking questions, exploring trade-offs, and debugging logic rather than generating code. This approach is slower but builds genuine understanding of React patterns, testing strategies, and accessibility best practices.
-Key Implementation Decisions
-Syllable Counting Architecture:
-English syllable counting is notoriously difficult for rule-based algorithms. The app uses a two-tier approach:
+English syllable counting is notoriously hard for rule-based algorithms. The app uses a two-tier system:
 
-Primary: WordsAPI for verified syllable counts
-Fallback: Custom algorithm for offline mode or API failures
-Caching layer: All API responses stored in localStorage (migrating to database for cross-user persistence)
+| Source | When used | Confidence indicator |
+|---|---|---|
+| [WordsAPI](https://www.wordsapi.com/) via RapidAPI | Fetched on spacebar press | Green — **verified** |
+| `countSyllables()` regex fallback | API unavailable or key missing | Yellow — **estimated** |
 
-This ensures the app remains functional even when the API is unavailable, while progressively improving accuracy as users encounter new words.
-Rhyme Scheme Visualization:
-Limericks use color-coding to indicate which lines should rhyme (AABBA pattern), but color alone isn't accessible. The implementation combines:
+Words are cached in `localStorage` after the first fetch, so the API is only called once per unique word across the session.
 
-Visual color indicators for sighted users
-ARIA labels describing the rhyme relationship for screen readers
-Screen-reader-only text explaining the expected pattern
+### Accessibility
 
-Running Locally
-Prerequisites:
+- ARIA live regions announce syllable counts as you type
+- Keyboard focus is trapped inside the download confirmation modal (Escape to dismiss, Tab cycles within)
+- Screen-reader-only text explains the AABBA rhyme scheme
+- Decorative emoji are hidden from assistive technology via `aria-hidden`
 
-Node.js (v18 or higher recommended)
-WordsAPI key (get one free at RapidAPI)
+---
 
-Setup:
-bash# Clone the repository
-git clone https://github.com/[your-username]/Poetry_App.git
-cd Poetry_App
+## Current Status
 
-# Install dependencies
+**Working:**
+- Haiku and limerick writers with real-time syllable counting
+- Two-tier syllable validation: WordsAPI + custom fallback algorithm
+- Smart caching layer (localStorage) to minimize API calls
+- Poem persistence, viewing, and deletion
+- Keyboard navigation and screen reader support
+- PNG export via html2canvas
 
+**In Development:**
+- Database migration for permanent, cross-user word cache
+- Enhanced ARIA patterns for rhyme scheme awareness
+- Improved offline graceful degradation
+
+**Planned:**
+- Additional poetic forms: sonnets, villanelles, pantoums
+- SSML-based "aural scansion" engine — text-to-speech with dynamic metrical stress
+- Haptic rhythm feedback for tactile meter awareness on mobile
+- Voice-to-meter composition with real-time syllable feedback
+- User authentication and persistent poem ownership
+- Social discovery (following poets, curated feeds)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, React Router |
+| Syllable API | WordsAPI via RapidAPI |
+| Image export | html2canvas |
+| Persistence | localStorage |
+| Testing | Vitest, React Testing Library |
+| Accessibility | ARIA labels, semantic HTML, keyboard navigation |
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- A [RapidAPI](https://rapidapi.com/) account with access to **WordsAPI** (free tier works)
+
+### Install
+
+```bash
 npm install
-
-# Create environment file
-
-# Add your WordsAPI key:
-
-# VITE_WORDSAPI_KEY=your_key_here
-
-cp .env.example .env
-
-# Start development server
-
-npm run dev
-The app will open at http://localhost:5173
-Testing
-bash# Run all tests
-npm test
-
-# Run tests in watch mode
-
-npm run test:watch
-
-# Generate coverage report
-
-npm run test:coverage
-
 ```
 
-**Current test coverage: 84%** with near-complete coverage of critical paths:
-- 100% coverage on data persistence (localStorage, caching)
-- 95% coverage on API integration (WordsAPI)
-- Comprehensive testing of user interactions, form validation, and accessibility features
+### Environment
+
+Create a `.env` file at the project root:
+
+```env
+VITE_WORDS_API_KEY=your_rapidapi_key_here
+```
+
+> The app works without a key — syllable counting falls back to the local estimator, shown with a yellow confidence indicator.
+
+### Run
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Testing
+
+```bash
+npm test               # run all tests
+npm run test:watch     # watch mode
+npm run coverage       # generate coverage report
+```
+
+Tests cover critical paths with a focus on:
+- 100% on data persistence (localStorage, caching)
+- ~95% on API integration and syllable counting logic
+- Component rendering, user interactions, and accessibility features
+
+---
 
 ## Project Structure
+
+```
+src/
+├── routes.jsx                   # Route definitions: /, /haiku, /limerick
+├── routes/root.jsx              # Dashboard component
+├── utils/
+│   └── wordCache.js             # localStorage cache helpers
+└── pages/
+    ├── HaikuApp/src/pages/
+    │   ├── HaikuApp.jsx         # Main haiku editor
+    │   ├── HaikuLine.jsx        # Per-line input, syllable counter, progress bar
+    │   ├── WordFind.js          # useWordData hook — API fetch + cache
+    │   ├── syllableCounter.js   # Regex-based fallback estimator
+    │   └── haikuStorage.js      # save / get / delete haikus
+    └── Limerick/
+        ├── LimerickApp.jsx      # Main limerick editor
+        ├── LimerickLine.jsx     # Per-line input with rhyme color coding
+        ├── syllableCounter.js   # Same estimator (local copy)
+        └── limericksStorage.js  # save / get / delete limericks
 ```
 
-Poetry_App/
-├── src/
-│ ├── components/ # React components
-│ ├── utils/ # Syllable counting, caching logic
-│ ├── hooks/ # Custom React hooks
-│ └── tests/ # Test files alongside components
-├── public/
-└── vite.config.js
+---
+
+## Development Approach
+
+**Test-driven development.** Every component is tested before or alongside implementation, keeping refactors safe as the architecture evolves.
+
+**Accessibility first.** ARIA patterns are used where semantic HTML isn't sufficient, with non-visual alternatives provided for all color-coded UI (e.g., rhyme scheme indicators have both color borders and `aria-label` descriptions).
+
+**AI-assisted learning.** Built with Claude as a technical mentor — asking questions, exploring trade-offs, and debugging logic rather than generating code. This approach is slower but builds genuine understanding of React patterns, testing strategies, and accessibility best practices.
+
+---
+
+## Known Limitations
+
+- **Diphthong detection:** `countSyllables()` can't distinguish a true diphthong (e.g. "coin") from adjacent vowels that span a syllable boundary (e.g. "co-in" in "coincidence"). Affected words get a slightly off fallback count. WordsAPI always returns the correct count.
+- **Rhyme checking:** The app guides line length but doesn't verify that AABBA lines actually rhyme — that part's on you.
+
+---
+
+## License
+
+MIT
