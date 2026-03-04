@@ -10,6 +10,7 @@ vi.mock("html2canvas", () => ({
   default: vi.fn(() =>
     Promise.resolve({
       toDataURL: () => "data:image/png;base64,mock",
+      toBlob: vi.fn((callback) => callback(new Blob())),
     }),
   ),
 }));
@@ -28,6 +29,12 @@ describe("App Component", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
+
+    // Mock fetch to return fallback-style responses
+    globalThis.fetch.mockResolvedValue({
+      ok: false,
+      status: 404,
+    });
   });
 
   it("save button appears when Limerick is complete", async () => {
@@ -68,7 +75,10 @@ describe("App Component", () => {
     await user.type(line4, `Four Larks and a Wren,`);
     await user.type(line5, `Have all built their nests in my beard!"`);
 
-    const wellDone = screen.getByText("✨ You do limerick! ✨");
+    const wellDone = screen.getByRole("heading", {
+      name: /You do limerick/i,
+      level: 1,
+    });
     expect(wellDone).toBeVisible;
   });
 

@@ -22,10 +22,22 @@ const localStorageMock = (() => {
   };
 })();
 
+// mock html2canvas
+vi.mock("html2canvas", () => ({
+  default: vi.fn(() =>
+    Promise.resolve({
+      toBlob: vi.fn((callback) => callback(new Blob())),
+    }),
+  ),
+}));
+
 globalThis.localStorage = localStorageMock;
+
+globalThis.fetch = vi.fn();
 
 beforeEach(() => {
   localStorage.clear();
+  globalThis.fetch.mockClear();
 });
 
 afterEach(() => {

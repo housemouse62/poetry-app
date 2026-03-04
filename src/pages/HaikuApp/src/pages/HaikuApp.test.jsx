@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { getAllHaikus } from "./haikuStorage";
 import userEvent from "@testing-library/user-event";
 import HaikuApp from "./HaikuApp";
@@ -10,6 +10,7 @@ vi.mock("html2canvas", () => ({
   default: vi.fn(() =>
     Promise.resolve({
       toDataURL: () => "data:image/png;base64,mock",
+      toBlob: vi.fn((callback) => callback(new Blob())),
     }),
   ),
 }));
@@ -23,6 +24,11 @@ describe("App Component", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
+    // Mock fetch to return fallback-style responses
+    globalThis.fetch.mockResolvedValue({
+      ok: false,
+      status: 404,
+    });
   });
 
   it("save button appears when haiku is complete", async () => {
@@ -53,7 +59,10 @@ describe("App Component", () => {
     await user.type(line2, "I hope you are feeling well");
     await user.type(line3, "I am waiting here");
 
-    const wellDone = screen.getByText(/✨ You do haiku! ✨/i);
+    const wellDone = screen.getByRole("heading", {
+      name: /You do haiku/i,
+      level: 1,
+    });
     expect(wellDone).toBeVisible;
   });
   it("saves a haiku to local storage when the save button is clicked", async () => {
@@ -277,6 +286,7 @@ describe("App Component", () => {
   it("confirm download modal pops up when user clicks download", async () => {
     const user = userEvent.setup();
     renderWithRouter(<HaikuApp />);
+
     // Type a complete haiku (5-7-5 syllables)
     const line1 = screen.getByPlaceholderText(/line 1/i);
     const line2 = screen.getByPlaceholderText(/line 2/i);
@@ -301,8 +311,10 @@ describe("App Component", () => {
     await user.click(downloadButton);
 
     // Confirm Download Modal Pops Up
-    const downloadModal = screen.getByRole("dialog");
-    expect(downloadModal).toBeVisible();
+    await waitFor(() => {
+      const downloadModal = screen.getByRole("dialog");
+      expect(downloadModal).toBeVisible();
+    });
   });
 
   it("confirm confirm button and cancel button render on modal dialog", async () => {

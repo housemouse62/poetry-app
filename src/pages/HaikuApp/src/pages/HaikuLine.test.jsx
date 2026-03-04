@@ -1,11 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
-import { saveWordToCache, getWordFromCache } from "../../../../utils/wordCache";
 import userEvent from "@testing-library/user-event";
 import * as WordFind from "./WordFind";
 import HaikuLine from "./HaikuLine";
 import HaikuApp from "./HaikuApp";
-import { useWordData } from "./WordFind";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { useState } from "react";
 
@@ -182,6 +180,11 @@ describe("Haiku Line Word Validation", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
+    // Mock fetch to return fallback-style responses
+    globalThis.fetch.mockResolvedValue({
+      ok: false,
+      status: 404,
+    });
   });
 
   beforeEach(() => {

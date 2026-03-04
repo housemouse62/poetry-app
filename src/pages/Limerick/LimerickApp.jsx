@@ -137,7 +137,10 @@ function LimerickApp() {
           </button>
         </aside>
         <header>
-          <h1 className="limerick-h1"><span aria-hidden="true">🎭</span> Let's Limerick! <span aria-hidden="true">🍀</span></h1>
+          <h1 className="limerick-h1">
+            <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
+            <span aria-hidden="true">🍀</span>
+          </h1>
           <p className="limerick-subtitle">
             Lines with matching borders rhyme together.
           </p>
@@ -190,9 +193,17 @@ function LimerickApp() {
             aria-atomic="true"
           >
             {saved ? (
-              <><span aria-hidden="true">✨</span> Saved! <span aria-hidden="true">✨</span></>
+              <>
+                <span aria-hidden="true">✨</span> Saved!{" "}
+                <span aria-hidden="true">✨</span>
+              </>
             ) : (
-              <><span aria-hidden="true">✨</span> You do limerick! <span aria-hidden="true">✨</span></>
+              <>
+                <h1 className="haiku-h1">
+                  <span aria-hidden="true">✨</span> You do limerick!{" "}
+                  <span aria-hidden="true">✨</span>
+                </h1>
+              </>
             )}
           </div>
         )}
@@ -208,7 +219,9 @@ function LimerickApp() {
           <button
             disabled={!isComplete || saved}
             className="save-limerick-btn"
-            aria-describedby={!isComplete && !saved ? "save-limerick-help" : undefined}
+            aria-describedby={
+              !isComplete && !saved ? "save-limerick-help" : undefined
+            }
             onClick={() => {
               saveLimerick(lines);
               setSaved(true);

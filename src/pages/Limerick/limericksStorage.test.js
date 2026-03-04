@@ -9,6 +9,12 @@ describe("limerickStorage", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
+
+    // Mock fetch to return fallback-style responses
+    globalThis.fetch.mockResolvedValue({
+      ok: false,
+      status: 404,
+    });
   });
 
   it("should save a limerick to localStorage", () => {

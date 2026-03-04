@@ -24,7 +24,10 @@ describe("Poetry-App", () => {
 
     render(<RouterProvider router={router} />);
 
-    const doyou = screen.getByText("🌸 Do You Do Haiku? 🪷");
+    const doyou = screen.getByRole("heading", {
+      name: /Do You Do Haiku/i,
+      level: 1,
+    });
     expect(doyou).toBeVisible();
   });
 
@@ -36,7 +39,10 @@ describe("Poetry-App", () => {
 
     render(<RouterProvider router={router} />);
 
-    const limerick = screen.getByText("🎭 Let's Limerick! 🍀");
+    const limerick = screen.getByRole("heading", {
+      name: /Let's Limerick/i,
+      level: 1,
+    });
     expect(limerick).toBeVisible();
   });
 
@@ -49,7 +55,10 @@ describe("Poetry-App", () => {
     const haikuLink = screen.getByRole("link", { name: /haiku/i });
     await user.click(haikuLink);
 
-    const doyou = screen.getByText("🌸 Do You Do Haiku? 🪷");
+    const doyou = screen.getByRole("heading", {
+      name: /Do You Do Haiku/i,
+      level: 1,
+    });
     expect(doyou).toBeVisible();
   });
 
@@ -62,7 +71,10 @@ describe("Poetry-App", () => {
     const limerickLink = screen.getByRole("link", { name: /limerick/i });
     await user.click(limerickLink);
 
-    const doyou = screen.getByText("🎭 Let's Limerick! 🍀");
+    const doyou = screen.getByRole("heading", {
+      name: /Let's Limerick!/i,
+      level: 1,
+    });
     expect(doyou).toBeVisible();
   });
 

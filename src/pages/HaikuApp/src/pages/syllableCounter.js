@@ -55,9 +55,15 @@ export function countSyllables(text) {
 
       if (word.endsWith("some") && syllables > 1) {
         syllables--;
-      }
-
-      if (word.endsWith("e") && syllables > 1) {
+        // Also correct for silent e in the root before "some" (e.g. "awesome", "tiresome")
+        const rootBeforeSome = word.slice(0, -4);
+        if (
+          rootBeforeSome.endsWith("e") &&
+          (rootBeforeSome.match(/[aeiouy]+/g) || []).length > 1
+        ) {
+          syllables--;
+        }
+      } else if (word.endsWith("e") && syllables > 1) {
         syllables--;
       }
 

@@ -5,6 +5,12 @@ describe("haikuStorage", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
+
+    // Mock fetch to return fallback-style responses
+    globalThis.fetch.mockResolvedValue({
+      ok: false,
+      status: 404,
+    });
   });
 
   it("should save a haiku to localStorage", () => {
