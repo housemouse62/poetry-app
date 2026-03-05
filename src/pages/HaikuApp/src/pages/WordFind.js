@@ -19,7 +19,6 @@ export const useWordData = (wordToFetch) => {
 
       // Check Cache for word
       const cached = getWordFromCache(wordToFetch);
-      console.log(cached);
       if (Object.keys(cached).length > 0) {
         setWordData(cached);
         setConfidence("verified");
@@ -43,33 +42,20 @@ export const useWordData = (wordToFetch) => {
             },
           },
         );
-        console.log(
-          "Fetch response for",
-          wordToFetch,
-          ":",
-          response.ok,
-          response.status,
-        );
+
         if (!response.ok) {
           throw new Error(`HTTP error: Status ${response.status}`);
         }
 
         const data = await response.json();
-        console.log("API data for", wordToFetch, ":", data);
         // Save to Cache
         saveWordToCache(wordToFetch, data);
         setWordData(data);
         setConfidence("verified");
       } catch (error) {
-        console.log("Fetch failed for", wordToFetch, "- using fallback");
         setError(error.message);
         const fallBackSyllables = countSyllables(wordToFetch);
-        console.log(
-          "Fallback syllables for",
-          wordToFetch,
-          ":",
-          fallBackSyllables,
-        );
+
         const fallbackData = {
           word: wordToFetch,
           syllables: { count: fallBackSyllables }, // from countSyllables

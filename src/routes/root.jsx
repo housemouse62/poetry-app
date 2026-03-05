@@ -4,7 +4,6 @@ import "./root.css";
 
 export default function Root() {
   const { wordData, loading, error } = useWordData("");
-  console.log(wordData);
   return (
     <>
       <div className="root-app">

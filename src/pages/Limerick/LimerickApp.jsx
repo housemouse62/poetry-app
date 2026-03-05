@@ -347,7 +347,6 @@ function LimerickApp() {
                       aria-label={`Delete limerick: ${h.line1}`}
                       className="delete-limerick-btn"
                       onClick={() => {
-                        console.log(h.id);
                         deleteLimerick(h.id);
                         const newSavedLimericks = getAllLimericks();
                         setSavedLimericks(newSavedLimericks);

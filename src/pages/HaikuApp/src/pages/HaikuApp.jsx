@@ -1,17 +1,13 @@
 // HaikuApp.jsx
 import { useState, useRef, useEffect } from "react";
 import HaikuLine from "./HaikuLine";
-import { countSyllables } from "./syllableCounter";
 import "./HaikuApp.css";
 import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
-import { useWordData } from "./WordFind";
 
 function HaikuApp() {
   const navigate = useNavigate();
-  const { wordData, loading, error } = useWordData(null);
-  if (wordData) console.log(wordData.syllables.count);
 
   const [lines, setLines] = useState({
     line1: "",
@@ -89,8 +85,6 @@ function HaikuApp() {
   const shareAsImage = async (haikuId) => {
     // Find the specific card element
     const cardElement = document.querySelector(`[data-haiku-id="${haikuId}"]`);
-    console.log(haikuId);
-    console.log(cardElement);
     if (!cardElement) return;
 
     // hide buttons before screenshot
@@ -111,7 +105,6 @@ function HaikuApp() {
     canvas.toBlob((blob) => {
       // Create download link
       const url = URL.createObjectURL(blob);
-      console.log(url);
       const link = document.createElement("a");
       link.download = "haiku.png";
       link.href = url;
@@ -133,7 +126,10 @@ function HaikuApp() {
           </button>
         </aside>
         <header>
-          <h1 className="haiku-h1"><span aria-hidden="true">🌸</span> Do You Do Haiku? <span aria-hidden="true">🪷</span></h1>
+          <h1 className="haiku-h1">
+            <span aria-hidden="true">🌸</span> Do You Do Haiku?{" "}
+            <span aria-hidden="true">🪷</span>
+          </h1>
           <p className="haiku-subtitle">
             Write a haiku following the 5-7-5 syllable pattern
           </p>
@@ -173,9 +169,15 @@ function HaikuApp() {
             aria-atomic="true"
           >
             {saved ? (
-              <><span aria-hidden="true">✨</span> Saved! <span aria-hidden="true">✨</span></>
+              <>
+                <span aria-hidden="true">✨</span> Saved!{" "}
+                <span aria-hidden="true">✨</span>
+              </>
             ) : (
-              <><span aria-hidden="true">✨</span> You do haiku! <span aria-hidden="true">✨</span></>
+              <>
+                <span aria-hidden="true">✨</span> You do haiku!{" "}
+                <span aria-hidden="true">✨</span>
+              </>
             )}
           </div>
         )}
@@ -191,7 +193,9 @@ function HaikuApp() {
           <button
             disabled={!isComplete || saved}
             className="save-haikus-btn"
-            aria-describedby={!isComplete && !saved ? "save-haiku-help" : undefined}
+            aria-describedby={
+              !isComplete && !saved ? "save-haiku-help" : undefined
+            }
             onClick={() => {
               saveHaiku(lines);
               setSaved(true);
@@ -301,7 +305,6 @@ function HaikuApp() {
                       aria-label={`Delete haiku: ${h.line1}`}
                       className="delete-haiku-btn"
                       onClick={() => {
-                        console.log(h.id);
                         deleteHaiku(h.id);
                         const newSavedHaikus = getAllHaikus();
                         setSavedHaikus(newSavedHaikus);

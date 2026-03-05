@@ -8,20 +8,17 @@ export function saveLimerick(limerick) {
     createdAt: new Date().toISOString(),
     ...limerick,
   };
-  console.log("saving", newLimerick);
   existing.push(newLimerick);
   //Save back to localStorage
   localStorage.setItem("limericks", JSON.stringify(existing));
 }
 
 export function deleteLimerick(id) {
-  console.log("delete", id);
   // Get existing limericks from localStorage
   let existing = getAllLimericks();
-  console.log("existing", existing);
+
   // Filter out Limerick with matching ID
   const newLimericks = existing.filter((h) => h.id !== id);
-  console.log("newLimericks", newLimericks);
   localStorage.setItem("limericks", JSON.stringify(newLimericks));
 }
 

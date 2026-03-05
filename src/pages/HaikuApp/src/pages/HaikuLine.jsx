@@ -20,10 +20,8 @@ function HaikuLine({
 
   const words = value.split(" ").filter((w) => w.length > 0);
 
-  console.log("words array", words);
   const currentSyllables = words.reduce((total, word) => {
     const cached = getWordFromCache(word);
-    console.log(`cache for "${word}":`, cached);
     return total + (cached?.syllables?.count || countSyllables(word));
   }, 0);
 
@@ -45,8 +43,6 @@ function HaikuLine({
   useEffect(() => {
     onSyllableChange?.(currentSyllables);
   }, [currentSyllables]);
-
-  console.log("total syllables:", currentSyllables);
 
   // Determine status for styling
   let status = "under";
