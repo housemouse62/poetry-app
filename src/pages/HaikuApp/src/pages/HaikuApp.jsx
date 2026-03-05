@@ -1,6 +1,7 @@
 // HaikuApp.jsx
 import { useState, useRef, useEffect } from "react";
 import HaikuLine from "./HaikuLine";
+import { countSyllables } from "../../../../utils/syllableCounter";
 import "./HaikuApp.css";
 import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
@@ -68,9 +69,9 @@ function HaikuApp() {
 
   // Check if haiku is complete
   const isComplete =
-    syllableCounts.line1 === 5 &&
-    syllableCounts.line2 === 7 &&
-    syllableCounts.line3 === 5;
+    countSyllables(lines.line1) === 5 &&
+    countSyllables(lines.line2) === 7 &&
+    countSyllables(lines.line3) === 5;
 
   const fieldsEmpty =
     lines.line1 === "" && lines.line2 === "" && lines.line3 === "";

@@ -1,5 +1,4 @@
 // HaikuLine.jsx
-// import { countSyllables } from "./syllableCounter";
 import { useState, useEffect } from "react";
 import { useWordData } from "./WordFind";
 import "./HaikuLine.css";
@@ -14,9 +13,8 @@ function HaikuLine({
   onSyllableChange,
 }) {
   const [currentWord, setCurrentWord] = useState(null);
-  // const [syllableCount, setSyllableCount] = useState(0);
 
-  const { wordData } = useWordData(currentWord);
+  useWordData(currentWord);
 
   const words = value.split(" ").filter((w) => w.length > 0);
 

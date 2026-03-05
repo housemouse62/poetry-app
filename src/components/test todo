@@ -1,0 +1,32 @@
+Based on the prop interface you designed and the behavior both existing components share:
+
+// lineNumber
+// targetSyllables
+// value
+// onChange
+// onSyllableChange
+// placeholderText
+// borderColor       (optional, generic default)
+// showTarget        (boolean, defaults false)
+
+Rendering
+
+Syllable counter starts at 0 with no input
+Renders the placeholder text passed via prop
+Renders count/target format when showTarget is true (e.g. 0/5)
+Renders just count format when showTarget is false/omitted (e.g. 0)
+Renders with a custom border color when borderColor is passed
+Renders with a default/generic style when borderColor is omitted
+Syllable counting
+7. Syllable count updates after typing a word and pressing spacebar
+8. Multiple words aggregate correctly
+9. Same word typed twice doesn't refetch from the API
+10. Spacebar not pressed — useWordData not called
+
+Confidence indicator
+11. neutral when no words typed
+12. estimated when at least one word came from fallback
+13. verified when all words came from the API
+
+Callbacks
+14. onSyllableChange is called with the correct count when syllables update

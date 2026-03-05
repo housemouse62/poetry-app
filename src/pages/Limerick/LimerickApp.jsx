@@ -29,6 +29,13 @@ function LimerickApp() {
   const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
   const [showExample, setShowExample] = useState(false);
+  const [syllableCounts, setSyllablesCounts] = useState({
+    line1: 0,
+    line2: 0,
+    line3: 0,
+    line4: 0,
+    line5: 0,
+  });
 
   const targetSyllables = [7, 7, 5, 5, 7];
   const dialogRef = useRef(null);
@@ -156,6 +163,9 @@ function LimerickApp() {
           targetSyllables={targetSyllables[0]}
           value={lines.line1}
           onChange={(value) => updateLine("line1", value)}
+          onSyllableChange={(count) =>
+            setSyllablesCounts((prev) => ({ ...prev, line1: count }))
+          }
         />
         <LimerickLine
           aria-label="Line 2, rhymes with lines 1 and 5"
@@ -163,6 +173,9 @@ function LimerickApp() {
           targetSyllables={targetSyllables[1]}
           value={lines.line2}
           onChange={(value) => updateLine("line2", value)}
+          onSyllableChange={(count) =>
+            setSyllablesCounts((prev) => ({ ...prev, line2: count }))
+          }
         />
         <LimerickLine
           aria-label="Line 3, rhymes with line 4"
@@ -170,6 +183,9 @@ function LimerickApp() {
           targetSyllables={targetSyllables[2]}
           value={lines.line3}
           onChange={(value) => updateLine("line3", value)}
+          onSyllableChange={(count) =>
+            setSyllablesCounts((prev) => ({ ...prev, line3: count }))
+          }
         />
         <LimerickLine
           aria-label="Line 4, rhymes with line 5"
@@ -177,6 +193,9 @@ function LimerickApp() {
           targetSyllables={targetSyllables[3]}
           value={lines.line4}
           onChange={(value) => updateLine("line4", value)}
+          onSyllableChange={(count) =>
+            setSyllablesCounts((prev) => ({ ...prev, line4: count }))
+          }
         />
         <LimerickLine
           aria-label="Line 5, rhymes with lines 1 and 2"
@@ -184,6 +203,9 @@ function LimerickApp() {
           targetSyllables={targetSyllables[4]}
           value={lines.line5}
           onChange={(value) => updateLine("line5", value)}
+          onSyllableChange={(count) =>
+            setSyllablesCounts((prev) => ({ ...prev, line5: count }))
+          }
         />
         {(isComplete || saved) && (
           <div
@@ -199,7 +221,7 @@ function LimerickApp() {
               </>
             ) : (
               <>
-                <h1 className="haiku-h1">
+                <h1 className="limerick-h1">
                   <span aria-hidden="true">✨</span> You do limerick!{" "}
                   <span aria-hidden="true">✨</span>
                 </h1>
