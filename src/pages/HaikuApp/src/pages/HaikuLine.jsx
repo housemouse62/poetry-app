@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useWordData } from "./WordFind";
 import "./HaikuLine.css";
 import { getWordFromCache } from "../../../../utils/wordCache";
-import { countSyllables } from "./syllableCounter";
+import { countSyllables } from "../../../../utils/syllableCounter";
 
 function HaikuLine({
   lineNumber,

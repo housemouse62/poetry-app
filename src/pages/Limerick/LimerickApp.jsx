@@ -1,7 +1,7 @@
 // LimerickApp.jsx
 import { useState, useRef, useEffect } from "react";
 import LimerickLine from "./LimerickLine";
-import { countSyllables } from "./syllableCounter";
+import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
 import {
   saveLimerick,

@@ -1,8 +1,14 @@
 // LimerickLine.jsx
-import { countSyllables } from "./syllableCounter";
+import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickLine.css";
 
-function LimerickLine({ lineNumber, targetSyllables, value, onChange, ...rest }) {
+function LimerickLine({
+  lineNumber,
+  targetSyllables,
+  value,
+  onChange,
+  ...rest
+}) {
   const currentSyllables = countSyllables(value);
 
   // Determine status for styling

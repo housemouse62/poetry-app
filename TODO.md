@@ -6,7 +6,7 @@ Goal: get this app shareable.
 
 ## Quick Wins
 
-- [ ] Remove all `console.log` calls (HaikuApp.jsx, HaikuLine.jsx, WordFind.js, haikuStorage.js, limericksStorage.js)
+- [x] Remove all `console.log` calls (HaikuApp.jsx, HaikuLine.jsx, WordFind.js, haikuStorage.js, limericksStorage.js)
 - [ ] Add a `.env.example` file documenting `VITE_WORDS_API_KEY`
 - [ ] Deduplicate `syllableCounter.js` — move one shared copy to `src/utils/`, delete the two page-level copies
 

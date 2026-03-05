@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWordFromCache, saveWordToCache } from "../../../../utils/wordCache";
-import { countSyllables } from "./syllableCounter";
+import { countSyllables } from "../../../../utils/syllableCounter";
 
 const apiKey = import.meta.env.VITE_WORDS_API_KEY;
 
