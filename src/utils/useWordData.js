@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { getWordFromCache, saveWordToCache } from "./wordCache";
 import { countSyllables } from "./syllableCounter";
 
-const apiKey = import.meta.env.VITE_WORDS_API_KEY;
-
 export const useWordData = (wordToFetch) => {
   const [wordData, setWordData] = useState(null);
   const [confidence, setConfidence] = useState(null);
@@ -28,19 +26,8 @@ export const useWordData = (wordToFetch) => {
 
       // Not cached? Fetch from API
       try {
-        if (!apiKey) {
-          throw new Error("API key missing");
-        }
-
         const response = await fetch(
-          `https://wordsapiv1.p.rapidapi.com/words/${wordToFetch}`,
-          {
-            method: "GET",
-            headers: {
-              "x-rapidapi-host": "wordsapiv1.p.rapidapi.com",
-              "x-rapidapi-key": apiKey,
-            },
-          },
+          `/.netlify/functions/wordApi?word=${wordToFetch}`,
         );
 
         if (!response.ok) {
