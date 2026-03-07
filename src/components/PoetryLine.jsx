@@ -46,8 +46,12 @@ function PoetryLine({
   // Parse targetSyllables — accepts a number or a range string like "7 - 10" or "5-8"
   const parseTarget = (t) => {
     if (typeof t === "number") return { min: t, max: t };
-    const parts = String(t).split(/\s*-\s*/).map(Number);
-    return parts.length === 2 ? { min: parts[0], max: parts[1] } : { min: parts[0], max: parts[0] };
+    const parts = String(t)
+      .split(/\s*-\s*/)
+      .map(Number);
+    return parts.length === 2
+      ? { min: parts[0], max: parts[1] }
+      : { min: parts[0], max: parts[0] };
   };
   const { min: minSyllables, max: maxSyllables } = parseTarget(targetSyllables);
 
@@ -80,9 +84,7 @@ function PoetryLine({
           : `${currentSyllables} syllables`
       }
     >
-      {showTarget
-        ? currentSyllables + "/" + targetSyllables
-        : currentSyllables}
+      {showTarget ? currentSyllables + "/" + targetSyllables : currentSyllables}
     </span>
   );
 
@@ -110,11 +112,7 @@ function PoetryLine({
 
   return (
     <div className="line-group">
-      {!borderColor && (
-        <div className="line-header">
-          {syllableCounter}
-        </div>
-      )}
+      {!borderColor && <div className="line-header">{syllableCounter}</div>}
 
       {borderColor ? (
         <div className={`input-row ${borderColor}`}>
