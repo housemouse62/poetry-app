@@ -5,7 +5,7 @@ import "./HaikuApp.css";
 import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
-import PoetryLine from "../../components/PoetryLine";
+import PoetryLine from "../../components/PoetryLine.jsx";
 
 function HaikuApp() {
   const navigate = useNavigate();
