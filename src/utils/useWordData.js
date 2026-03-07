@@ -26,6 +26,7 @@ export const useWordData = (wordToFetch) => {
 
       // Not cached? Fetch from API
       try {
+        console.log("Fetching word:", wordToFetch);
         const response = await fetch(
           `/.netlify/functions/wordsAPI?word=${wordToFetch}`,
         );
