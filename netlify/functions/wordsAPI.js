@@ -8,7 +8,7 @@ exports.handler = async (event) => {
     };
   }
 
-  const apiKey = process.env.VITE_WORDS_API_KEY;
+  const apiKey = process.env.WORDS_API_KEY;
 
   try {
     const response = await fetch(
