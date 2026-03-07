@@ -14,18 +14,22 @@ export default function Root() {
           <div className="poem-cards">
             <Link to="/haiku" className="link">
               <div className="poem-card haiku">
-                <span aria-hidden="true">🌸</span>
+                <span aria-hidden="true" className="card-symbol">
+                  🌸
+                </span>
                 <p className="card-title">haiku</p>
                 <p className="card-tagline">5 - 7 - 5</p>
-                <p className="saved-count">__ saved</p>
+                {/* <p className="saved-count">__ saved</p> */}
               </div>
             </Link>
             <Link to="/limerick" className="link">
               <div className="poem-card limerick">
-                <span aria-hidden="true">🍀</span>
+                <span aria-hidden="true" className="card-symbol">
+                  🍀
+                </span>
                 <p className="card-title">limerick</p>
                 <p className="card-tagline">playful rhymes</p>
-                <p className="saved-count">__ saved</p>
+                {/* <p className="saved-count">__ saved</p> */}
               </div>
             </Link>
           </div>

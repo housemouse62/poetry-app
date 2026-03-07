@@ -93,6 +93,9 @@ body {
   margin: 0;
 }
 
+.card-symbol {
+  font-size: 50px;
+}
 .card-title {
   font-size: 24px;
   font-weight: bold;
@@ -103,7 +106,7 @@ body {
 
 .card-tagline {
   color: #111827;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 400;
   font-style: italic;
 }

@@ -10,6 +10,11 @@
   margin-bottom: 8px;
 }
 
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 /* Haiku-style: syllable count badge above the textarea */
 .syllable-count {
   font-size: 0.9em;
