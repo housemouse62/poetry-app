@@ -1,6 +1,7 @@
 // LimerickApp.jsx
 import { useState, useRef, useEffect } from "react";
-import LimerickLine from "./LimerickLine";
+// import LimerickLine from "./LimerickLine";
+import PoetryLine from "../../components/PoetryLine";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
 import {
@@ -157,7 +158,7 @@ function LimerickApp() {
             (shown with orange borders).
           </p>
         </header>
-        <LimerickLine
+        <PoetryLine
           aria-label="Line 1, rhymes with lines 2 and 5"
           lineNumber={1}
           targetSyllables={targetSyllables[0]}
@@ -166,8 +167,11 @@ function LimerickApp() {
           onSyllableChange={(count) =>
             setSyllablesCounts((prev) => ({ ...prev, line1: count }))
           }
+          borderColor={"A"}
+          showTarget={false}
+          placeholderText={`Line 1 (${targetSyllables[0]} syllables)`}
         />
-        <LimerickLine
+        <PoetryLine
           aria-label="Line 2, rhymes with lines 1 and 5"
           lineNumber={2}
           targetSyllables={targetSyllables[1]}
@@ -176,8 +180,11 @@ function LimerickApp() {
           onSyllableChange={(count) =>
             setSyllablesCounts((prev) => ({ ...prev, line2: count }))
           }
+          borderColor={"A"}
+          showTarget={false}
+          placeholderText={`Line 2 (${targetSyllables[0]} syllables)`}
         />
-        <LimerickLine
+        <PoetryLine
           aria-label="Line 3, rhymes with line 4"
           lineNumber={3}
           targetSyllables={targetSyllables[2]}
@@ -186,8 +193,11 @@ function LimerickApp() {
           onSyllableChange={(count) =>
             setSyllablesCounts((prev) => ({ ...prev, line3: count }))
           }
+          borderColor={"B"}
+          showTarget={false}
+          placeholderText={`Line 3 (${targetSyllables[2]} syllables)`}
         />
-        <LimerickLine
+        <PoetryLine
           aria-label="Line 4, rhymes with line 5"
           lineNumber={4}
           targetSyllables={targetSyllables[3]}
@@ -196,8 +206,11 @@ function LimerickApp() {
           onSyllableChange={(count) =>
             setSyllablesCounts((prev) => ({ ...prev, line4: count }))
           }
+          borderColor={"B"}
+          showTarget={false}
+          placeholderText={`Line 4 (${targetSyllables[3]} syllables)`}
         />
-        <LimerickLine
+        <PoetryLine
           aria-label="Line 5, rhymes with lines 1 and 2"
           lineNumber={5}
           targetSyllables={targetSyllables[4]}
@@ -206,6 +219,9 @@ function LimerickApp() {
           onSyllableChange={(count) =>
             setSyllablesCounts((prev) => ({ ...prev, line5: count }))
           }
+          borderColor={"A"}
+          showTarget={false}
+          placeholderText={`Line 5 (${targetSyllables[4]} syllables)`}
         />
         {(isComplete || saved) && (
           <div
