@@ -43,65 +43,89 @@ function PoetryLine({
     onSyllableChange?.(currentSyllables);
   }, [currentSyllables]);
 
+  // Parse targetSyllables — accepts a number or a range string like "7 - 10" or "5-8"
+  const parseTarget = (t) => {
+    if (typeof t === "number") return { min: t, max: t };
+    const parts = String(t).split(/\s*-\s*/).map(Number);
+    return parts.length === 2 ? { min: parts[0], max: parts[1] } : { min: parts[0], max: parts[0] };
+  };
+  const { min: minSyllables, max: maxSyllables } = parseTarget(targetSyllables);
+
   // Determine status for styling
   let status = "under";
-  if (currentSyllables < targetSyllables) {
+  if (currentSyllables < minSyllables) {
     status = "under";
-  } else if (currentSyllables === targetSyllables) {
+  } else if (currentSyllables <= maxSyllables) {
     status = "correct";
-  } else if (currentSyllables > targetSyllables) {
+  } else {
     status = "over";
   }
 
-  // Calculate progress percentage
+  // Calculate progress percentage — fills to 100% at minSyllables
   const progressPercentage = Math.min(
-    (currentSyllables / targetSyllables) * 100,
+    (currentSyllables / minSyllables) * 100,
     100,
+  );
+
+  const syllableCounter = (
+    <span
+      data-testid="syllable-counter"
+      data-confidence={confidence}
+      className={`syllable-count ${confidence}`}
+      aria-live="polite"
+      aria-atomic="true"
+      aria-label={
+        showTarget
+          ? `${currentSyllables} of ${targetSyllables} syllables`
+          : `${currentSyllables} syllables`
+      }
+    >
+      {showTarget
+        ? currentSyllables + "/" + targetSyllables
+        : currentSyllables}
+    </span>
+  );
+
+  const textarea = (
+    <textarea
+      className={`line-input ${status}`}
+      rows="1"
+      aria-label={`Line ${lineNumber}, ${targetSyllables} syllables`}
+      placeholder={placeholderText}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      onKeyDown={(e) => {
+        if (e.key === " ") {
+          const words = value.split(" ").filter((word) => word.length > 0);
+          const lastWord = words[words.length - 1];
+
+          if (lastWord) {
+            const cleanWord = lastWord.trim();
+            setCurrentWord(cleanWord);
+          }
+        }
+      }}
+    />
   );
 
   return (
     <div className="line-group">
-      <div className="line-header">
-        <span className="line-label">Line {lineNumber}</span>
-        <span
-          data-testid="syllable-counter"
-          data-confidence={confidence}
-          className={`syllable-count ${confidence}`}
-          aria-live="polite"
-          aria-atomic="true"
-          aria-label={
-            showTarget
-              ? `${currentSyllables} of ${targetSyllables} syllables`
-              : `${currentSyllables} syllables`
-          }
-        >
-          {showTarget
-            ? currentSyllables + "/" + targetSyllables
-            : currentSyllables}
-        </span>
-      </div>
+      {!borderColor && (
+        <div className="line-header">
+          {syllableCounter}
+        </div>
+      )}
 
-      <textarea
-        className={`line-input ${status} ${borderColor}`}
-        rows="1"
-        aria-label={`Line ${lineNumber}, ${targetSyllables} syllables`}
-        placeholder={placeholderText}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === " ") {
-            const words = value.split(" ").filter((word) => word.length > 0);
-            const lastWord = words[words.length - 1];
+      {borderColor ? (
+        <div className={`input-row ${borderColor}`}>
+          {textarea}
+          {syllableCounter}
+        </div>
+      ) : (
+        textarea
+      )}
 
-            if (lastWord) {
-              const cleanWord = lastWord.trim();
-              setCurrentWord(cleanWord);
-            }
-          }
-        }}
-      />
-
-      <div className="progress-bar">
+      <div className="progress-bar" aria-hidden="true">
         <div
           className="progress-fill"
           style={{

@@ -38,8 +38,9 @@ function LimerickApp() {
     line5: 0,
   });
 
-  const targetSyllables = [7, 7, 5, 5, 7];
+  const targetSyllables = ["7 - 10", "7 - 10", "5-8", "5-8", "7 - 10"];
   const dialogRef = useRef(null);
+  const downloadTriggerRef = useRef(null);
 
   useEffect(() => {
     if (!showDownloadModal) return;
@@ -55,6 +56,7 @@ function LimerickApp() {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         setShowDownloadModal(false);
+        downloadTriggerRef.current?.focus();
         return;
       }
       if (e.key === "Tab" && focusable.length) {
@@ -134,16 +136,17 @@ function LimerickApp() {
   return (
     <div className="limerick-app">
       <main className="limerick-container">
-        <aside>
+        <nav aria-label="Page navigation">
           <button
             className="limerick-back"
+            aria-label="Back to dashboard"
             onClick={() => {
               navigate(-1);
             }}
           >
             dashboard
           </button>
-        </aside>
+        </nav>
         <header>
           <h1 className="limerick-h1">
             <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
@@ -182,7 +185,7 @@ function LimerickApp() {
           }
           borderColor={"A"}
           showTarget={false}
-          placeholderText={`Line 2 (${targetSyllables[0]} syllables)`}
+          placeholderText={`Line 2 (${targetSyllables[1]} syllables)`}
         />
         <PoetryLine
           aria-label="Line 3, rhymes with line 4"
@@ -374,7 +377,8 @@ function LimerickApp() {
                     <button
                       aria-label={`Download limerick: ${h.line1}`}
                       className="download-limerick-btn"
-                      onClick={() => {
+                      onClick={(e) => {
+                        downloadTriggerRef.current = e.currentTarget;
                         setShowDownloadModal(true);
                         setDownloadID(h.id);
                       }}
@@ -416,6 +420,7 @@ function LimerickApp() {
                   shareAsImage(downloadID);
                   setShowDownloadModal(false);
                   setDownloadID("");
+                  downloadTriggerRef.current?.focus();
                 }}
               >
                 Confirm
@@ -424,6 +429,7 @@ function LimerickApp() {
                 className="cancel-limerick-button"
                 onClick={() => {
                   setShowDownloadModal(false);
+                  downloadTriggerRef.current?.focus();
                 }}
               >
                 Cancel

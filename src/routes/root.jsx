@@ -3,7 +3,7 @@ import { useWordData } from "../utils/useWordData";
 import "./root.css";
 
 export default function Root() {
-  const { wordData, loading, error } = useWordData("");
+  useWordData("");
   return (
     <>
       <div className="root-app">
@@ -14,7 +14,7 @@ export default function Root() {
           <div className="poem-cards">
             <Link to="/haiku" className="link">
               <div className="poem-card haiku">
-                <h2 aria-hidden="true">🌸</h2>
+                <span aria-hidden="true">🌸</span>
                 <p className="card-title">haiku</p>
                 <p className="card-tagline">5 - 7 - 5</p>
                 <p className="saved-count">__ saved</p>
@@ -22,7 +22,7 @@ export default function Root() {
             </Link>
             <Link to="/limerick" className="link">
               <div className="poem-card limerick">
-                <h2 aria-hidden="true">🍀</h2>
+                <span aria-hidden="true">🍀</span>
                 <p className="card-title">limerick</p>
                 <p className="card-tagline">playful rhymes</p>
                 <p className="saved-count">__ saved</p>

@@ -96,20 +96,20 @@ body {
 .card-title {
   font-size: 24px;
   font-weight: bold;
-  color: white;
+  color: #111827;
   text-transform: capitalize;
   margin: 0;
 }
 
 .card-tagline {
-  color: #ffffff;
+  color: #111827;
   font-size: 14px;
   font-weight: 400;
   font-style: italic;
 }
 
 .saved-count {
-  color: #ffffff;
+  color: #111827;
   font-size: 12px;
   font-weight: 300;
 }

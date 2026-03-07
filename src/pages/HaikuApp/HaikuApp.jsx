@@ -30,6 +30,7 @@ function HaikuApp() {
   });
   const targetSyllables = [5, 7, 5];
   const dialogRef = useRef(null);
+  const downloadTriggerRef = useRef(null);
 
   useEffect(() => {
     if (!showDownloadModal) return;
@@ -45,6 +46,7 @@ function HaikuApp() {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         setShowDownloadModal(false);
+        downloadTriggerRef.current?.focus();
         return;
       }
       if (e.key === "Tab" && focusable.length) {
@@ -116,16 +118,17 @@ function HaikuApp() {
   return (
     <div className="haiku-app">
       <main className="haiku-container">
-        <aside>
+        <nav aria-label="Page navigation">
           <button
             className="haiku-back"
+            aria-label="Back to dashboard"
             onClick={() => {
               navigate(-1);
             }}
           >
             dashboard
           </button>
-        </aside>
+        </nav>
         <header>
           <h1 className="haiku-h1">
             <span aria-hidden="true">🌸</span> Do You Do Haiku?{" "}
@@ -301,7 +304,8 @@ function HaikuApp() {
                     <button
                       aria-label={`Download haiku: ${h.line1}`}
                       className="download-haiku-btn"
-                      onClick={() => {
+                      onClick={(e) => {
+                        downloadTriggerRef.current = e.currentTarget;
                         setShowDownloadModal(true);
                         setDownloadID(h.id);
                       }}
@@ -343,6 +347,7 @@ function HaikuApp() {
                   shareAsImage(downloadID);
                   setShowDownloadModal(false);
                   setDownloadID("");
+                  downloadTriggerRef.current?.focus();
                 }}
               >
                 Confirm
@@ -351,6 +356,7 @@ function HaikuApp() {
                 className="cancel-haiku-button"
                 onClick={() => {
                   setShowDownloadModal(false);
+                  downloadTriggerRef.current?.focus();
                 }}
               >
                 Cancel
