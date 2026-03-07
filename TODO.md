@@ -8,13 +8,13 @@ Goal: get this app shareable.
 
 - [x] Remove all `console.log` calls (HaikuApp.jsx, HaikuLine.jsx, WordFind.js, haikuStorage.js, limericksStorage.js)
 - [ ] Add a `.env.example` file documenting `VITE_WORDS_API_KEY`
-- [ ] Deduplicate `syllableCounter.js` — move one shared copy to `src/utils/`, delete the two page-level copies
+- [x] Deduplicate `syllableCounter.js` — move one shared copy to `src/utils/`, delete the two page-level copies
 
 ---
 
 ## Testing Gaps
 
-- [ ] Add tests for `src/pages/Limerick/syllableCounter.js` (resolves itself once deduplicated)
+- [x] Add tests for `src/pages/Limerick/syllableCounter.js` (resolves itself once deduplicated)
 - [ ] Add tests for `LimerickLine.jsx` (HaikuLine is tested, LimerickLine is not)
 - [ ] Extract the `confidence` calculation in `HaikuLine.jsx` to a pure function so it can be unit tested independently
 
@@ -31,7 +31,7 @@ Goal: get this app shareable.
 
 ## Biggest Unlock
 
-- [ ] Bring `useWordData` (API-backed syllable counting) to the Limerick editor — it currently uses only the `countSyllables` fallback; all the infrastructure already exists
+- [x] Bring `useWordData` (API-backed syllable counting) to the Limerick editor — it currently uses only the `countSyllables` fallback; all the infrastructure already exists
 
 ---
 

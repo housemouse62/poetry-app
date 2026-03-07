@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import * as WordFind from "./WordFind";
+import * as WordFind from "../../utils/useWordData";
 import HaikuLine from "./HaikuLine";
 import HaikuApp from "./HaikuApp";
 import { createMemoryRouter, RouterProvider } from "react-router";

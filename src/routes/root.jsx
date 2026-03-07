@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { useWordData } from "../pages/HaikuApp/src/pages/WordFind";
+import { useWordData } from "../utils/useWordData";
 import "./root.css";
 
 export default function Root() {

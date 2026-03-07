@@ -1,5 +1,5 @@
 import Root from "./routes/root";
-import HaikuApp from "./pages/HaikuApp/src/pages/HaikuApp";
+import HaikuApp from "./pages/HaikuApp/HaikuApp";
 import LimerickApp from "./pages/Limerick/LimerickApp";
 import ErrorPage from "./errorPage";
 

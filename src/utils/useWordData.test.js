@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useWordData } from "./WordFind";
-import { saveWordToCache, getWordFromCache } from "../../../../utils/wordCache";
+import { useWordData } from "./useWordData";
+import { saveWordToCache, getWordFromCache } from "./wordCache";
 import { renderHook, waitFor } from "@testing-library/react";
 
 describe("WordFind hook", () => {

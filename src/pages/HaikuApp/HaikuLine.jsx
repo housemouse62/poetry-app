@@ -1,9 +1,9 @@
 // HaikuLine.jsx
 import { useState, useEffect } from "react";
-import { useWordData } from "./WordFind";
+import { useWordData } from "../../utils/useWordData";
 import "./HaikuLine.css";
-import { getWordFromCache } from "../../../../utils/wordCache";
-import { countSyllables } from "../../../../utils/syllableCounter";
+import { getWordFromCache } from "../../utils/wordCache";
+import { countSyllables } from "../../utils/syllableCounter";
 
 function HaikuLine({
   lineNumber,

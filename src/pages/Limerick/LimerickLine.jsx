@@ -1,6 +1,6 @@
 // LimerickLine.jsx
 import { useState, useEffect } from "react";
-import { useWordData } from "../HaikuApp/src/pages/WordFind";
+import { useWordData } from "../../utils/useWordData";
 import "./LimerickLine.css";
 import { getWordFromCache } from "../../utils/wordCache";
 import { countSyllables } from "../../utils/syllableCounter";

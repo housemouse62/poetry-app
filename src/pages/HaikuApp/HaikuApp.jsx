@@ -1,7 +1,7 @@
 // HaikuApp.jsx
 import { useState, useRef, useEffect } from "react";
 import HaikuLine from "./HaikuLine";
-import { countSyllables } from "../../../../utils/syllableCounter";
+import { countSyllables } from "../../utils/syllableCounter";
 import "./HaikuApp.css";
 import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
