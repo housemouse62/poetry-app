@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useWordData } from "../utils/useWordData";
 import { getWordFromCache } from "../utils/wordCache";
 import { countSyllables } from "../utils/syllableCounter";
+import "./PoetryLine.css";
 
 function PoetryLine({
   lineNumber,

@@ -1,11 +1,11 @@
 // HaikuApp.jsx
 import { useState, useRef, useEffect } from "react";
-import HaikuLine from "./HaikuLine";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./HaikuApp.css";
 import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
+import PoetryLine from "../../components/PoetryLine";
 
 function HaikuApp() {
   const navigate = useNavigate();
@@ -135,7 +135,7 @@ function HaikuApp() {
             Write a haiku following the 5-7-5 syllable pattern
           </p>
         </header>
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={targetSyllables[0]}
           value={lines.line1}
@@ -143,8 +143,10 @@ function HaikuApp() {
           onSyllableChange={(count) =>
             setSyllableCounts((prev) => ({ ...prev, line1: count }))
           }
+          showTarget={true}
+          placeholderText={`Line 1 (${targetSyllables[0]} syllables)`}
         />
-        <HaikuLine
+        <PoetryLine
           lineNumber={2}
           targetSyllables={targetSyllables[1]}
           value={lines.line2}
@@ -152,8 +154,10 @@ function HaikuApp() {
           onSyllableChange={(count) =>
             setSyllableCounts((prev) => ({ ...prev, line2: count }))
           }
+          showTarget={true}
+          placeholderText={`Line 2 (${targetSyllables[1]} syllables)`}
         />
-        <HaikuLine
+        <PoetryLine
           lineNumber={3}
           targetSyllables={targetSyllables[2]}
           value={lines.line3}
@@ -161,6 +165,8 @@ function HaikuApp() {
           onSyllableChange={(count) =>
             setSyllableCounts((prev) => ({ ...prev, line3: count }))
           }
+          showTarget={true}
+          placeholderText={`Line 3 (${targetSyllables[2]} syllables)`}
         />
         {(isComplete || saved) && (
           <div
