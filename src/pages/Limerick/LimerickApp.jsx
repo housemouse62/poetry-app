@@ -1,6 +1,5 @@
 // LimerickApp.jsx
 import { useState, useRef, useEffect } from "react";
-// import LimerickLine from "./LimerickLine";
 import PoetryLine from "../../components/PoetryLine";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
@@ -345,13 +344,13 @@ function LimerickApp() {
             <div className="example-limerick-text">
               There was an Old Man in a tree, (8)
               <br />
-              Who was horribly bored by a bee. (8)
+              Who was horribly bored by a bee. (9)
               <br />
-              When they said, "Does it buzz?" (5)
+              When they said, "Does it buzz?" (6)
               <br />
-              He replied, "Yes, it does! (5)
+              He replied, "Yes, it does! (6)
               <br />
-              It's a regular brute of a bee!" (8)
+              It's a regular brute of a bee!" (9)
               <br />- Edward Lear
             </div>
           </div>
