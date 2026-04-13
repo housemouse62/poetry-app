@@ -6,7 +6,9 @@ An accessible poetry composition tool built to explore the intersection of tradi
 
 ## Screenshots
 
-> _Add screenshots here_
+![Make Poetry Screen 1](src/assets/make%20poetry%20screen%201.png)
+![Make Poetry Screen 2](src/assets/make%20poetry%20screen%202.png)
+![Make Poetry Screen 3](src/assets/make%20poetry%20screen%203.png)
 
 ---
 
