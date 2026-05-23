@@ -1,0 +1,126 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                Int     @id @default(autoincrement())
+  email             String  @unique
+  password          String
+  name              String?
+  screenname        String?
+  haikus            Haiku[]
+  limericks         Limerick[]
+  haikuComments     HaikuComment[]
+  limerickComments  LimerickComment[]
+  haikuReplies      HaikuReply[]
+  limerickReplies   LimerickReply[]
+}
+
+model Haiku {
+  id                  Int     @id @default(autoincrement())
+  title               String
+  lineOne             String
+  lineTwo             String
+  lineThree           String
+  lineOneSyllables    Int
+  lineTwoSyllables    Int
+  lineThreeSyllables  Int
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  author              User?      @relation(fields: [authorID], references: [id])
+  authorID            Int?
+  screenname          String?
+  published           Boolean   @default(false)
+  comments            HaikuComment[]
+}
+
+model Limerick {
+  id                  Int     @id @default(autoincrement())
+  title               String
+  lineOne             String
+  lineTwo             String
+  lineThree           String
+  lineFour            String
+  lineFive            String
+  lineOneSyllables    Int
+  lineTwoSyllables    Int
+  lineThreeSyllables  Int
+  lineFourSyllables   Int
+  lineFiveSyllables   Int
+  rhymeA              String?
+  rhymeB              String?
+  rhymeAVerified      Boolean   @default(false)
+  rhymeBVerified      Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  author              User?      @relation(fields: [authorID], references: [id])
+  authorID            Int?
+  screenname          String?
+  published           Boolean   @default(false)
+  comments            LimerickComment[]
+}
+
+model HaikuComment {
+  id          Int     @id @default(autoincrement())
+  commentbody String
+  author      User    @relation(fields: [authorID], references: [id])
+  authorID    Int
+  poem        Haiku    @relation(fields: [poemID], references: [id], onDelete: Cascade)
+  poemID      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  reply       HaikuReply[]
+}
+
+model LimerickComment {
+  id          Int     @id @default(autoincrement())
+  commentbody String
+  author      User    @relation(fields: [authorID], references: [id])
+  authorID    Int
+  poem        Limerick    @relation(fields: [poemID], references: [id], onDelete: Cascade)
+  poemID      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  reply       LimerickReply[]
+}
+
+model HaikuReply {
+  id          Int     @id @default(autoincrement())
+  replybody   String
+  author      User   @relation(fields: [authorID], references: [id])
+  authorID    Int
+  comment     HaikuComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model LimerickReply {
+  id          Int     @id @default(autoincrement())
+  replybody   String
+  author      User   @relation(fields: [authorID], references: [id])
+  authorID    Int
+  comment     LimerickComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Word {
+  id            Int     @id @default(autoincrement())
+  word          String  @unique
+  source        String
+  flagged       Boolean @default(false)
+  syllableCount Int
+  data          Json
+}
