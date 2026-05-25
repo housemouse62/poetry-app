@@ -12,12 +12,17 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Usertype {
+  user
+  admin
+}
 model User {
   id                Int     @id @default(autoincrement())
   email             String  @unique
   password          String
   name              String?
   screenname        String?
+  usertype          Usertype  @default(user)
   haikus            Haiku[]
   limericks         Limerick[]
   haikuComments     HaikuComment[]
