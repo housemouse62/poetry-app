@@ -31,4 +31,42 @@ wordRouter.post("/", verifyToken, async (req, res, next) => {
   }
 });
 
+wordRouter.get("/:word", verifyToken, async (req, res, next) => {
+  try {
+    const word = await prisma.word.findUnique({
+      where: { word: req.params.word },
+    });
+    if (!word) {
+      return res.status(404).json({ error: "Word doesn't exist in database" });
+    }
+    return res.status(200).json(word);
+  } catch (err) {
+    next(err);
+  }
+});
+
+wordRouter.patch("/:word/flag", verifyToken, async (req, res, next) => {
+  try {
+    const word = await prisma.word.findUnique({
+      where: { word: req.params.word },
+    });
+    if (!word) {
+      return res.status(404).json({ error: "Word doesn't exist in database" });
+    }
+    const newWord = await prisma.word.update({
+      where: { word: req.params.word },
+      data: { flagged: !word.flagged },
+    });
+
+    return res.status(200).json(newWord);
+  } catch (err) {
+    if (err.code === "P2025") {
+      return res.status(404).json({ error: "Word doesn't exist in database" });
+    }
+    {
+      next(err);
+    }
+  }
+});
+
 export default wordRouter;
