@@ -129,9 +129,6 @@ haikuRouter.patch("/:id", verifyToken, async (req, res, next) => {
     });
     return res.status(200).json(haiku);
   } catch (error) {
-    if (error.code === "P2025") {
-      return res.status(404).json({ error: "Haiku doesn't exist in database" });
-    }
     next(error);
   }
 });

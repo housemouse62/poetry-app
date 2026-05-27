@@ -40,6 +40,7 @@ export type UserMinAggregateOutputType = {
   password: string | null
   name: string | null
   screenname: string | null
+  usertype: $Enums.Usertype | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type UserMaxAggregateOutputType = {
   password: string | null
   name: string | null
   screenname: string | null
+  usertype: $Enums.Usertype | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -56,6 +58,7 @@ export type UserCountAggregateOutputType = {
   password: number
   name: number
   screenname: number
+  usertype: number
   _all: number
 }
 
@@ -74,6 +77,7 @@ export type UserMinAggregateInputType = {
   password?: true
   name?: true
   screenname?: true
+  usertype?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -82,6 +86,7 @@ export type UserMaxAggregateInputType = {
   password?: true
   name?: true
   screenname?: true
+  usertype?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -90,6 +95,7 @@ export type UserCountAggregateInputType = {
   password?: true
   name?: true
   screenname?: true
+  usertype?: true
   _all?: true
 }
 
@@ -185,6 +191,7 @@ export type UserGroupByOutputType = {
   password: string
   name: string | null
   screenname: string | null
+  usertype: $Enums.Usertype
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -216,6 +223,7 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   screenname?: Prisma.StringNullableFilter<"User"> | string | null
+  usertype?: Prisma.EnumUsertypeFilter<"User"> | $Enums.Usertype
   haikus?: Prisma.HaikuListRelationFilter
   limericks?: Prisma.LimerickListRelationFilter
   haikuComments?: Prisma.HaikuCommentListRelationFilter
@@ -230,6 +238,7 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   screenname?: Prisma.SortOrderInput | Prisma.SortOrder
+  usertype?: Prisma.SortOrder
   haikus?: Prisma.HaikuOrderByRelationAggregateInput
   limericks?: Prisma.LimerickOrderByRelationAggregateInput
   haikuComments?: Prisma.HaikuCommentOrderByRelationAggregateInput
@@ -247,6 +256,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   password?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   screenname?: Prisma.StringNullableFilter<"User"> | string | null
+  usertype?: Prisma.EnumUsertypeFilter<"User"> | $Enums.Usertype
   haikus?: Prisma.HaikuListRelationFilter
   limericks?: Prisma.LimerickListRelationFilter
   haikuComments?: Prisma.HaikuCommentListRelationFilter
@@ -261,6 +271,7 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   screenname?: Prisma.SortOrderInput | Prisma.SortOrder
+  usertype?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -277,6 +288,7 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   screenname?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  usertype?: Prisma.EnumUsertypeWithAggregatesFilter<"User"> | $Enums.Usertype
 }
 
 export type UserCreateInput = {
@@ -284,6 +296,7 @@ export type UserCreateInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
@@ -298,6 +311,7 @@ export type UserUncheckedCreateInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -311,6 +325,7 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
@@ -325,6 +340,7 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -339,6 +355,7 @@ export type UserCreateManyInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
 }
 
 export type UserUpdateManyMutationInput = {
@@ -346,6 +363,7 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -354,6 +372,7 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -362,6 +381,7 @@ export type UserCountOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   screenname?: Prisma.SortOrder
+  usertype?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -374,6 +394,7 @@ export type UserMaxOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   screenname?: Prisma.SortOrder
+  usertype?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -382,6 +403,7 @@ export type UserMinOrderByAggregateInput = {
   password?: Prisma.SortOrder
   name?: Prisma.SortOrder
   screenname?: Prisma.SortOrder
+  usertype?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -404,6 +426,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type EnumUsertypeFieldUpdateOperationsInput = {
+  set?: $Enums.Usertype
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -507,6 +533,7 @@ export type UserCreateWithoutHaikusInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
   limerickComments?: Prisma.LimerickCommentCreateNestedManyWithoutAuthorInput
@@ -520,6 +547,7 @@ export type UserUncheckedCreateWithoutHaikusInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
   limerickComments?: Prisma.LimerickCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -548,6 +576,7 @@ export type UserUpdateWithoutHaikusInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
   limerickComments?: Prisma.LimerickCommentUpdateManyWithoutAuthorNestedInput
@@ -561,6 +590,7 @@ export type UserUncheckedUpdateWithoutHaikusInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
   limerickComments?: Prisma.LimerickCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -573,6 +603,7 @@ export type UserCreateWithoutLimericksInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
   limerickComments?: Prisma.LimerickCommentCreateNestedManyWithoutAuthorInput
@@ -586,6 +617,7 @@ export type UserUncheckedCreateWithoutLimericksInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
   limerickComments?: Prisma.LimerickCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -614,6 +646,7 @@ export type UserUpdateWithoutLimericksInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
   limerickComments?: Prisma.LimerickCommentUpdateManyWithoutAuthorNestedInput
@@ -627,6 +660,7 @@ export type UserUncheckedUpdateWithoutLimericksInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
   limerickComments?: Prisma.LimerickCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -639,6 +673,7 @@ export type UserCreateWithoutHaikuCommentsInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
   limerickComments?: Prisma.LimerickCommentCreateNestedManyWithoutAuthorInput
@@ -652,6 +687,7 @@ export type UserUncheckedCreateWithoutHaikuCommentsInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
   limerickComments?: Prisma.LimerickCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -680,6 +716,7 @@ export type UserUpdateWithoutHaikuCommentsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
   limerickComments?: Prisma.LimerickCommentUpdateManyWithoutAuthorNestedInput
@@ -693,6 +730,7 @@ export type UserUncheckedUpdateWithoutHaikuCommentsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
   limerickComments?: Prisma.LimerickCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -705,6 +743,7 @@ export type UserCreateWithoutLimerickCommentsInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
@@ -718,6 +757,7 @@ export type UserUncheckedCreateWithoutLimerickCommentsInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -746,6 +786,7 @@ export type UserUpdateWithoutLimerickCommentsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
@@ -759,6 +800,7 @@ export type UserUncheckedUpdateWithoutLimerickCommentsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -771,6 +813,7 @@ export type UserCreateWithoutHaikuRepliesInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
@@ -784,6 +827,7 @@ export type UserUncheckedCreateWithoutHaikuRepliesInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -812,6 +856,7 @@ export type UserUpdateWithoutHaikuRepliesInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
@@ -825,6 +870,7 @@ export type UserUncheckedUpdateWithoutHaikuRepliesInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -837,6 +883,7 @@ export type UserCreateWithoutLimerickRepliesInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
@@ -850,6 +897,7 @@ export type UserUncheckedCreateWithoutLimerickRepliesInput = {
   password: string
   name?: string | null
   screenname?: string | null
+  usertype?: $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
   limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
   haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
@@ -878,6 +926,7 @@ export type UserUpdateWithoutLimerickRepliesInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
@@ -891,6 +940,7 @@ export type UserUncheckedUpdateWithoutLimerickRepliesInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
   haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
   limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
   haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
@@ -980,6 +1030,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   password?: boolean
   name?: boolean
   screenname?: boolean
+  usertype?: boolean
   haikus?: boolean | Prisma.User$haikusArgs<ExtArgs>
   limericks?: boolean | Prisma.User$limericksArgs<ExtArgs>
   haikuComments?: boolean | Prisma.User$haikuCommentsArgs<ExtArgs>
@@ -995,6 +1046,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   name?: boolean
   screenname?: boolean
+  usertype?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1003,6 +1055,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   password?: boolean
   name?: boolean
   screenname?: boolean
+  usertype?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1011,9 +1064,10 @@ export type UserSelectScalar = {
   password?: boolean
   name?: boolean
   screenname?: boolean
+  usertype?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "name" | "screenname", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "name" | "screenname" | "usertype", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   haikus?: boolean | Prisma.User$haikusArgs<ExtArgs>
   limericks?: boolean | Prisma.User$limericksArgs<ExtArgs>
@@ -1042,6 +1096,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     name: string | null
     screenname: string | null
+    usertype: $Enums.Usertype
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1476,6 +1531,7 @@ export interface UserFieldRefs {
   readonly password: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly screenname: Prisma.FieldRef<"User", 'String'>
+  readonly usertype: Prisma.FieldRef<"User", 'Usertype'>
 }
     
 

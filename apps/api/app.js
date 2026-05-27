@@ -4,6 +4,7 @@ import cors from "cors";
 import userRouter from "./src/user.js";
 import wordRouter from "./src/word.js";
 import haikuRouter from "./src/haiku.js";
+import limerickRouter from "./src/limerick.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/users", userRouter);
 app.use("/word", wordRouter);
 app.use("/haiku", haikuRouter);
+app.use("/limerick", limerickRouter);
 
 app.listen(process.env.PORT, () =>
   console.log(`Listening on port ${process.env.PORT}`),

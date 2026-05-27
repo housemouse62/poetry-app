@@ -62,6 +62,7 @@ userRouter.patch(
           email: true,
           name: true,
           screenname: true,
+          usertype: true,
         },
       });
       const tokenUser = {
@@ -69,6 +70,7 @@ userRouter.patch(
         email: newUser.email,
         name: newUser.name,
         screenname: newUser.screenname,
+        usertype: newUser.usertype,
       };
       jwt.sign(
         { tokenUser },
@@ -124,6 +126,7 @@ userRouter.post(
           email: true,
           name: true,
           screenname: true,
+          usertype: true,
         },
       });
       return res.status(201).json(user);
@@ -153,6 +156,7 @@ userRouter.post("/login", async (req, res, next) => {
       email: user.email,
       name: user.name,
       screenname: user.screenname,
+      usertype: user.usertype,
     };
     jwt.sign(
       { tokenUser },
