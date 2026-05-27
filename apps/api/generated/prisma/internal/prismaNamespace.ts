@@ -386,11 +386,17 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Haiku: 'Haiku',
+  HaikuLike: 'HaikuLike',
   Limerick: 'Limerick',
+  LimerickLike: 'LimerickLike',
   HaikuComment: 'HaikuComment',
+  HaikuCommentLike: 'HaikuCommentLike',
   LimerickComment: 'LimerickComment',
+  LimerickCommentLike: 'LimerickCommentLike',
   HaikuReply: 'HaikuReply',
+  HaikuReplyLike: 'HaikuReplyLike',
   LimerickReply: 'LimerickReply',
+  LimerickReplyLike: 'LimerickReplyLike',
   Word: 'Word'
 } as const
 
@@ -407,7 +413,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "haiku" | "limerick" | "haikuComment" | "limerickComment" | "haikuReply" | "limerickReply" | "word"
+    modelProps: "user" | "haiku" | "haikuLike" | "limerick" | "limerickLike" | "haikuComment" | "haikuCommentLike" | "limerickComment" | "limerickCommentLike" | "haikuReply" | "haikuReplyLike" | "limerickReply" | "limerickReplyLike" | "word"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -559,6 +565,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HaikuLike: {
+      payload: Prisma.$HaikuLikePayload<ExtArgs>
+      fields: Prisma.HaikuLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HaikuLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HaikuLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>
+        }
+        findFirst: {
+          args: Prisma.HaikuLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HaikuLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>
+        }
+        findMany: {
+          args: Prisma.HaikuLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>[]
+        }
+        create: {
+          args: Prisma.HaikuLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>
+        }
+        createMany: {
+          args: Prisma.HaikuLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HaikuLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>[]
+        }
+        delete: {
+          args: Prisma.HaikuLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>
+        }
+        update: {
+          args: Prisma.HaikuLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.HaikuLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HaikuLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HaikuLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.HaikuLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuLikePayload>
+        }
+        aggregate: {
+          args: Prisma.HaikuLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHaikuLike>
+        }
+        groupBy: {
+          args: Prisma.HaikuLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaikuLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HaikuLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaikuLikeCountAggregateOutputType> | number
+        }
+      }
+    }
     Limerick: {
       payload: Prisma.$LimerickPayload<ExtArgs>
       fields: Prisma.LimerickFieldRefs
@@ -630,6 +710,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LimerickCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LimerickCountAggregateOutputType> | number
+        }
+      }
+    }
+    LimerickLike: {
+      payload: Prisma.$LimerickLikePayload<ExtArgs>
+      fields: Prisma.LimerickLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LimerickLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LimerickLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>
+        }
+        findFirst: {
+          args: Prisma.LimerickLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LimerickLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>
+        }
+        findMany: {
+          args: Prisma.LimerickLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>[]
+        }
+        create: {
+          args: Prisma.LimerickLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>
+        }
+        createMany: {
+          args: Prisma.LimerickLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LimerickLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>[]
+        }
+        delete: {
+          args: Prisma.LimerickLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>
+        }
+        update: {
+          args: Prisma.LimerickLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.LimerickLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LimerickLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LimerickLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.LimerickLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickLikePayload>
+        }
+        aggregate: {
+          args: Prisma.LimerickLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLimerickLike>
+        }
+        groupBy: {
+          args: Prisma.LimerickLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LimerickLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LimerickLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LimerickLikeCountAggregateOutputType> | number
         }
       }
     }
@@ -707,6 +861,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HaikuCommentLike: {
+      payload: Prisma.$HaikuCommentLikePayload<ExtArgs>
+      fields: Prisma.HaikuCommentLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HaikuCommentLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HaikuCommentLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>
+        }
+        findFirst: {
+          args: Prisma.HaikuCommentLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HaikuCommentLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>
+        }
+        findMany: {
+          args: Prisma.HaikuCommentLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>[]
+        }
+        create: {
+          args: Prisma.HaikuCommentLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>
+        }
+        createMany: {
+          args: Prisma.HaikuCommentLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HaikuCommentLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>[]
+        }
+        delete: {
+          args: Prisma.HaikuCommentLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>
+        }
+        update: {
+          args: Prisma.HaikuCommentLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.HaikuCommentLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HaikuCommentLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HaikuCommentLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.HaikuCommentLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuCommentLikePayload>
+        }
+        aggregate: {
+          args: Prisma.HaikuCommentLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHaikuCommentLike>
+        }
+        groupBy: {
+          args: Prisma.HaikuCommentLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaikuCommentLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HaikuCommentLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaikuCommentLikeCountAggregateOutputType> | number
+        }
+      }
+    }
     LimerickComment: {
       payload: Prisma.$LimerickCommentPayload<ExtArgs>
       fields: Prisma.LimerickCommentFieldRefs
@@ -778,6 +1006,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LimerickCommentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LimerickCommentCountAggregateOutputType> | number
+        }
+      }
+    }
+    LimerickCommentLike: {
+      payload: Prisma.$LimerickCommentLikePayload<ExtArgs>
+      fields: Prisma.LimerickCommentLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LimerickCommentLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LimerickCommentLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>
+        }
+        findFirst: {
+          args: Prisma.LimerickCommentLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LimerickCommentLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>
+        }
+        findMany: {
+          args: Prisma.LimerickCommentLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>[]
+        }
+        create: {
+          args: Prisma.LimerickCommentLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>
+        }
+        createMany: {
+          args: Prisma.LimerickCommentLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LimerickCommentLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>[]
+        }
+        delete: {
+          args: Prisma.LimerickCommentLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>
+        }
+        update: {
+          args: Prisma.LimerickCommentLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.LimerickCommentLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LimerickCommentLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LimerickCommentLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.LimerickCommentLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickCommentLikePayload>
+        }
+        aggregate: {
+          args: Prisma.LimerickCommentLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLimerickCommentLike>
+        }
+        groupBy: {
+          args: Prisma.LimerickCommentLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LimerickCommentLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LimerickCommentLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LimerickCommentLikeCountAggregateOutputType> | number
         }
       }
     }
@@ -855,6 +1157,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HaikuReplyLike: {
+      payload: Prisma.$HaikuReplyLikePayload<ExtArgs>
+      fields: Prisma.HaikuReplyLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HaikuReplyLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HaikuReplyLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>
+        }
+        findFirst: {
+          args: Prisma.HaikuReplyLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HaikuReplyLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>
+        }
+        findMany: {
+          args: Prisma.HaikuReplyLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>[]
+        }
+        create: {
+          args: Prisma.HaikuReplyLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>
+        }
+        createMany: {
+          args: Prisma.HaikuReplyLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HaikuReplyLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>[]
+        }
+        delete: {
+          args: Prisma.HaikuReplyLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>
+        }
+        update: {
+          args: Prisma.HaikuReplyLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.HaikuReplyLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HaikuReplyLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HaikuReplyLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.HaikuReplyLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HaikuReplyLikePayload>
+        }
+        aggregate: {
+          args: Prisma.HaikuReplyLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHaikuReplyLike>
+        }
+        groupBy: {
+          args: Prisma.HaikuReplyLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaikuReplyLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HaikuReplyLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HaikuReplyLikeCountAggregateOutputType> | number
+        }
+      }
+    }
     LimerickReply: {
       payload: Prisma.$LimerickReplyPayload<ExtArgs>
       fields: Prisma.LimerickReplyFieldRefs
@@ -926,6 +1302,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.LimerickReplyCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.LimerickReplyCountAggregateOutputType> | number
+        }
+      }
+    }
+    LimerickReplyLike: {
+      payload: Prisma.$LimerickReplyLikePayload<ExtArgs>
+      fields: Prisma.LimerickReplyLikeFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LimerickReplyLikeFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LimerickReplyLikeFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>
+        }
+        findFirst: {
+          args: Prisma.LimerickReplyLikeFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LimerickReplyLikeFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>
+        }
+        findMany: {
+          args: Prisma.LimerickReplyLikeFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>[]
+        }
+        create: {
+          args: Prisma.LimerickReplyLikeCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>
+        }
+        createMany: {
+          args: Prisma.LimerickReplyLikeCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LimerickReplyLikeCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>[]
+        }
+        delete: {
+          args: Prisma.LimerickReplyLikeDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>
+        }
+        update: {
+          args: Prisma.LimerickReplyLikeUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>
+        }
+        deleteMany: {
+          args: Prisma.LimerickReplyLikeDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LimerickReplyLikeUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LimerickReplyLikeUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>[]
+        }
+        upsert: {
+          args: Prisma.LimerickReplyLikeUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LimerickReplyLikePayload>
+        }
+        aggregate: {
+          args: Prisma.LimerickReplyLikeAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLimerickReplyLike>
+        }
+        groupBy: {
+          args: Prisma.LimerickReplyLikeGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LimerickReplyLikeGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LimerickReplyLikeCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LimerickReplyLikeCountAggregateOutputType> | number
         }
       }
     }
@@ -1073,6 +1523,15 @@ export const HaikuScalarFieldEnum = {
 export type HaikuScalarFieldEnum = (typeof HaikuScalarFieldEnum)[keyof typeof HaikuScalarFieldEnum]
 
 
+export const HaikuLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  haikuID: 'haikuID'
+} as const
+
+export type HaikuLikeScalarFieldEnum = (typeof HaikuLikeScalarFieldEnum)[keyof typeof HaikuLikeScalarFieldEnum]
+
+
 export const LimerickScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -1100,6 +1559,15 @@ export const LimerickScalarFieldEnum = {
 export type LimerickScalarFieldEnum = (typeof LimerickScalarFieldEnum)[keyof typeof LimerickScalarFieldEnum]
 
 
+export const LimerickLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  limerickID: 'limerickID'
+} as const
+
+export type LimerickLikeScalarFieldEnum = (typeof LimerickLikeScalarFieldEnum)[keyof typeof LimerickLikeScalarFieldEnum]
+
+
 export const HaikuCommentScalarFieldEnum = {
   id: 'id',
   commentbody: 'commentbody',
@@ -1110,6 +1578,15 @@ export const HaikuCommentScalarFieldEnum = {
 } as const
 
 export type HaikuCommentScalarFieldEnum = (typeof HaikuCommentScalarFieldEnum)[keyof typeof HaikuCommentScalarFieldEnum]
+
+
+export const HaikuCommentLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  commentID: 'commentID'
+} as const
+
+export type HaikuCommentLikeScalarFieldEnum = (typeof HaikuCommentLikeScalarFieldEnum)[keyof typeof HaikuCommentLikeScalarFieldEnum]
 
 
 export const LimerickCommentScalarFieldEnum = {
@@ -1124,6 +1601,15 @@ export const LimerickCommentScalarFieldEnum = {
 export type LimerickCommentScalarFieldEnum = (typeof LimerickCommentScalarFieldEnum)[keyof typeof LimerickCommentScalarFieldEnum]
 
 
+export const LimerickCommentLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  commentID: 'commentID'
+} as const
+
+export type LimerickCommentLikeScalarFieldEnum = (typeof LimerickCommentLikeScalarFieldEnum)[keyof typeof LimerickCommentLikeScalarFieldEnum]
+
+
 export const HaikuReplyScalarFieldEnum = {
   id: 'id',
   replybody: 'replybody',
@@ -1136,6 +1622,15 @@ export const HaikuReplyScalarFieldEnum = {
 export type HaikuReplyScalarFieldEnum = (typeof HaikuReplyScalarFieldEnum)[keyof typeof HaikuReplyScalarFieldEnum]
 
 
+export const HaikuReplyLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  replyID: 'replyID'
+} as const
+
+export type HaikuReplyLikeScalarFieldEnum = (typeof HaikuReplyLikeScalarFieldEnum)[keyof typeof HaikuReplyLikeScalarFieldEnum]
+
+
 export const LimerickReplyScalarFieldEnum = {
   id: 'id',
   replybody: 'replybody',
@@ -1146,6 +1641,15 @@ export const LimerickReplyScalarFieldEnum = {
 } as const
 
 export type LimerickReplyScalarFieldEnum = (typeof LimerickReplyScalarFieldEnum)[keyof typeof LimerickReplyScalarFieldEnum]
+
+
+export const LimerickReplyLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  replyID: 'replyID'
+} as const
+
+export type LimerickReplyLikeScalarFieldEnum = (typeof LimerickReplyLikeScalarFieldEnum)[keyof typeof LimerickReplyLikeScalarFieldEnum]
 
 
 export const WordScalarFieldEnum = {
@@ -1408,11 +1912,17 @@ export type PrismaClientOptions = ({
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   haiku?: Prisma.HaikuOmit
+  haikuLike?: Prisma.HaikuLikeOmit
   limerick?: Prisma.LimerickOmit
+  limerickLike?: Prisma.LimerickLikeOmit
   haikuComment?: Prisma.HaikuCommentOmit
+  haikuCommentLike?: Prisma.HaikuCommentLikeOmit
   limerickComment?: Prisma.LimerickCommentOmit
+  limerickCommentLike?: Prisma.LimerickCommentLikeOmit
   haikuReply?: Prisma.HaikuReplyOmit
+  haikuReplyLike?: Prisma.HaikuReplyLikeOmit
   limerickReply?: Prisma.LimerickReplyOmit
+  limerickReplyLike?: Prisma.LimerickReplyLikeOmit
   word?: Prisma.WordOmit
 }
 

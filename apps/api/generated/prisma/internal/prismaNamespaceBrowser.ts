@@ -53,11 +53,17 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Haiku: 'Haiku',
+  HaikuLike: 'HaikuLike',
   Limerick: 'Limerick',
+  LimerickLike: 'LimerickLike',
   HaikuComment: 'HaikuComment',
+  HaikuCommentLike: 'HaikuCommentLike',
   LimerickComment: 'LimerickComment',
+  LimerickCommentLike: 'LimerickCommentLike',
   HaikuReply: 'HaikuReply',
+  HaikuReplyLike: 'HaikuReplyLike',
   LimerickReply: 'LimerickReply',
+  LimerickReplyLike: 'LimerickReplyLike',
   Word: 'Word'
 } as const
 
@@ -108,6 +114,15 @@ export const HaikuScalarFieldEnum = {
 export type HaikuScalarFieldEnum = (typeof HaikuScalarFieldEnum)[keyof typeof HaikuScalarFieldEnum]
 
 
+export const HaikuLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  haikuID: 'haikuID'
+} as const
+
+export type HaikuLikeScalarFieldEnum = (typeof HaikuLikeScalarFieldEnum)[keyof typeof HaikuLikeScalarFieldEnum]
+
+
 export const LimerickScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -135,6 +150,15 @@ export const LimerickScalarFieldEnum = {
 export type LimerickScalarFieldEnum = (typeof LimerickScalarFieldEnum)[keyof typeof LimerickScalarFieldEnum]
 
 
+export const LimerickLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  limerickID: 'limerickID'
+} as const
+
+export type LimerickLikeScalarFieldEnum = (typeof LimerickLikeScalarFieldEnum)[keyof typeof LimerickLikeScalarFieldEnum]
+
+
 export const HaikuCommentScalarFieldEnum = {
   id: 'id',
   commentbody: 'commentbody',
@@ -145,6 +169,15 @@ export const HaikuCommentScalarFieldEnum = {
 } as const
 
 export type HaikuCommentScalarFieldEnum = (typeof HaikuCommentScalarFieldEnum)[keyof typeof HaikuCommentScalarFieldEnum]
+
+
+export const HaikuCommentLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  commentID: 'commentID'
+} as const
+
+export type HaikuCommentLikeScalarFieldEnum = (typeof HaikuCommentLikeScalarFieldEnum)[keyof typeof HaikuCommentLikeScalarFieldEnum]
 
 
 export const LimerickCommentScalarFieldEnum = {
@@ -159,6 +192,15 @@ export const LimerickCommentScalarFieldEnum = {
 export type LimerickCommentScalarFieldEnum = (typeof LimerickCommentScalarFieldEnum)[keyof typeof LimerickCommentScalarFieldEnum]
 
 
+export const LimerickCommentLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  commentID: 'commentID'
+} as const
+
+export type LimerickCommentLikeScalarFieldEnum = (typeof LimerickCommentLikeScalarFieldEnum)[keyof typeof LimerickCommentLikeScalarFieldEnum]
+
+
 export const HaikuReplyScalarFieldEnum = {
   id: 'id',
   replybody: 'replybody',
@@ -171,6 +213,15 @@ export const HaikuReplyScalarFieldEnum = {
 export type HaikuReplyScalarFieldEnum = (typeof HaikuReplyScalarFieldEnum)[keyof typeof HaikuReplyScalarFieldEnum]
 
 
+export const HaikuReplyLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  replyID: 'replyID'
+} as const
+
+export type HaikuReplyLikeScalarFieldEnum = (typeof HaikuReplyLikeScalarFieldEnum)[keyof typeof HaikuReplyLikeScalarFieldEnum]
+
+
 export const LimerickReplyScalarFieldEnum = {
   id: 'id',
   replybody: 'replybody',
@@ -181,6 +232,15 @@ export const LimerickReplyScalarFieldEnum = {
 } as const
 
 export type LimerickReplyScalarFieldEnum = (typeof LimerickReplyScalarFieldEnum)[keyof typeof LimerickReplyScalarFieldEnum]
+
+
+export const LimerickReplyLikeScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  replyID: 'replyID'
+} as const
+
+export type LimerickReplyLikeScalarFieldEnum = (typeof LimerickReplyLikeScalarFieldEnum)[keyof typeof LimerickReplyLikeScalarFieldEnum]
 
 
 export const WordScalarFieldEnum = {

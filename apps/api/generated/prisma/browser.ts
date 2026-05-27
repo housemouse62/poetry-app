@@ -28,30 +28,60 @@ export type User = Prisma.UserModel
  */
 export type Haiku = Prisma.HaikuModel
 /**
+ * Model HaikuLike
+ * 
+ */
+export type HaikuLike = Prisma.HaikuLikeModel
+/**
  * Model Limerick
  * 
  */
 export type Limerick = Prisma.LimerickModel
+/**
+ * Model LimerickLike
+ * 
+ */
+export type LimerickLike = Prisma.LimerickLikeModel
 /**
  * Model HaikuComment
  * 
  */
 export type HaikuComment = Prisma.HaikuCommentModel
 /**
+ * Model HaikuCommentLike
+ * 
+ */
+export type HaikuCommentLike = Prisma.HaikuCommentLikeModel
+/**
  * Model LimerickComment
  * 
  */
 export type LimerickComment = Prisma.LimerickCommentModel
+/**
+ * Model LimerickCommentLike
+ * 
+ */
+export type LimerickCommentLike = Prisma.LimerickCommentLikeModel
 /**
  * Model HaikuReply
  * 
  */
 export type HaikuReply = Prisma.HaikuReplyModel
 /**
+ * Model HaikuReplyLike
+ * 
+ */
+export type HaikuReplyLike = Prisma.HaikuReplyLikeModel
+/**
  * Model LimerickReply
  * 
  */
 export type LimerickReply = Prisma.LimerickReplyModel
+/**
+ * Model LimerickReplyLike
+ * 
+ */
+export type LimerickReplyLike = Prisma.LimerickReplyLikeModel
 /**
  * Model Word
  * 

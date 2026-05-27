@@ -234,6 +234,7 @@ export type LimerickReplyWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"LimerickReply"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   comment?: Prisma.XOR<Prisma.LimerickCommentScalarRelationFilter, Prisma.LimerickCommentWhereInput>
+  replyLikes?: Prisma.LimerickReplyLikeListRelationFilter
 }
 
 export type LimerickReplyOrderByWithRelationInput = {
@@ -245,6 +246,7 @@ export type LimerickReplyOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
   comment?: Prisma.LimerickCommentOrderByWithRelationInput
+  replyLikes?: Prisma.LimerickReplyLikeOrderByRelationAggregateInput
 }
 
 export type LimerickReplyWhereUniqueInput = Prisma.AtLeast<{
@@ -259,6 +261,7 @@ export type LimerickReplyWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"LimerickReply"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   comment?: Prisma.XOR<Prisma.LimerickCommentScalarRelationFilter, Prisma.LimerickCommentWhereInput>
+  replyLikes?: Prisma.LimerickReplyLikeListRelationFilter
 }, "id">
 
 export type LimerickReplyOrderByWithAggregationInput = {
@@ -293,6 +296,7 @@ export type LimerickReplyCreateInput = {
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutLimerickRepliesInput
   comment: Prisma.LimerickCommentCreateNestedOneWithoutReplyInput
+  replyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutReplyInput
 }
 
 export type LimerickReplyUncheckedCreateInput = {
@@ -302,6 +306,7 @@ export type LimerickReplyUncheckedCreateInput = {
   commentID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutReplyInput
 }
 
 export type LimerickReplyUpdateInput = {
@@ -310,6 +315,7 @@ export type LimerickReplyUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutLimerickRepliesNestedInput
   comment?: Prisma.LimerickCommentUpdateOneRequiredWithoutReplyNestedInput
+  replyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutReplyNestedInput
 }
 
 export type LimerickReplyUncheckedUpdateInput = {
@@ -319,6 +325,7 @@ export type LimerickReplyUncheckedUpdateInput = {
   commentID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutReplyNestedInput
 }
 
 export type LimerickReplyCreateManyInput = {
@@ -392,6 +399,11 @@ export type LimerickReplySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   authorID?: Prisma.SortOrder
   commentID?: Prisma.SortOrder
+}
+
+export type LimerickReplyScalarRelationFilter = {
+  is?: Prisma.LimerickReplyWhereInput
+  isNot?: Prisma.LimerickReplyWhereInput
 }
 
 export type LimerickReplyCreateNestedManyWithoutAuthorInput = {
@@ -478,11 +490,26 @@ export type LimerickReplyUncheckedUpdateManyWithoutCommentNestedInput = {
   deleteMany?: Prisma.LimerickReplyScalarWhereInput | Prisma.LimerickReplyScalarWhereInput[]
 }
 
+export type LimerickReplyCreateNestedOneWithoutReplyLikesInput = {
+  create?: Prisma.XOR<Prisma.LimerickReplyCreateWithoutReplyLikesInput, Prisma.LimerickReplyUncheckedCreateWithoutReplyLikesInput>
+  connectOrCreate?: Prisma.LimerickReplyCreateOrConnectWithoutReplyLikesInput
+  connect?: Prisma.LimerickReplyWhereUniqueInput
+}
+
+export type LimerickReplyUpdateOneRequiredWithoutReplyLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.LimerickReplyCreateWithoutReplyLikesInput, Prisma.LimerickReplyUncheckedCreateWithoutReplyLikesInput>
+  connectOrCreate?: Prisma.LimerickReplyCreateOrConnectWithoutReplyLikesInput
+  upsert?: Prisma.LimerickReplyUpsertWithoutReplyLikesInput
+  connect?: Prisma.LimerickReplyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LimerickReplyUpdateToOneWithWhereWithoutReplyLikesInput, Prisma.LimerickReplyUpdateWithoutReplyLikesInput>, Prisma.LimerickReplyUncheckedUpdateWithoutReplyLikesInput>
+}
+
 export type LimerickReplyCreateWithoutAuthorInput = {
   replybody: string
   createdAt?: Date | string
   updatedAt?: Date | string
   comment: Prisma.LimerickCommentCreateNestedOneWithoutReplyInput
+  replyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutReplyInput
 }
 
 export type LimerickReplyUncheckedCreateWithoutAuthorInput = {
@@ -491,6 +518,7 @@ export type LimerickReplyUncheckedCreateWithoutAuthorInput = {
   commentID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutReplyInput
 }
 
 export type LimerickReplyCreateOrConnectWithoutAuthorInput = {
@@ -536,6 +564,7 @@ export type LimerickReplyCreateWithoutCommentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutLimerickRepliesInput
+  replyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutReplyInput
 }
 
 export type LimerickReplyUncheckedCreateWithoutCommentInput = {
@@ -544,6 +573,7 @@ export type LimerickReplyUncheckedCreateWithoutCommentInput = {
   authorID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutReplyInput
 }
 
 export type LimerickReplyCreateOrConnectWithoutCommentInput = {
@@ -572,6 +602,56 @@ export type LimerickReplyUpdateManyWithWhereWithoutCommentInput = {
   data: Prisma.XOR<Prisma.LimerickReplyUpdateManyMutationInput, Prisma.LimerickReplyUncheckedUpdateManyWithoutCommentInput>
 }
 
+export type LimerickReplyCreateWithoutReplyLikesInput = {
+  replybody: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutLimerickRepliesInput
+  comment: Prisma.LimerickCommentCreateNestedOneWithoutReplyInput
+}
+
+export type LimerickReplyUncheckedCreateWithoutReplyLikesInput = {
+  id?: number
+  replybody: string
+  authorID: number
+  commentID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type LimerickReplyCreateOrConnectWithoutReplyLikesInput = {
+  where: Prisma.LimerickReplyWhereUniqueInput
+  create: Prisma.XOR<Prisma.LimerickReplyCreateWithoutReplyLikesInput, Prisma.LimerickReplyUncheckedCreateWithoutReplyLikesInput>
+}
+
+export type LimerickReplyUpsertWithoutReplyLikesInput = {
+  update: Prisma.XOR<Prisma.LimerickReplyUpdateWithoutReplyLikesInput, Prisma.LimerickReplyUncheckedUpdateWithoutReplyLikesInput>
+  create: Prisma.XOR<Prisma.LimerickReplyCreateWithoutReplyLikesInput, Prisma.LimerickReplyUncheckedCreateWithoutReplyLikesInput>
+  where?: Prisma.LimerickReplyWhereInput
+}
+
+export type LimerickReplyUpdateToOneWithWhereWithoutReplyLikesInput = {
+  where?: Prisma.LimerickReplyWhereInput
+  data: Prisma.XOR<Prisma.LimerickReplyUpdateWithoutReplyLikesInput, Prisma.LimerickReplyUncheckedUpdateWithoutReplyLikesInput>
+}
+
+export type LimerickReplyUpdateWithoutReplyLikesInput = {
+  replybody?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutLimerickRepliesNestedInput
+  comment?: Prisma.LimerickCommentUpdateOneRequiredWithoutReplyNestedInput
+}
+
+export type LimerickReplyUncheckedUpdateWithoutReplyLikesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  replybody?: Prisma.StringFieldUpdateOperationsInput | string
+  authorID?: Prisma.IntFieldUpdateOperationsInput | number
+  commentID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type LimerickReplyCreateManyAuthorInput = {
   id?: number
   replybody: string
@@ -585,6 +665,7 @@ export type LimerickReplyUpdateWithoutAuthorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comment?: Prisma.LimerickCommentUpdateOneRequiredWithoutReplyNestedInput
+  replyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutReplyNestedInput
 }
 
 export type LimerickReplyUncheckedUpdateWithoutAuthorInput = {
@@ -593,6 +674,7 @@ export type LimerickReplyUncheckedUpdateWithoutAuthorInput = {
   commentID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutReplyNestedInput
 }
 
 export type LimerickReplyUncheckedUpdateManyWithoutAuthorInput = {
@@ -616,6 +698,7 @@ export type LimerickReplyUpdateWithoutCommentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutLimerickRepliesNestedInput
+  replyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutReplyNestedInput
 }
 
 export type LimerickReplyUncheckedUpdateWithoutCommentInput = {
@@ -624,6 +707,7 @@ export type LimerickReplyUncheckedUpdateWithoutCommentInput = {
   authorID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutReplyNestedInput
 }
 
 export type LimerickReplyUncheckedUpdateManyWithoutCommentInput = {
@@ -635,6 +719,35 @@ export type LimerickReplyUncheckedUpdateManyWithoutCommentInput = {
 }
 
 
+/**
+ * Count Type LimerickReplyCountOutputType
+ */
+
+export type LimerickReplyCountOutputType = {
+  replyLikes: number
+}
+
+export type LimerickReplyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  replyLikes?: boolean | LimerickReplyCountOutputTypeCountReplyLikesArgs
+}
+
+/**
+ * LimerickReplyCountOutputType without action
+ */
+export type LimerickReplyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LimerickReplyCountOutputType
+   */
+  select?: Prisma.LimerickReplyCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * LimerickReplyCountOutputType without action
+ */
+export type LimerickReplyCountOutputTypeCountReplyLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LimerickReplyLikeWhereInput
+}
+
 
 export type LimerickReplySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -645,6 +758,8 @@ export type LimerickReplySelect<ExtArgs extends runtime.Types.Extensions.Interna
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   comment?: boolean | Prisma.LimerickCommentDefaultArgs<ExtArgs>
+  replyLikes?: boolean | Prisma.LimerickReply$replyLikesArgs<ExtArgs>
+  _count?: boolean | Prisma.LimerickReplyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["limerickReply"]>
 
 export type LimerickReplySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -682,6 +797,8 @@ export type LimerickReplyOmit<ExtArgs extends runtime.Types.Extensions.InternalA
 export type LimerickReplyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   comment?: boolean | Prisma.LimerickCommentDefaultArgs<ExtArgs>
+  replyLikes?: boolean | Prisma.LimerickReply$replyLikesArgs<ExtArgs>
+  _count?: boolean | Prisma.LimerickReplyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LimerickReplyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -697,6 +814,7 @@ export type $LimerickReplyPayload<ExtArgs extends runtime.Types.Extensions.Inter
   objects: {
     author: Prisma.$UserPayload<ExtArgs>
     comment: Prisma.$LimerickCommentPayload<ExtArgs>
+    replyLikes: Prisma.$LimerickReplyLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1101,6 +1219,7 @@ export interface Prisma__LimerickReplyClient<T, Null = never, ExtArgs extends ru
   readonly [Symbol.toStringTag]: "PrismaPromise"
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   comment<T extends Prisma.LimerickCommentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LimerickCommentDefaultArgs<ExtArgs>>): Prisma.Prisma__LimerickCommentClient<runtime.Types.Result.GetResult<Prisma.$LimerickCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  replyLikes<T extends Prisma.LimerickReply$replyLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LimerickReply$replyLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LimerickReplyLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1534,6 +1653,30 @@ export type LimerickReplyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many LimerickReplies to delete.
    */
   limit?: number
+}
+
+/**
+ * LimerickReply.replyLikes
+ */
+export type LimerickReply$replyLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LimerickReplyLike
+   */
+  select?: Prisma.LimerickReplyLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LimerickReplyLike
+   */
+  omit?: Prisma.LimerickReplyLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LimerickReplyLikeInclude<ExtArgs> | null
+  where?: Prisma.LimerickReplyLikeWhereInput
+  orderBy?: Prisma.LimerickReplyLikeOrderByWithRelationInput | Prisma.LimerickReplyLikeOrderByWithRelationInput[]
+  cursor?: Prisma.LimerickReplyLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LimerickReplyLikeScalarFieldEnum | Prisma.LimerickReplyLikeScalarFieldEnum[]
 }
 
 /**

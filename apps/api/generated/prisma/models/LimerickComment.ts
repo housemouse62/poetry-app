@@ -235,6 +235,7 @@ export type LimerickCommentWhereInput = {
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   poem?: Prisma.XOR<Prisma.LimerickScalarRelationFilter, Prisma.LimerickWhereInput>
   reply?: Prisma.LimerickReplyListRelationFilter
+  commentLikes?: Prisma.LimerickCommentLikeListRelationFilter
 }
 
 export type LimerickCommentOrderByWithRelationInput = {
@@ -247,6 +248,7 @@ export type LimerickCommentOrderByWithRelationInput = {
   author?: Prisma.UserOrderByWithRelationInput
   poem?: Prisma.LimerickOrderByWithRelationInput
   reply?: Prisma.LimerickReplyOrderByRelationAggregateInput
+  commentLikes?: Prisma.LimerickCommentLikeOrderByRelationAggregateInput
 }
 
 export type LimerickCommentWhereUniqueInput = Prisma.AtLeast<{
@@ -262,6 +264,7 @@ export type LimerickCommentWhereUniqueInput = Prisma.AtLeast<{
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   poem?: Prisma.XOR<Prisma.LimerickScalarRelationFilter, Prisma.LimerickWhereInput>
   reply?: Prisma.LimerickReplyListRelationFilter
+  commentLikes?: Prisma.LimerickCommentLikeListRelationFilter
 }, "id">
 
 export type LimerickCommentOrderByWithAggregationInput = {
@@ -297,6 +300,7 @@ export type LimerickCommentCreateInput = {
   author: Prisma.UserCreateNestedOneWithoutLimerickCommentsInput
   poem: Prisma.LimerickCreateNestedOneWithoutCommentsInput
   reply?: Prisma.LimerickReplyCreateNestedManyWithoutCommentInput
+  commentLikes?: Prisma.LimerickCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentUncheckedCreateInput = {
@@ -307,6 +311,7 @@ export type LimerickCommentUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reply?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutCommentInput
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentUpdateInput = {
@@ -316,6 +321,7 @@ export type LimerickCommentUpdateInput = {
   author?: Prisma.UserUpdateOneRequiredWithoutLimerickCommentsNestedInput
   poem?: Prisma.LimerickUpdateOneRequiredWithoutCommentsNestedInput
   reply?: Prisma.LimerickReplyUpdateManyWithoutCommentNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentUncheckedUpdateInput = {
@@ -326,6 +332,7 @@ export type LimerickCommentUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reply?: Prisma.LimerickReplyUncheckedUpdateManyWithoutCommentNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentCreateManyInput = {
@@ -490,6 +497,20 @@ export type LimerickCommentUncheckedUpdateManyWithoutPoemNestedInput = {
   deleteMany?: Prisma.LimerickCommentScalarWhereInput | Prisma.LimerickCommentScalarWhereInput[]
 }
 
+export type LimerickCommentCreateNestedOneWithoutCommentLikesInput = {
+  create?: Prisma.XOR<Prisma.LimerickCommentCreateWithoutCommentLikesInput, Prisma.LimerickCommentUncheckedCreateWithoutCommentLikesInput>
+  connectOrCreate?: Prisma.LimerickCommentCreateOrConnectWithoutCommentLikesInput
+  connect?: Prisma.LimerickCommentWhereUniqueInput
+}
+
+export type LimerickCommentUpdateOneRequiredWithoutCommentLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.LimerickCommentCreateWithoutCommentLikesInput, Prisma.LimerickCommentUncheckedCreateWithoutCommentLikesInput>
+  connectOrCreate?: Prisma.LimerickCommentCreateOrConnectWithoutCommentLikesInput
+  upsert?: Prisma.LimerickCommentUpsertWithoutCommentLikesInput
+  connect?: Prisma.LimerickCommentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.LimerickCommentUpdateToOneWithWhereWithoutCommentLikesInput, Prisma.LimerickCommentUpdateWithoutCommentLikesInput>, Prisma.LimerickCommentUncheckedUpdateWithoutCommentLikesInput>
+}
+
 export type LimerickCommentCreateNestedOneWithoutReplyInput = {
   create?: Prisma.XOR<Prisma.LimerickCommentCreateWithoutReplyInput, Prisma.LimerickCommentUncheckedCreateWithoutReplyInput>
   connectOrCreate?: Prisma.LimerickCommentCreateOrConnectWithoutReplyInput
@@ -510,6 +531,7 @@ export type LimerickCommentCreateWithoutAuthorInput = {
   updatedAt?: Date | string
   poem: Prisma.LimerickCreateNestedOneWithoutCommentsInput
   reply?: Prisma.LimerickReplyCreateNestedManyWithoutCommentInput
+  commentLikes?: Prisma.LimerickCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentUncheckedCreateWithoutAuthorInput = {
@@ -519,6 +541,7 @@ export type LimerickCommentUncheckedCreateWithoutAuthorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reply?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutCommentInput
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentCreateOrConnectWithoutAuthorInput = {
@@ -565,6 +588,7 @@ export type LimerickCommentCreateWithoutPoemInput = {
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutLimerickCommentsInput
   reply?: Prisma.LimerickReplyCreateNestedManyWithoutCommentInput
+  commentLikes?: Prisma.LimerickCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentUncheckedCreateWithoutPoemInput = {
@@ -574,6 +598,7 @@ export type LimerickCommentUncheckedCreateWithoutPoemInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reply?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutCommentInput
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentCreateOrConnectWithoutPoemInput = {
@@ -602,12 +627,67 @@ export type LimerickCommentUpdateManyWithWhereWithoutPoemInput = {
   data: Prisma.XOR<Prisma.LimerickCommentUpdateManyMutationInput, Prisma.LimerickCommentUncheckedUpdateManyWithoutPoemInput>
 }
 
+export type LimerickCommentCreateWithoutCommentLikesInput = {
+  commentbody: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutLimerickCommentsInput
+  poem: Prisma.LimerickCreateNestedOneWithoutCommentsInput
+  reply?: Prisma.LimerickReplyCreateNestedManyWithoutCommentInput
+}
+
+export type LimerickCommentUncheckedCreateWithoutCommentLikesInput = {
+  id?: number
+  commentbody: string
+  authorID: number
+  poemID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reply?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutCommentInput
+}
+
+export type LimerickCommentCreateOrConnectWithoutCommentLikesInput = {
+  where: Prisma.LimerickCommentWhereUniqueInput
+  create: Prisma.XOR<Prisma.LimerickCommentCreateWithoutCommentLikesInput, Prisma.LimerickCommentUncheckedCreateWithoutCommentLikesInput>
+}
+
+export type LimerickCommentUpsertWithoutCommentLikesInput = {
+  update: Prisma.XOR<Prisma.LimerickCommentUpdateWithoutCommentLikesInput, Prisma.LimerickCommentUncheckedUpdateWithoutCommentLikesInput>
+  create: Prisma.XOR<Prisma.LimerickCommentCreateWithoutCommentLikesInput, Prisma.LimerickCommentUncheckedCreateWithoutCommentLikesInput>
+  where?: Prisma.LimerickCommentWhereInput
+}
+
+export type LimerickCommentUpdateToOneWithWhereWithoutCommentLikesInput = {
+  where?: Prisma.LimerickCommentWhereInput
+  data: Prisma.XOR<Prisma.LimerickCommentUpdateWithoutCommentLikesInput, Prisma.LimerickCommentUncheckedUpdateWithoutCommentLikesInput>
+}
+
+export type LimerickCommentUpdateWithoutCommentLikesInput = {
+  commentbody?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutLimerickCommentsNestedInput
+  poem?: Prisma.LimerickUpdateOneRequiredWithoutCommentsNestedInput
+  reply?: Prisma.LimerickReplyUpdateManyWithoutCommentNestedInput
+}
+
+export type LimerickCommentUncheckedUpdateWithoutCommentLikesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  commentbody?: Prisma.StringFieldUpdateOperationsInput | string
+  authorID?: Prisma.IntFieldUpdateOperationsInput | number
+  poemID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reply?: Prisma.LimerickReplyUncheckedUpdateManyWithoutCommentNestedInput
+}
+
 export type LimerickCommentCreateWithoutReplyInput = {
   commentbody: string
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutLimerickCommentsInput
   poem: Prisma.LimerickCreateNestedOneWithoutCommentsInput
+  commentLikes?: Prisma.LimerickCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentUncheckedCreateWithoutReplyInput = {
@@ -617,6 +697,7 @@ export type LimerickCommentUncheckedCreateWithoutReplyInput = {
   poemID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type LimerickCommentCreateOrConnectWithoutReplyInput = {
@@ -641,6 +722,7 @@ export type LimerickCommentUpdateWithoutReplyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutLimerickCommentsNestedInput
   poem?: Prisma.LimerickUpdateOneRequiredWithoutCommentsNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentUncheckedUpdateWithoutReplyInput = {
@@ -650,6 +732,7 @@ export type LimerickCommentUncheckedUpdateWithoutReplyInput = {
   poemID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentCreateManyAuthorInput = {
@@ -666,6 +749,7 @@ export type LimerickCommentUpdateWithoutAuthorInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poem?: Prisma.LimerickUpdateOneRequiredWithoutCommentsNestedInput
   reply?: Prisma.LimerickReplyUpdateManyWithoutCommentNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentUncheckedUpdateWithoutAuthorInput = {
@@ -675,6 +759,7 @@ export type LimerickCommentUncheckedUpdateWithoutAuthorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reply?: Prisma.LimerickReplyUncheckedUpdateManyWithoutCommentNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentUncheckedUpdateManyWithoutAuthorInput = {
@@ -699,6 +784,7 @@ export type LimerickCommentUpdateWithoutPoemInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutLimerickCommentsNestedInput
   reply?: Prisma.LimerickReplyUpdateManyWithoutCommentNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentUncheckedUpdateWithoutPoemInput = {
@@ -708,6 +794,7 @@ export type LimerickCommentUncheckedUpdateWithoutPoemInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reply?: Prisma.LimerickReplyUncheckedUpdateManyWithoutCommentNestedInput
+  commentLikes?: Prisma.LimerickCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type LimerickCommentUncheckedUpdateManyWithoutPoemInput = {
@@ -725,10 +812,12 @@ export type LimerickCommentUncheckedUpdateManyWithoutPoemInput = {
 
 export type LimerickCommentCountOutputType = {
   reply: number
+  commentLikes: number
 }
 
 export type LimerickCommentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   reply?: boolean | LimerickCommentCountOutputTypeCountReplyArgs
+  commentLikes?: boolean | LimerickCommentCountOutputTypeCountCommentLikesArgs
 }
 
 /**
@@ -748,6 +837,13 @@ export type LimerickCommentCountOutputTypeCountReplyArgs<ExtArgs extends runtime
   where?: Prisma.LimerickReplyWhereInput
 }
 
+/**
+ * LimerickCommentCountOutputType without action
+ */
+export type LimerickCommentCountOutputTypeCountCommentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LimerickCommentLikeWhereInput
+}
+
 
 export type LimerickCommentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -759,6 +855,7 @@ export type LimerickCommentSelect<ExtArgs extends runtime.Types.Extensions.Inter
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   poem?: boolean | Prisma.LimerickDefaultArgs<ExtArgs>
   reply?: boolean | Prisma.LimerickComment$replyArgs<ExtArgs>
+  commentLikes?: boolean | Prisma.LimerickComment$commentLikesArgs<ExtArgs>
   _count?: boolean | Prisma.LimerickCommentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["limerickComment"]>
 
@@ -798,6 +895,7 @@ export type LimerickCommentInclude<ExtArgs extends runtime.Types.Extensions.Inte
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   poem?: boolean | Prisma.LimerickDefaultArgs<ExtArgs>
   reply?: boolean | Prisma.LimerickComment$replyArgs<ExtArgs>
+  commentLikes?: boolean | Prisma.LimerickComment$commentLikesArgs<ExtArgs>
   _count?: boolean | Prisma.LimerickCommentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type LimerickCommentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -815,6 +913,7 @@ export type $LimerickCommentPayload<ExtArgs extends runtime.Types.Extensions.Int
     author: Prisma.$UserPayload<ExtArgs>
     poem: Prisma.$LimerickPayload<ExtArgs>
     reply: Prisma.$LimerickReplyPayload<ExtArgs>[]
+    commentLikes: Prisma.$LimerickCommentLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1220,6 +1319,7 @@ export interface Prisma__LimerickCommentClient<T, Null = never, ExtArgs extends 
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   poem<T extends Prisma.LimerickDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LimerickDefaultArgs<ExtArgs>>): Prisma.Prisma__LimerickClient<runtime.Types.Result.GetResult<Prisma.$LimerickPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reply<T extends Prisma.LimerickComment$replyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LimerickComment$replyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LimerickReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  commentLikes<T extends Prisma.LimerickComment$commentLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.LimerickComment$commentLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LimerickCommentLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1677,6 +1777,30 @@ export type LimerickComment$replyArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.LimerickReplyScalarFieldEnum | Prisma.LimerickReplyScalarFieldEnum[]
+}
+
+/**
+ * LimerickComment.commentLikes
+ */
+export type LimerickComment$commentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LimerickCommentLike
+   */
+  select?: Prisma.LimerickCommentLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LimerickCommentLike
+   */
+  omit?: Prisma.LimerickCommentLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LimerickCommentLikeInclude<ExtArgs> | null
+  where?: Prisma.LimerickCommentLikeWhereInput
+  orderBy?: Prisma.LimerickCommentLikeOrderByWithRelationInput | Prisma.LimerickCommentLikeOrderByWithRelationInput[]
+  cursor?: Prisma.LimerickCommentLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LimerickCommentLikeScalarFieldEnum | Prisma.LimerickCommentLikeScalarFieldEnum[]
 }
 
 /**

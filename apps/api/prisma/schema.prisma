@@ -24,11 +24,18 @@ model User {
   screenname        String?
   usertype          Usertype  @default(user)
   haikus            Haiku[]
+  haikuLikes        HaikuLike[]
   limericks         Limerick[]
+  limerickLikes     LimerickLike[]
   haikuComments     HaikuComment[]
+  haikuCommentLikes HaikuCommentLike[]
   limerickComments  LimerickComment[]
+  limerickCommentLikes  LimerickCommentLike[]
   haikuReplies      HaikuReply[]
+  haikuReplyLikes   HaikuReplyLike[]
   limerickReplies   LimerickReply[]
+  limerickReplyLikes  LimerickReplyLike[]
+  
 }
 
 model Haiku {
@@ -47,6 +54,16 @@ model Haiku {
   screenname          String?
   published           Boolean   @default(false)
   comments            HaikuComment[]
+  haikuLikes          HaikuLike[]
+}
+
+model HaikuLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  haiku   Haiku @relation(fields: [haikuID], references: [id], onDelete: Cascade)
+  haikuID Int
+  @@unique([userID, haikuID])
 }
 
 model Limerick {
@@ -73,18 +90,38 @@ model Limerick {
   screenname          String?
   published           Boolean   @default(false)
   comments            LimerickComment[]
+limerickLikes         LimerickLike[]
+}
+
+model LimerickLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  limerick   Limerick @relation(fields: [limerickID], references: [id], onDelete: Cascade)
+  limerickID Int
+  @@unique([userID, limerickID])
 }
 
 model HaikuComment {
-  id          Int     @id @default(autoincrement())
-  commentbody String
-  author      User    @relation(fields: [authorID], references: [id])
-  authorID    Int
-  poem        Haiku    @relation(fields: [poemID], references: [id], onDelete: Cascade)
-  poemID      Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  reply       HaikuReply[]
+  id            Int     @id @default(autoincrement())
+  commentbody   String
+  author        User    @relation(fields: [authorID], references: [id])
+  authorID      Int
+  poem          Haiku    @relation(fields: [poemID], references: [id], onDelete: Cascade)
+  poemID        Int
+  commentLikes  HaikuCommentLike[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reply         HaikuReply[]
+}
+
+model HaikuCommentLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  comment   HaikuComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID Int
+  @@unique([userID, commentID])
 }
 
 model LimerickComment {
@@ -97,6 +134,16 @@ model LimerickComment {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   reply       LimerickReply[]
+  commentLikes LimerickCommentLike[]
+}
+
+model LimerickCommentLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  comment   LimerickComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID Int
+  @@unique([userID, commentID])
 }
 
 model HaikuReply {
@@ -108,6 +155,16 @@ model HaikuReply {
   commentID   Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  replyLikes  HaikuReplyLike[]
+}
+
+model HaikuReplyLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  reply     HaikuReply @relation(fields: [replyID], references: [id], onDelete: Cascade)
+  replyID   Int
+  @@unique([userID, replyID])
 }
 
 model LimerickReply {
@@ -119,6 +176,16 @@ model LimerickReply {
   commentID   Int
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  replyLikes LimerickReplyLike[]
+}
+
+model LimerickReplyLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  reply     LimerickReply @relation(fields: [replyID], references: [id], onDelete: Cascade)
+  replyID   Int
+  @@unique([userID, replyID])
 }
 
 model Word {

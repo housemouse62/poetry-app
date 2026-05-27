@@ -234,6 +234,7 @@ export type HaikuReplyWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"HaikuReply"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   comment?: Prisma.XOR<Prisma.HaikuCommentScalarRelationFilter, Prisma.HaikuCommentWhereInput>
+  replyLikes?: Prisma.HaikuReplyLikeListRelationFilter
 }
 
 export type HaikuReplyOrderByWithRelationInput = {
@@ -245,6 +246,7 @@ export type HaikuReplyOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
   comment?: Prisma.HaikuCommentOrderByWithRelationInput
+  replyLikes?: Prisma.HaikuReplyLikeOrderByRelationAggregateInput
 }
 
 export type HaikuReplyWhereUniqueInput = Prisma.AtLeast<{
@@ -259,6 +261,7 @@ export type HaikuReplyWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"HaikuReply"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   comment?: Prisma.XOR<Prisma.HaikuCommentScalarRelationFilter, Prisma.HaikuCommentWhereInput>
+  replyLikes?: Prisma.HaikuReplyLikeListRelationFilter
 }, "id">
 
 export type HaikuReplyOrderByWithAggregationInput = {
@@ -293,6 +296,7 @@ export type HaikuReplyCreateInput = {
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutHaikuRepliesInput
   comment: Prisma.HaikuCommentCreateNestedOneWithoutReplyInput
+  replyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutReplyInput
 }
 
 export type HaikuReplyUncheckedCreateInput = {
@@ -302,6 +306,7 @@ export type HaikuReplyUncheckedCreateInput = {
   commentID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutReplyInput
 }
 
 export type HaikuReplyUpdateInput = {
@@ -310,6 +315,7 @@ export type HaikuReplyUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutHaikuRepliesNestedInput
   comment?: Prisma.HaikuCommentUpdateOneRequiredWithoutReplyNestedInput
+  replyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutReplyNestedInput
 }
 
 export type HaikuReplyUncheckedUpdateInput = {
@@ -319,6 +325,7 @@ export type HaikuReplyUncheckedUpdateInput = {
   commentID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutReplyNestedInput
 }
 
 export type HaikuReplyCreateManyInput = {
@@ -392,6 +399,11 @@ export type HaikuReplySumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   authorID?: Prisma.SortOrder
   commentID?: Prisma.SortOrder
+}
+
+export type HaikuReplyScalarRelationFilter = {
+  is?: Prisma.HaikuReplyWhereInput
+  isNot?: Prisma.HaikuReplyWhereInput
 }
 
 export type HaikuReplyCreateNestedManyWithoutAuthorInput = {
@@ -478,11 +490,26 @@ export type HaikuReplyUncheckedUpdateManyWithoutCommentNestedInput = {
   deleteMany?: Prisma.HaikuReplyScalarWhereInput | Prisma.HaikuReplyScalarWhereInput[]
 }
 
+export type HaikuReplyCreateNestedOneWithoutReplyLikesInput = {
+  create?: Prisma.XOR<Prisma.HaikuReplyCreateWithoutReplyLikesInput, Prisma.HaikuReplyUncheckedCreateWithoutReplyLikesInput>
+  connectOrCreate?: Prisma.HaikuReplyCreateOrConnectWithoutReplyLikesInput
+  connect?: Prisma.HaikuReplyWhereUniqueInput
+}
+
+export type HaikuReplyUpdateOneRequiredWithoutReplyLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.HaikuReplyCreateWithoutReplyLikesInput, Prisma.HaikuReplyUncheckedCreateWithoutReplyLikesInput>
+  connectOrCreate?: Prisma.HaikuReplyCreateOrConnectWithoutReplyLikesInput
+  upsert?: Prisma.HaikuReplyUpsertWithoutReplyLikesInput
+  connect?: Prisma.HaikuReplyWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HaikuReplyUpdateToOneWithWhereWithoutReplyLikesInput, Prisma.HaikuReplyUpdateWithoutReplyLikesInput>, Prisma.HaikuReplyUncheckedUpdateWithoutReplyLikesInput>
+}
+
 export type HaikuReplyCreateWithoutAuthorInput = {
   replybody: string
   createdAt?: Date | string
   updatedAt?: Date | string
   comment: Prisma.HaikuCommentCreateNestedOneWithoutReplyInput
+  replyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutReplyInput
 }
 
 export type HaikuReplyUncheckedCreateWithoutAuthorInput = {
@@ -491,6 +518,7 @@ export type HaikuReplyUncheckedCreateWithoutAuthorInput = {
   commentID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutReplyInput
 }
 
 export type HaikuReplyCreateOrConnectWithoutAuthorInput = {
@@ -536,6 +564,7 @@ export type HaikuReplyCreateWithoutCommentInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutHaikuRepliesInput
+  replyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutReplyInput
 }
 
 export type HaikuReplyUncheckedCreateWithoutCommentInput = {
@@ -544,6 +573,7 @@ export type HaikuReplyUncheckedCreateWithoutCommentInput = {
   authorID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  replyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutReplyInput
 }
 
 export type HaikuReplyCreateOrConnectWithoutCommentInput = {
@@ -572,6 +602,56 @@ export type HaikuReplyUpdateManyWithWhereWithoutCommentInput = {
   data: Prisma.XOR<Prisma.HaikuReplyUpdateManyMutationInput, Prisma.HaikuReplyUncheckedUpdateManyWithoutCommentInput>
 }
 
+export type HaikuReplyCreateWithoutReplyLikesInput = {
+  replybody: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutHaikuRepliesInput
+  comment: Prisma.HaikuCommentCreateNestedOneWithoutReplyInput
+}
+
+export type HaikuReplyUncheckedCreateWithoutReplyLikesInput = {
+  id?: number
+  replybody: string
+  authorID: number
+  commentID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type HaikuReplyCreateOrConnectWithoutReplyLikesInput = {
+  where: Prisma.HaikuReplyWhereUniqueInput
+  create: Prisma.XOR<Prisma.HaikuReplyCreateWithoutReplyLikesInput, Prisma.HaikuReplyUncheckedCreateWithoutReplyLikesInput>
+}
+
+export type HaikuReplyUpsertWithoutReplyLikesInput = {
+  update: Prisma.XOR<Prisma.HaikuReplyUpdateWithoutReplyLikesInput, Prisma.HaikuReplyUncheckedUpdateWithoutReplyLikesInput>
+  create: Prisma.XOR<Prisma.HaikuReplyCreateWithoutReplyLikesInput, Prisma.HaikuReplyUncheckedCreateWithoutReplyLikesInput>
+  where?: Prisma.HaikuReplyWhereInput
+}
+
+export type HaikuReplyUpdateToOneWithWhereWithoutReplyLikesInput = {
+  where?: Prisma.HaikuReplyWhereInput
+  data: Prisma.XOR<Prisma.HaikuReplyUpdateWithoutReplyLikesInput, Prisma.HaikuReplyUncheckedUpdateWithoutReplyLikesInput>
+}
+
+export type HaikuReplyUpdateWithoutReplyLikesInput = {
+  replybody?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutHaikuRepliesNestedInput
+  comment?: Prisma.HaikuCommentUpdateOneRequiredWithoutReplyNestedInput
+}
+
+export type HaikuReplyUncheckedUpdateWithoutReplyLikesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  replybody?: Prisma.StringFieldUpdateOperationsInput | string
+  authorID?: Prisma.IntFieldUpdateOperationsInput | number
+  commentID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type HaikuReplyCreateManyAuthorInput = {
   id?: number
   replybody: string
@@ -585,6 +665,7 @@ export type HaikuReplyUpdateWithoutAuthorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   comment?: Prisma.HaikuCommentUpdateOneRequiredWithoutReplyNestedInput
+  replyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutReplyNestedInput
 }
 
 export type HaikuReplyUncheckedUpdateWithoutAuthorInput = {
@@ -593,6 +674,7 @@ export type HaikuReplyUncheckedUpdateWithoutAuthorInput = {
   commentID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutReplyNestedInput
 }
 
 export type HaikuReplyUncheckedUpdateManyWithoutAuthorInput = {
@@ -616,6 +698,7 @@ export type HaikuReplyUpdateWithoutCommentInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutHaikuRepliesNestedInput
+  replyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutReplyNestedInput
 }
 
 export type HaikuReplyUncheckedUpdateWithoutCommentInput = {
@@ -624,6 +707,7 @@ export type HaikuReplyUncheckedUpdateWithoutCommentInput = {
   authorID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  replyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutReplyNestedInput
 }
 
 export type HaikuReplyUncheckedUpdateManyWithoutCommentInput = {
@@ -635,6 +719,35 @@ export type HaikuReplyUncheckedUpdateManyWithoutCommentInput = {
 }
 
 
+/**
+ * Count Type HaikuReplyCountOutputType
+ */
+
+export type HaikuReplyCountOutputType = {
+  replyLikes: number
+}
+
+export type HaikuReplyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  replyLikes?: boolean | HaikuReplyCountOutputTypeCountReplyLikesArgs
+}
+
+/**
+ * HaikuReplyCountOutputType without action
+ */
+export type HaikuReplyCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HaikuReplyCountOutputType
+   */
+  select?: Prisma.HaikuReplyCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * HaikuReplyCountOutputType without action
+ */
+export type HaikuReplyCountOutputTypeCountReplyLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HaikuReplyLikeWhereInput
+}
+
 
 export type HaikuReplySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -645,6 +758,8 @@ export type HaikuReplySelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   comment?: boolean | Prisma.HaikuCommentDefaultArgs<ExtArgs>
+  replyLikes?: boolean | Prisma.HaikuReply$replyLikesArgs<ExtArgs>
+  _count?: boolean | Prisma.HaikuReplyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["haikuReply"]>
 
 export type HaikuReplySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -682,6 +797,8 @@ export type HaikuReplyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type HaikuReplyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   comment?: boolean | Prisma.HaikuCommentDefaultArgs<ExtArgs>
+  replyLikes?: boolean | Prisma.HaikuReply$replyLikesArgs<ExtArgs>
+  _count?: boolean | Prisma.HaikuReplyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type HaikuReplyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -697,6 +814,7 @@ export type $HaikuReplyPayload<ExtArgs extends runtime.Types.Extensions.Internal
   objects: {
     author: Prisma.$UserPayload<ExtArgs>
     comment: Prisma.$HaikuCommentPayload<ExtArgs>
+    replyLikes: Prisma.$HaikuReplyLikePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1101,6 +1219,7 @@ export interface Prisma__HaikuReplyClient<T, Null = never, ExtArgs extends runti
   readonly [Symbol.toStringTag]: "PrismaPromise"
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   comment<T extends Prisma.HaikuCommentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HaikuCommentDefaultArgs<ExtArgs>>): Prisma.Prisma__HaikuCommentClient<runtime.Types.Result.GetResult<Prisma.$HaikuCommentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  replyLikes<T extends Prisma.HaikuReply$replyLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HaikuReply$replyLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HaikuReplyLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1534,6 +1653,30 @@ export type HaikuReplyDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many HaikuReplies to delete.
    */
   limit?: number
+}
+
+/**
+ * HaikuReply.replyLikes
+ */
+export type HaikuReply$replyLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HaikuReplyLike
+   */
+  select?: Prisma.HaikuReplyLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HaikuReplyLike
+   */
+  omit?: Prisma.HaikuReplyLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HaikuReplyLikeInclude<ExtArgs> | null
+  where?: Prisma.HaikuReplyLikeWhereInput
+  orderBy?: Prisma.HaikuReplyLikeOrderByWithRelationInput | Prisma.HaikuReplyLikeOrderByWithRelationInput[]
+  cursor?: Prisma.HaikuReplyLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HaikuReplyLikeScalarFieldEnum | Prisma.HaikuReplyLikeScalarFieldEnum[]
 }
 
 /**

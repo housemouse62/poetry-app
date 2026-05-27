@@ -234,6 +234,7 @@ export type HaikuCommentWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"HaikuComment"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   poem?: Prisma.XOR<Prisma.HaikuScalarRelationFilter, Prisma.HaikuWhereInput>
+  commentLikes?: Prisma.HaikuCommentLikeListRelationFilter
   reply?: Prisma.HaikuReplyListRelationFilter
 }
 
@@ -246,6 +247,7 @@ export type HaikuCommentOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   author?: Prisma.UserOrderByWithRelationInput
   poem?: Prisma.HaikuOrderByWithRelationInput
+  commentLikes?: Prisma.HaikuCommentLikeOrderByRelationAggregateInput
   reply?: Prisma.HaikuReplyOrderByRelationAggregateInput
 }
 
@@ -261,6 +263,7 @@ export type HaikuCommentWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"HaikuComment"> | Date | string
   author?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   poem?: Prisma.XOR<Prisma.HaikuScalarRelationFilter, Prisma.HaikuWhereInput>
+  commentLikes?: Prisma.HaikuCommentLikeListRelationFilter
   reply?: Prisma.HaikuReplyListRelationFilter
 }, "id">
 
@@ -296,6 +299,7 @@ export type HaikuCommentCreateInput = {
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutHaikuCommentsInput
   poem: Prisma.HaikuCreateNestedOneWithoutCommentsInput
+  commentLikes?: Prisma.HaikuCommentLikeCreateNestedManyWithoutCommentInput
   reply?: Prisma.HaikuReplyCreateNestedManyWithoutCommentInput
 }
 
@@ -306,6 +310,7 @@ export type HaikuCommentUncheckedCreateInput = {
   poemID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reply?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -315,6 +320,7 @@ export type HaikuCommentUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutHaikuCommentsNestedInput
   poem?: Prisma.HaikuUpdateOneRequiredWithoutCommentsNestedInput
+  commentLikes?: Prisma.HaikuCommentLikeUpdateManyWithoutCommentNestedInput
   reply?: Prisma.HaikuReplyUpdateManyWithoutCommentNestedInput
 }
 
@@ -325,6 +331,7 @@ export type HaikuCommentUncheckedUpdateInput = {
   poemID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reply?: Prisma.HaikuReplyUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -490,6 +497,20 @@ export type HaikuCommentUncheckedUpdateManyWithoutPoemNestedInput = {
   deleteMany?: Prisma.HaikuCommentScalarWhereInput | Prisma.HaikuCommentScalarWhereInput[]
 }
 
+export type HaikuCommentCreateNestedOneWithoutCommentLikesInput = {
+  create?: Prisma.XOR<Prisma.HaikuCommentCreateWithoutCommentLikesInput, Prisma.HaikuCommentUncheckedCreateWithoutCommentLikesInput>
+  connectOrCreate?: Prisma.HaikuCommentCreateOrConnectWithoutCommentLikesInput
+  connect?: Prisma.HaikuCommentWhereUniqueInput
+}
+
+export type HaikuCommentUpdateOneRequiredWithoutCommentLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.HaikuCommentCreateWithoutCommentLikesInput, Prisma.HaikuCommentUncheckedCreateWithoutCommentLikesInput>
+  connectOrCreate?: Prisma.HaikuCommentCreateOrConnectWithoutCommentLikesInput
+  upsert?: Prisma.HaikuCommentUpsertWithoutCommentLikesInput
+  connect?: Prisma.HaikuCommentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.HaikuCommentUpdateToOneWithWhereWithoutCommentLikesInput, Prisma.HaikuCommentUpdateWithoutCommentLikesInput>, Prisma.HaikuCommentUncheckedUpdateWithoutCommentLikesInput>
+}
+
 export type HaikuCommentCreateNestedOneWithoutReplyInput = {
   create?: Prisma.XOR<Prisma.HaikuCommentCreateWithoutReplyInput, Prisma.HaikuCommentUncheckedCreateWithoutReplyInput>
   connectOrCreate?: Prisma.HaikuCommentCreateOrConnectWithoutReplyInput
@@ -509,6 +530,7 @@ export type HaikuCommentCreateWithoutAuthorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   poem: Prisma.HaikuCreateNestedOneWithoutCommentsInput
+  commentLikes?: Prisma.HaikuCommentLikeCreateNestedManyWithoutCommentInput
   reply?: Prisma.HaikuReplyCreateNestedManyWithoutCommentInput
 }
 
@@ -518,6 +540,7 @@ export type HaikuCommentUncheckedCreateWithoutAuthorInput = {
   poemID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reply?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -564,6 +587,7 @@ export type HaikuCommentCreateWithoutPoemInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutHaikuCommentsInput
+  commentLikes?: Prisma.HaikuCommentLikeCreateNestedManyWithoutCommentInput
   reply?: Prisma.HaikuReplyCreateNestedManyWithoutCommentInput
 }
 
@@ -573,6 +597,7 @@ export type HaikuCommentUncheckedCreateWithoutPoemInput = {
   authorID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedCreateNestedManyWithoutCommentInput
   reply?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutCommentInput
 }
 
@@ -602,12 +627,67 @@ export type HaikuCommentUpdateManyWithWhereWithoutPoemInput = {
   data: Prisma.XOR<Prisma.HaikuCommentUpdateManyMutationInput, Prisma.HaikuCommentUncheckedUpdateManyWithoutPoemInput>
 }
 
+export type HaikuCommentCreateWithoutCommentLikesInput = {
+  commentbody: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  author: Prisma.UserCreateNestedOneWithoutHaikuCommentsInput
+  poem: Prisma.HaikuCreateNestedOneWithoutCommentsInput
+  reply?: Prisma.HaikuReplyCreateNestedManyWithoutCommentInput
+}
+
+export type HaikuCommentUncheckedCreateWithoutCommentLikesInput = {
+  id?: number
+  commentbody: string
+  authorID: number
+  poemID: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reply?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutCommentInput
+}
+
+export type HaikuCommentCreateOrConnectWithoutCommentLikesInput = {
+  where: Prisma.HaikuCommentWhereUniqueInput
+  create: Prisma.XOR<Prisma.HaikuCommentCreateWithoutCommentLikesInput, Prisma.HaikuCommentUncheckedCreateWithoutCommentLikesInput>
+}
+
+export type HaikuCommentUpsertWithoutCommentLikesInput = {
+  update: Prisma.XOR<Prisma.HaikuCommentUpdateWithoutCommentLikesInput, Prisma.HaikuCommentUncheckedUpdateWithoutCommentLikesInput>
+  create: Prisma.XOR<Prisma.HaikuCommentCreateWithoutCommentLikesInput, Prisma.HaikuCommentUncheckedCreateWithoutCommentLikesInput>
+  where?: Prisma.HaikuCommentWhereInput
+}
+
+export type HaikuCommentUpdateToOneWithWhereWithoutCommentLikesInput = {
+  where?: Prisma.HaikuCommentWhereInput
+  data: Prisma.XOR<Prisma.HaikuCommentUpdateWithoutCommentLikesInput, Prisma.HaikuCommentUncheckedUpdateWithoutCommentLikesInput>
+}
+
+export type HaikuCommentUpdateWithoutCommentLikesInput = {
+  commentbody?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  author?: Prisma.UserUpdateOneRequiredWithoutHaikuCommentsNestedInput
+  poem?: Prisma.HaikuUpdateOneRequiredWithoutCommentsNestedInput
+  reply?: Prisma.HaikuReplyUpdateManyWithoutCommentNestedInput
+}
+
+export type HaikuCommentUncheckedUpdateWithoutCommentLikesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  commentbody?: Prisma.StringFieldUpdateOperationsInput | string
+  authorID?: Prisma.IntFieldUpdateOperationsInput | number
+  poemID?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reply?: Prisma.HaikuReplyUncheckedUpdateManyWithoutCommentNestedInput
+}
+
 export type HaikuCommentCreateWithoutReplyInput = {
   commentbody: string
   createdAt?: Date | string
   updatedAt?: Date | string
   author: Prisma.UserCreateNestedOneWithoutHaikuCommentsInput
   poem: Prisma.HaikuCreateNestedOneWithoutCommentsInput
+  commentLikes?: Prisma.HaikuCommentLikeCreateNestedManyWithoutCommentInput
 }
 
 export type HaikuCommentUncheckedCreateWithoutReplyInput = {
@@ -617,6 +697,7 @@ export type HaikuCommentUncheckedCreateWithoutReplyInput = {
   poemID: number
   createdAt?: Date | string
   updatedAt?: Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedCreateNestedManyWithoutCommentInput
 }
 
 export type HaikuCommentCreateOrConnectWithoutReplyInput = {
@@ -641,6 +722,7 @@ export type HaikuCommentUpdateWithoutReplyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutHaikuCommentsNestedInput
   poem?: Prisma.HaikuUpdateOneRequiredWithoutCommentsNestedInput
+  commentLikes?: Prisma.HaikuCommentLikeUpdateManyWithoutCommentNestedInput
 }
 
 export type HaikuCommentUncheckedUpdateWithoutReplyInput = {
@@ -650,6 +732,7 @@ export type HaikuCommentUncheckedUpdateWithoutReplyInput = {
   poemID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
 }
 
 export type HaikuCommentCreateManyAuthorInput = {
@@ -665,6 +748,7 @@ export type HaikuCommentUpdateWithoutAuthorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   poem?: Prisma.HaikuUpdateOneRequiredWithoutCommentsNestedInput
+  commentLikes?: Prisma.HaikuCommentLikeUpdateManyWithoutCommentNestedInput
   reply?: Prisma.HaikuReplyUpdateManyWithoutCommentNestedInput
 }
 
@@ -674,6 +758,7 @@ export type HaikuCommentUncheckedUpdateWithoutAuthorInput = {
   poemID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reply?: Prisma.HaikuReplyUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -698,6 +783,7 @@ export type HaikuCommentUpdateWithoutPoemInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   author?: Prisma.UserUpdateOneRequiredWithoutHaikuCommentsNestedInput
+  commentLikes?: Prisma.HaikuCommentLikeUpdateManyWithoutCommentNestedInput
   reply?: Prisma.HaikuReplyUpdateManyWithoutCommentNestedInput
 }
 
@@ -707,6 +793,7 @@ export type HaikuCommentUncheckedUpdateWithoutPoemInput = {
   authorID?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  commentLikes?: Prisma.HaikuCommentLikeUncheckedUpdateManyWithoutCommentNestedInput
   reply?: Prisma.HaikuReplyUncheckedUpdateManyWithoutCommentNestedInput
 }
 
@@ -724,10 +811,12 @@ export type HaikuCommentUncheckedUpdateManyWithoutPoemInput = {
  */
 
 export type HaikuCommentCountOutputType = {
+  commentLikes: number
   reply: number
 }
 
 export type HaikuCommentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  commentLikes?: boolean | HaikuCommentCountOutputTypeCountCommentLikesArgs
   reply?: boolean | HaikuCommentCountOutputTypeCountReplyArgs
 }
 
@@ -739,6 +828,13 @@ export type HaikuCommentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types
    * Select specific fields to fetch from the HaikuCommentCountOutputType
    */
   select?: Prisma.HaikuCommentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * HaikuCommentCountOutputType without action
+ */
+export type HaikuCommentCountOutputTypeCountCommentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.HaikuCommentLikeWhereInput
 }
 
 /**
@@ -758,6 +854,7 @@ export type HaikuCommentSelect<ExtArgs extends runtime.Types.Extensions.Internal
   updatedAt?: boolean
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   poem?: boolean | Prisma.HaikuDefaultArgs<ExtArgs>
+  commentLikes?: boolean | Prisma.HaikuComment$commentLikesArgs<ExtArgs>
   reply?: boolean | Prisma.HaikuComment$replyArgs<ExtArgs>
   _count?: boolean | Prisma.HaikuCommentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["haikuComment"]>
@@ -797,6 +894,7 @@ export type HaikuCommentOmit<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type HaikuCommentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   author?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   poem?: boolean | Prisma.HaikuDefaultArgs<ExtArgs>
+  commentLikes?: boolean | Prisma.HaikuComment$commentLikesArgs<ExtArgs>
   reply?: boolean | Prisma.HaikuComment$replyArgs<ExtArgs>
   _count?: boolean | Prisma.HaikuCommentCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -814,6 +912,7 @@ export type $HaikuCommentPayload<ExtArgs extends runtime.Types.Extensions.Intern
   objects: {
     author: Prisma.$UserPayload<ExtArgs>
     poem: Prisma.$HaikuPayload<ExtArgs>
+    commentLikes: Prisma.$HaikuCommentLikePayload<ExtArgs>[]
     reply: Prisma.$HaikuReplyPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1219,6 +1318,7 @@ export interface Prisma__HaikuCommentClient<T, Null = never, ExtArgs extends run
   readonly [Symbol.toStringTag]: "PrismaPromise"
   author<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   poem<T extends Prisma.HaikuDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HaikuDefaultArgs<ExtArgs>>): Prisma.Prisma__HaikuClient<runtime.Types.Result.GetResult<Prisma.$HaikuPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  commentLikes<T extends Prisma.HaikuComment$commentLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HaikuComment$commentLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HaikuCommentLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reply<T extends Prisma.HaikuComment$replyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.HaikuComment$replyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HaikuReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1653,6 +1753,30 @@ export type HaikuCommentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many HaikuComments to delete.
    */
   limit?: number
+}
+
+/**
+ * HaikuComment.commentLikes
+ */
+export type HaikuComment$commentLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the HaikuCommentLike
+   */
+  select?: Prisma.HaikuCommentLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the HaikuCommentLike
+   */
+  omit?: Prisma.HaikuCommentLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.HaikuCommentLikeInclude<ExtArgs> | null
+  where?: Prisma.HaikuCommentLikeWhereInput
+  orderBy?: Prisma.HaikuCommentLikeOrderByWithRelationInput | Prisma.HaikuCommentLikeOrderByWithRelationInput[]
+  cursor?: Prisma.HaikuCommentLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.HaikuCommentLikeScalarFieldEnum | Prisma.HaikuCommentLikeScalarFieldEnum[]
 }
 
 /**
