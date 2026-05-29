@@ -34,7 +34,7 @@ haikuRouter.get("/", verifyToken, async (req, res, next) => {
       where: { published: true },
       include: {
         _count: {
-          select: { comments: true },
+          select: { comments: true, haikuLikes: true },
         },
       },
     });
@@ -51,7 +51,7 @@ haikuRouter.get("/mine", verifyToken, async (req, res, next) => {
       where: { authorID: req.user.id },
       include: {
         _count: {
-          select: { comments: true },
+          select: { comments: true, haikuLikes: true },
         },
       },
     });
@@ -67,7 +67,7 @@ haikuRouter.get("/:id", verifyToken, async (req, res, next) => {
     const haiku = await prisma.haiku.findUnique({
       where: { id: parseInt(req.params.id) },
       include: {
-        _count: { select: { comments: true } },
+        _count: { select: { comments: true, haikuLikes: true } },
       },
     });
     if (!haiku) {
@@ -90,7 +90,7 @@ haikuRouter.get("/user/:userID", verifyToken, async (req, res, next) => {
     const userHaikus = await prisma.haiku.findMany({
       where: { authorID: parseInt(req.params.userID), published: true },
       include: {
-        _count: { select: { comments: true } },
+        _count: { select: { comments: true, haikuLikes: true } },
       },
     });
     res.json(userHaikus);
@@ -154,6 +154,56 @@ haikuRouter.delete("/:id", verifyToken, async (req, res, next) => {
     } else {
       return res.status(403).json({ error: "Unauthorized Credentials" });
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// user can like a haiku
+haikuRouter.post("/:id/like", verifyToken, async (req, res, next) => {
+  try {
+    const haikuID = parseInt(req.params.id);
+    if (isNaN(haikuID))
+      return res.status(400).json({ error: "Invalid Haiku ID" });
+
+    const haiku = await prisma.haiku.findUnique({
+      where: { id: haikuID },
+    });
+    if (!haiku) return res.status(404).json({ error: "Haiku Not Found" });
+
+    const like = await prisma.haikuLike.create({
+      data: {
+        userID: req.user.id,
+        haikuID: haikuID,
+      },
+    });
+    return res.status(201).json(like);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//user can delete their like (unlike)
+haikuRouter.delete("/:id/like", verifyToken, async (req, res, next) => {
+  try {
+    const haikuID = parseInt(req.params.id);
+    if (isNaN(haikuID))
+      return res.status(400).json({ error: "Invalid Haiku ID" });
+
+    const haiku = await prisma.haiku.findUnique({
+      where: { id: haikuID },
+    });
+    if (!haiku) return res.status(404).json({ error: "Haiku Not Found" });
+
+    const like = await prisma.haikuLike.delete({
+      where: {
+        userID_haikuID: {
+          haikuID: haikuID,
+          userID: req.user.id,
+        },
+      },
+    });
+    return res.status(200).json(like);
   } catch (error) {
     next(error);
   }

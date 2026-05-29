@@ -42,7 +42,7 @@ limerickRouter.get("/", verifyToken, async (req, res, next) => {
       where: { published: true },
       include: {
         _count: {
-          select: { comments: true },
+          select: { comments: true, limerickLikes: true },
         },
       },
     });
@@ -59,7 +59,7 @@ limerickRouter.get("/mine", verifyToken, async (req, res, next) => {
       where: { authorID: req.user.id },
       include: {
         _count: {
-          select: { comments: true },
+          select: { comments: true, limerickLikes: true },
         },
       },
     });
@@ -75,7 +75,7 @@ limerickRouter.get("/:id", verifyToken, async (req, res, next) => {
     const limerick = await prisma.limerick.findUnique({
       where: { id: parseInt(req.params.id) },
       include: {
-        _count: { select: { comments: true } },
+        _count: { select: { comments: true, limerickLikes: true } },
       },
     });
     if (!limerick) {
@@ -100,7 +100,7 @@ limerickRouter.get("/user/:userID", verifyToken, async (req, res, next) => {
     const userlimericks = await prisma.limerick.findMany({
       where: { authorID: parseInt(req.params.userID), published: true },
       include: {
-        _count: { select: { comments: true } },
+        _count: { select: { comments: true, limerickLikes: true } },
       },
     });
     res.json(userlimericks);
@@ -177,6 +177,56 @@ limerickRouter.delete("/:id", verifyToken, async (req, res, next) => {
     } else {
       return res.status(403).json({ error: "Unauthorized Credentials" });
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+// user can like a limerick
+limerickRouter.post("/:id/like", verifyToken, async (req, res, next) => {
+  try {
+    const limerickID = parseInt(req.params.id);
+    if (isNaN(limerickID))
+      return res.status(400).json({ error: "Invalid Limerick ID" });
+
+    const limerick = await prisma.limerick.findUnique({
+      where: { id: limerickID },
+    });
+    if (!limerick) return res.status(404).json({ error: "Limerick Not Found" });
+
+    const like = await prisma.limerickLike.create({
+      data: {
+        userID: req.user.id,
+        limerickID: limerickID,
+      },
+    });
+    return res.status(201).json(like);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//user can delete their like (unlike)
+limerickRouter.delete("/:id/like", verifyToken, async (req, res, next) => {
+  try {
+    const limerickID = parseInt(req.params.id);
+    if (isNaN(limerickID))
+      return res.status(400).json({ error: "Invalid Limerick ID" });
+
+    const limerick = await prisma.limerick.findUnique({
+      where: { id: limerickID },
+    });
+    if (!limerick) return res.status(404).json({ error: "Limerick Not Found" });
+
+    const like = await prisma.limerickLike.delete({
+      where: {
+        userID_limerickID: {
+          limerickID: limerickID,
+          userID: req.user.id,
+        },
+      },
+    });
+    return res.status(200).json(like);
   } catch (error) {
     next(error);
   }
