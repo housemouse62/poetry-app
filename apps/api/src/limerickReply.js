@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { createLimiter } from "../middleware/limiters.js";
 
 const limerickReplyRouter = Router();
 
@@ -8,6 +9,7 @@ const limerickReplyRouter = Router();
 limerickReplyRouter.post(
   "/:commentID/replies",
   verifyToken,
+  createLimiter,
   async (req, res, next) => {
     try {
       const commentID = parseInt(req.params.commentID);
@@ -59,31 +61,36 @@ limerickReplyRouter.get("/:commentID", verifyToken, async (req, res, next) => {
 });
 
 // author edit their own reply.
-limerickReplyRouter.patch("/:replyID", verifyToken, async (req, res, next) => {
-  try {
-    const replyID = parseInt(req.params.replyID);
-    if (isNaN(replyID))
-      return res.status(400).json({ error: "Invalid Reply ID" });
+limerickReplyRouter.patch(
+  "/:replyID",
+  verifyToken,
+  createLimiter,
+  async (req, res, next) => {
+    try {
+      const replyID = parseInt(req.params.replyID);
+      if (isNaN(replyID))
+        return res.status(400).json({ error: "Invalid Reply ID" });
 
-    const reply = await prisma.limerickReply.findUnique({
-      where: { id: replyID },
-    });
-    if (!reply) return res.status(404).json({ error: "Reply Not Found" });
-    if (req.user.id === reply.authorID) {
-      const reply = await prisma.limerickReply.update({
+      const reply = await prisma.limerickReply.findUnique({
         where: { id: replyID },
-        data: {
-          replybody: req.body.replybody,
-        },
       });
-      return res.status(200).json(reply);
-    } else {
-      return res.status(403).json({ error: "Unauthorized Credentials" });
+      if (!reply) return res.status(404).json({ error: "Reply Not Found" });
+      if (req.user.id === reply.authorID) {
+        const reply = await prisma.limerickReply.update({
+          where: { id: replyID },
+          data: {
+            replybody: req.body.replybody,
+          },
+        });
+        return res.status(200).json(reply);
+      } else {
+        return res.status(403).json({ error: "Unauthorized Credentials" });
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // author delete their own reply || admin delete any reply
 limerickReplyRouter.delete("/:replyID", verifyToken, async (req, res, next) => {

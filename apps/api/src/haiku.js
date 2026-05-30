@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { createLimiter } from "../middleware/limiters.js";
 
 const haikuRouter = Router();
 
 // create a haiku
-haikuRouter.post("/", verifyToken, async (req, res, next) => {
+haikuRouter.post("/", verifyToken, createLimiter, async (req, res, next) => {
   try {
     const newHaiku = await prisma.haiku.create({
       data: {
@@ -55,7 +56,7 @@ haikuRouter.get("/mine", verifyToken, async (req, res, next) => {
         },
       },
     });
-    res.json(myHaikus);
+    res.status(200).json(myHaikus);
   } catch (error) {
     next(error);
   }
@@ -100,38 +101,45 @@ haikuRouter.get("/user/:userID", verifyToken, async (req, res, next) => {
 });
 
 // edit a specific haiku
-haikuRouter.patch("/:id", verifyToken, async (req, res, next) => {
-  try {
-    const haikuID = parseInt(req.params.id);
-    if (isNaN(haikuID))
-      return res.status(404).json({ error: "Invalid haiku ID" });
+haikuRouter.patch(
+  "/:id",
+  verifyToken,
+  createLimiter,
+  async (req, res, next) => {
+    try {
+      const haikuID = parseInt(req.params.id);
+      if (isNaN(haikuID))
+        return res.status(404).json({ error: "Invalid haiku ID" });
 
-    const findHaiku = await prisma.haiku.findUnique({ where: { id: haikuID } });
+      const findHaiku = await prisma.haiku.findUnique({
+        where: { id: haikuID },
+      });
 
-    if (!findHaiku) {
-      return res.status(404).json({ error: "Haiku not found" });
+      if (!findHaiku) {
+        return res.status(404).json({ error: "Haiku not found" });
+      }
+      if (findHaiku.authorID !== req.user.id) {
+        return res.status(403).json({ error: "Unauthorized User" });
+      }
+
+      const haiku = await prisma.haiku.update({
+        where: { id: haikuID },
+        data: {
+          title: req.body.title,
+          lineOne: req.body.lineOne,
+          lineTwo: req.body.lineTwo,
+          lineThree: req.body.lineThree,
+          lineOneSyllables: req.body.lineOneSyllables,
+          lineTwoSyllables: req.body.lineTwoSyllables,
+          lineThreeSyllables: req.body.lineThreeSyllables,
+        },
+      });
+      return res.status(200).json(haiku);
+    } catch (error) {
+      next(error);
     }
-    if (findHaiku.authorID !== req.user.id) {
-      return res.status(403).json({ error: "Unauthorized User" });
-    }
-
-    const haiku = await prisma.haiku.update({
-      where: { id: haikuID },
-      data: {
-        title: req.body.title,
-        lineOne: req.body.lineOne,
-        lineTwo: req.body.lineTwo,
-        lineThree: req.body.lineThree,
-        lineOneSyllables: req.body.lineOneSyllables,
-        lineTwoSyllables: req.body.lineTwoSyllables,
-        lineThreeSyllables: req.body.lineThreeSyllables,
-      },
-    });
-    return res.status(200).json(haiku);
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // delete a specific haiku
 haikuRouter.delete("/:id", verifyToken, async (req, res, next) => {

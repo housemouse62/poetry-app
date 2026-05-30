@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { createLimiter } from "../middleware/limiters.js";
 
 const limerickRouter = Router();
 
 // create a limerick
-limerickRouter.post("/", verifyToken, async (req, res, next) => {
+limerickRouter.post("/", verifyToken, createLimiter, async (req, res, next) => {
   try {
     const newlimerick = await prisma.limerick.create({
       data: {
@@ -110,48 +111,53 @@ limerickRouter.get("/user/:userID", verifyToken, async (req, res, next) => {
 });
 
 // edit a specific limerick
-limerickRouter.patch("/:id", verifyToken, async (req, res, next) => {
-  try {
-    const limerickID = parseInt(req.params.id);
-    if (isNaN(limerickID))
-      return res.status(404).json({ error: "Invalid limerick ID" });
+limerickRouter.patch(
+  "/:id",
+  verifyToken,
+  createLimiter,
+  async (req, res, next) => {
+    try {
+      const limerickID = parseInt(req.params.id);
+      if (isNaN(limerickID))
+        return res.status(404).json({ error: "Invalid limerick ID" });
 
-    const findlimerick = await prisma.limerick.findUnique({
-      where: { id: limerickID },
-    });
+      const findlimerick = await prisma.limerick.findUnique({
+        where: { id: limerickID },
+      });
 
-    if (!findlimerick) {
-      return res.status(404).json({ error: "Limerick not found" });
+      if (!findlimerick) {
+        return res.status(404).json({ error: "Limerick not found" });
+      }
+      if (findlimerick.authorID !== req.user.id) {
+        return res.status(403).json({ error: "Unauthorized User" });
+      }
+
+      const limerick = await prisma.limerick.update({
+        where: { id: limerickID },
+        data: {
+          title: req.body.title,
+          lineOne: req.body.lineOne,
+          lineTwo: req.body.lineTwo,
+          lineThree: req.body.lineThree,
+          lineFour: req.body.lineFour,
+          lineFive: req.body.lineFive,
+          lineOneSyllables: req.body.lineOneSyllables,
+          lineTwoSyllables: req.body.lineTwoSyllables,
+          lineThreeSyllables: req.body.lineThreeSyllables,
+          lineFourSyllables: req.body.lineFourSyllables,
+          lineFiveSyllables: req.body.lineFiveSyllables,
+          rhymeA: req.body.rhymeA,
+          rhymeB: req.body.rhymeB,
+          rhymeAVerified: req.body.rhymeAVerified,
+          rhymeBVerified: req.body.rhymeBVerified,
+        },
+      });
+      return res.status(200).json(limerick);
+    } catch (error) {
+      next(error);
     }
-    if (findlimerick.authorID !== req.user.id) {
-      return res.status(403).json({ error: "Unauthorized User" });
-    }
-
-    const limerick = await prisma.limerick.update({
-      where: { id: limerickID },
-      data: {
-        title: req.body.title,
-        lineOne: req.body.lineOne,
-        lineTwo: req.body.lineTwo,
-        lineThree: req.body.lineThree,
-        lineFour: req.body.lineFour,
-        lineFive: req.body.lineFive,
-        lineOneSyllables: req.body.lineOneSyllables,
-        lineTwoSyllables: req.body.lineTwoSyllables,
-        lineThreeSyllables: req.body.lineThreeSyllables,
-        lineFourSyllables: req.body.lineFourSyllables,
-        lineFiveSyllables: req.body.lineFiveSyllables,
-        rhymeA: req.body.rhymeA,
-        rhymeB: req.body.rhymeB,
-        rhymeAVerified: req.body.rhymeAVerified,
-        rhymeBVerified: req.body.rhymeBVerified,
-      },
-    });
-    return res.status(200).json(limerick);
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // delete a specific limerick
 limerickRouter.delete("/:id", verifyToken, async (req, res, next) => {

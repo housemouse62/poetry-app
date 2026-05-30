@@ -1,32 +1,38 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { createLimiter } from "../middleware/limiters.js";
 
 const limerickCommentRouter = Router();
 
 // any user post comment
-limerickCommentRouter.post("/:poemID", verifyToken, async (req, res, next) => {
-  try {
-    const poemID = parseInt(req.params.poemID);
-    if (isNaN(poemID))
-      return res.status(400).json({ error: "Invalid Comment ID" });
+limerickCommentRouter.post(
+  "/:poemID",
+  verifyToken,
+  createLimiter,
+  async (req, res, next) => {
+    try {
+      const poemID = parseInt(req.params.poemID);
+      if (isNaN(poemID))
+        return res.status(400).json({ error: "Invalid Comment ID" });
 
-    const poem = await prisma.limerick.findUnique({
-      where: { id: poemID },
-    });
-    if (!poem) return res.status(404).json({ error: "limerick Not Found" });
-    const newComment = await prisma.limerickComment.create({
-      data: {
-        commentbody: req.body.commentbody,
-        authorID: req.user.id,
-        poemID: poemID,
-      },
-    });
-    res.status(201).json(newComment);
-  } catch (error) {
-    next(error);
-  }
-});
+      const poem = await prisma.limerick.findUnique({
+        where: { id: poemID },
+      });
+      if (!poem) return res.status(404).json({ error: "limerick Not Found" });
+      const newComment = await prisma.limerickComment.create({
+        data: {
+          commentbody: req.body.commentbody,
+          authorID: req.user.id,
+          poemID: poemID,
+        },
+      });
+      res.status(201).json(newComment);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // any user get all comments for one post
 limerickCommentRouter.get("/:poemID", verifyToken, async (req, res, next) => {
@@ -56,6 +62,7 @@ limerickCommentRouter.get("/:poemID", verifyToken, async (req, res, next) => {
 limerickCommentRouter.patch(
   "/:commentID",
   verifyToken,
+  createLimiter,
   async (req, res, next) => {
     try {
       const commentID = parseInt(req.params.commentID);

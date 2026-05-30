@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { createLimiter } from "../middleware/limiters.js";
 
 const favoriteRouter = Router();
 
@@ -36,6 +37,7 @@ favoriteRouter.get("/:userID", verifyToken, async (req, res, next) => {
 favoriteRouter.post(
   "/:poemType/:poemID",
   verifyToken,
+  createLimiter,
   async (req, res, next) => {
     try {
       const newFavorite = await prisma.favorite.create({

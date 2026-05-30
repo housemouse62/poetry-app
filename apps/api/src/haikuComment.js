@@ -1,32 +1,38 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
+import { createLimiter } from "../middleware/limiters.js";
 
 const haikuCommentRouter = Router();
 
 // any user post comment
-haikuCommentRouter.post("/:poemID", verifyToken, async (req, res, next) => {
-  try {
-    const poemID = parseInt(req.params.poemID);
-    if (isNaN(poemID))
-      return res.status(400).json({ error: "Invalid Comment ID" });
+haikuCommentRouter.post(
+  "/:poemID",
+  createLimiter,
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      const poemID = parseInt(req.params.poemID);
+      if (isNaN(poemID))
+        return res.status(400).json({ error: "Invalid Comment ID" });
 
-    const poem = await prisma.haiku.findUnique({
-      where: { id: poemID },
-    });
-    if (!poem) return res.status(404).json({ error: "Haiku Not Found" });
-    const newComment = await prisma.haikuComment.create({
-      data: {
-        commentbody: req.body.commentbody,
-        authorID: req.user.id,
-        poemID: poemID,
-      },
-    });
-    res.status(201).json(newComment);
-  } catch (error) {
-    next(error);
-  }
-});
+      const poem = await prisma.haiku.findUnique({
+        where: { id: poemID },
+      });
+      if (!poem) return res.status(404).json({ error: "Haiku Not Found" });
+      const newComment = await prisma.haikuComment.create({
+        data: {
+          commentbody: req.body.commentbody,
+          authorID: req.user.id,
+          poemID: poemID,
+        },
+      });
+      res.status(201).json(newComment);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // any user get all comments for one post
 haikuCommentRouter.get("/:poemID", verifyToken, async (req, res, next) => {
@@ -53,31 +59,36 @@ haikuCommentRouter.get("/:poemID", verifyToken, async (req, res, next) => {
 });
 
 // author edit their own comment.
-haikuCommentRouter.patch("/:commentID", verifyToken, async (req, res, next) => {
-  try {
-    const commentID = parseInt(req.params.commentID);
-    if (isNaN(commentID))
-      return res.status(400).json({ error: "Invalid Comment ID" });
+haikuCommentRouter.patch(
+  "/:commentID",
+  verifyToken,
+  createLimiter,
+  async (req, res, next) => {
+    try {
+      const commentID = parseInt(req.params.commentID);
+      if (isNaN(commentID))
+        return res.status(400).json({ error: "Invalid Comment ID" });
 
-    const comment = await prisma.haikuComment.findUnique({
-      where: { id: commentID },
-    });
-    if (!comment) return res.status(404).json({ error: "Comment Not Found" });
-    if (req.user.id === comment.authorID) {
-      const comment = await prisma.haikuComment.update({
+      const comment = await prisma.haikuComment.findUnique({
         where: { id: commentID },
-        data: {
-          commentbody: req.body.commentbody,
-        },
       });
-      return res.status(200).json(comment);
-    } else {
-      return res.status(403).json({ error: "Unauthorized Credentials" });
+      if (!comment) return res.status(404).json({ error: "Comment Not Found" });
+      if (req.user.id === comment.authorID) {
+        const comment = await prisma.haikuComment.update({
+          where: { id: commentID },
+          data: {
+            commentbody: req.body.commentbody,
+          },
+        });
+        return res.status(200).json(comment);
+      } else {
+        return res.status(403).json({ error: "Unauthorized Credentials" });
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
-  }
-});
+  },
+);
 
 // author delete their own comment || admin delete any comment
 haikuCommentRouter.delete(
