@@ -9,6 +9,7 @@ import haikuCommentRouter from "./src/haikuComment.js";
 import limerickCommentRouter from "./src/limerickComment.js";
 import haikuReplyRouter from "./src/haikuReply.js";
 import limerickReplyRouter from "./src/limerickReply.js";
+import favoriteRouter from "./src/favorite.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/haikuComment", haikuCommentRouter);
 app.use("/limerickComment", limerickCommentRouter);
 app.use("/haikuReply", haikuReplyRouter);
 app.use("/limerickReply", limerickReplyRouter);
+app.use("/favorite", favoriteRouter);
 
 app.listen(process.env.PORT, () =>
   console.log(`Listening on port ${process.env.PORT}`),

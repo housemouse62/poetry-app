@@ -35,6 +35,7 @@ model User {
   haikuReplyLikes   HaikuReplyLike[]
   limerickReplies   LimerickReply[]
   limerickReplyLikes  LimerickReplyLike[]
+  favorites           Favorite[]
   
 }
 
@@ -195,4 +196,15 @@ model Word {
   flagged       Boolean @default(false)
   syllableCount Int
   data          Json
+}
+
+model Favorite {
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [userID], references: [id])
+  userID        Int
+  poemID        Int
+  poemType      String   //"haiku" or "limerick"
+  privacy       String  @default("private")
+  createdAt     DateTime @default(now())
+  @@unique([userID, poemID, poemType])
 }

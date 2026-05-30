@@ -64,7 +64,8 @@ export const ModelName = {
   HaikuReplyLike: 'HaikuReplyLike',
   LimerickReply: 'LimerickReply',
   LimerickReplyLike: 'LimerickReplyLike',
-  Word: 'Word'
+  Word: 'Word',
+  Favorite: 'Favorite'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -253,6 +254,18 @@ export const WordScalarFieldEnum = {
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]
+
+
+export const FavoriteScalarFieldEnum = {
+  id: 'id',
+  userID: 'userID',
+  poemID: 'poemID',
+  poemType: 'poemType',
+  privacy: 'privacy',
+  createdAt: 'createdAt'
+} as const
+
+export type FavoriteScalarFieldEnum = (typeof FavoriteScalarFieldEnum)[keyof typeof FavoriteScalarFieldEnum]
 
 
 export const SortOrder = {

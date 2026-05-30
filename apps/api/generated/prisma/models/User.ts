@@ -236,6 +236,7 @@ export type UserWhereInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeListRelationFilter
   limerickReplies?: Prisma.LimerickReplyListRelationFilter
   limerickReplyLikes?: Prisma.LimerickReplyLikeListRelationFilter
+  favorites?: Prisma.FavoriteListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -257,6 +258,7 @@ export type UserOrderByWithRelationInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeOrderByRelationAggregateInput
   limerickReplies?: Prisma.LimerickReplyOrderByRelationAggregateInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeOrderByRelationAggregateInput
+  favorites?: Prisma.FavoriteOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -281,6 +283,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   haikuReplyLikes?: Prisma.HaikuReplyLikeListRelationFilter
   limerickReplies?: Prisma.LimerickReplyListRelationFilter
   limerickReplyLikes?: Prisma.LimerickReplyLikeListRelationFilter
+  favorites?: Prisma.FavoriteListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -327,6 +330,7 @@ export type UserCreateInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -348,6 +352,7 @@ export type UserUncheckedCreateInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -368,6 +373,7 @@ export type UserUpdateInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -389,6 +395,7 @@ export type UserUncheckedUpdateInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -654,6 +661,20 @@ export type UserUpdateOneRequiredWithoutLimerickReplyLikesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLimerickReplyLikesInput, Prisma.UserUpdateWithoutLimerickReplyLikesInput>, Prisma.UserUncheckedUpdateWithoutLimerickReplyLikesInput>
 }
 
+export type UserCreateNestedOneWithoutFavoritesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoritesInput, Prisma.UserUncheckedCreateWithoutFavoritesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoritesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFavoritesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFavoritesInput, Prisma.UserUncheckedCreateWithoutFavoritesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFavoritesInput
+  upsert?: Prisma.UserUpsertWithoutFavoritesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFavoritesInput, Prisma.UserUpdateWithoutFavoritesInput>, Prisma.UserUncheckedUpdateWithoutFavoritesInput>
+}
+
 export type UserCreateWithoutHaikusInput = {
   email: string
   password: string
@@ -671,6 +692,7 @@ export type UserCreateWithoutHaikusInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHaikusInput = {
@@ -691,6 +713,7 @@ export type UserUncheckedCreateWithoutHaikusInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHaikusInput = {
@@ -726,6 +749,7 @@ export type UserUpdateWithoutHaikusInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHaikusInput = {
@@ -746,6 +770,7 @@ export type UserUncheckedUpdateWithoutHaikusInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHaikuLikesInput = {
@@ -765,6 +790,7 @@ export type UserCreateWithoutHaikuLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHaikuLikesInput = {
@@ -785,6 +811,7 @@ export type UserUncheckedCreateWithoutHaikuLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHaikuLikesInput = {
@@ -820,6 +847,7 @@ export type UserUpdateWithoutHaikuLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHaikuLikesInput = {
@@ -840,6 +868,7 @@ export type UserUncheckedUpdateWithoutHaikuLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLimericksInput = {
@@ -859,6 +888,7 @@ export type UserCreateWithoutLimericksInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLimericksInput = {
@@ -879,6 +909,7 @@ export type UserUncheckedCreateWithoutLimericksInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLimericksInput = {
@@ -914,6 +945,7 @@ export type UserUpdateWithoutLimericksInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLimericksInput = {
@@ -934,6 +966,7 @@ export type UserUncheckedUpdateWithoutLimericksInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLimerickLikesInput = {
@@ -953,6 +986,7 @@ export type UserCreateWithoutLimerickLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLimerickLikesInput = {
@@ -973,6 +1007,7 @@ export type UserUncheckedCreateWithoutLimerickLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLimerickLikesInput = {
@@ -1008,6 +1043,7 @@ export type UserUpdateWithoutLimerickLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLimerickLikesInput = {
@@ -1028,6 +1064,7 @@ export type UserUncheckedUpdateWithoutLimerickLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHaikuCommentsInput = {
@@ -1047,6 +1084,7 @@ export type UserCreateWithoutHaikuCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHaikuCommentsInput = {
@@ -1067,6 +1105,7 @@ export type UserUncheckedCreateWithoutHaikuCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHaikuCommentsInput = {
@@ -1102,6 +1141,7 @@ export type UserUpdateWithoutHaikuCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHaikuCommentsInput = {
@@ -1122,6 +1162,7 @@ export type UserUncheckedUpdateWithoutHaikuCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHaikuCommentLikesInput = {
@@ -1141,6 +1182,7 @@ export type UserCreateWithoutHaikuCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHaikuCommentLikesInput = {
@@ -1161,6 +1203,7 @@ export type UserUncheckedCreateWithoutHaikuCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHaikuCommentLikesInput = {
@@ -1196,6 +1239,7 @@ export type UserUpdateWithoutHaikuCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHaikuCommentLikesInput = {
@@ -1216,6 +1260,7 @@ export type UserUncheckedUpdateWithoutHaikuCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLimerickCommentsInput = {
@@ -1235,6 +1280,7 @@ export type UserCreateWithoutLimerickCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLimerickCommentsInput = {
@@ -1255,6 +1301,7 @@ export type UserUncheckedCreateWithoutLimerickCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLimerickCommentsInput = {
@@ -1290,6 +1337,7 @@ export type UserUpdateWithoutLimerickCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLimerickCommentsInput = {
@@ -1310,6 +1358,7 @@ export type UserUncheckedUpdateWithoutLimerickCommentsInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLimerickCommentLikesInput = {
@@ -1329,6 +1378,7 @@ export type UserCreateWithoutLimerickCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLimerickCommentLikesInput = {
@@ -1349,6 +1399,7 @@ export type UserUncheckedCreateWithoutLimerickCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLimerickCommentLikesInput = {
@@ -1384,6 +1435,7 @@ export type UserUpdateWithoutLimerickCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLimerickCommentLikesInput = {
@@ -1404,6 +1456,7 @@ export type UserUncheckedUpdateWithoutLimerickCommentLikesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHaikuRepliesInput = {
@@ -1423,6 +1476,7 @@ export type UserCreateWithoutHaikuRepliesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHaikuRepliesInput = {
@@ -1443,6 +1497,7 @@ export type UserUncheckedCreateWithoutHaikuRepliesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHaikuRepliesInput = {
@@ -1478,6 +1533,7 @@ export type UserUpdateWithoutHaikuRepliesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHaikuRepliesInput = {
@@ -1498,6 +1554,7 @@ export type UserUncheckedUpdateWithoutHaikuRepliesInput = {
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHaikuReplyLikesInput = {
@@ -1517,6 +1574,7 @@ export type UserCreateWithoutHaikuReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyCreateNestedManyWithoutAuthorInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHaikuReplyLikesInput = {
@@ -1537,6 +1595,7 @@ export type UserUncheckedCreateWithoutHaikuReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHaikuReplyLikesInput = {
@@ -1572,6 +1631,7 @@ export type UserUpdateWithoutHaikuReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyUpdateManyWithoutAuthorNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHaikuReplyLikesInput = {
@@ -1592,6 +1652,7 @@ export type UserUncheckedUpdateWithoutHaikuReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLimerickRepliesInput = {
@@ -1611,6 +1672,7 @@ export type UserCreateWithoutLimerickRepliesInput = {
   haikuReplies?: Prisma.HaikuReplyCreateNestedManyWithoutAuthorInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLimerickRepliesInput = {
@@ -1631,6 +1693,7 @@ export type UserUncheckedCreateWithoutLimerickRepliesInput = {
   haikuReplies?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutAuthorInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLimerickRepliesInput = {
@@ -1666,6 +1729,7 @@ export type UserUpdateWithoutLimerickRepliesInput = {
   haikuReplies?: Prisma.HaikuReplyUpdateManyWithoutAuthorNestedInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLimerickRepliesInput = {
@@ -1686,6 +1750,7 @@ export type UserUncheckedUpdateWithoutLimerickRepliesInput = {
   haikuReplies?: Prisma.HaikuReplyUncheckedUpdateManyWithoutAuthorNestedInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutLimerickReplyLikesInput = {
@@ -1705,6 +1770,7 @@ export type UserCreateWithoutLimerickReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyCreateNestedManyWithoutAuthorInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutLimerickReplyLikesInput = {
@@ -1725,6 +1791,7 @@ export type UserUncheckedCreateWithoutLimerickReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutAuthorInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
   limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutLimerickReplyLikesInput = {
@@ -1760,6 +1827,7 @@ export type UserUpdateWithoutLimerickReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyUpdateManyWithoutAuthorNestedInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutLimerickReplyLikesInput = {
@@ -1780,6 +1848,105 @@ export type UserUncheckedUpdateWithoutLimerickReplyLikesInput = {
   haikuReplies?: Prisma.HaikuReplyUncheckedUpdateManyWithoutAuthorNestedInput
   haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
   limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFavoritesInput = {
+  email: string
+  password: string
+  name?: string | null
+  screenname?: string | null
+  usertype?: $Enums.Usertype
+  haikus?: Prisma.HaikuCreateNestedManyWithoutAuthorInput
+  haikuLikes?: Prisma.HaikuLikeCreateNestedManyWithoutUserInput
+  limericks?: Prisma.LimerickCreateNestedManyWithoutAuthorInput
+  limerickLikes?: Prisma.LimerickLikeCreateNestedManyWithoutUserInput
+  haikuComments?: Prisma.HaikuCommentCreateNestedManyWithoutAuthorInput
+  haikuCommentLikes?: Prisma.HaikuCommentLikeCreateNestedManyWithoutUserInput
+  limerickComments?: Prisma.LimerickCommentCreateNestedManyWithoutAuthorInput
+  limerickCommentLikes?: Prisma.LimerickCommentLikeCreateNestedManyWithoutUserInput
+  haikuReplies?: Prisma.HaikuReplyCreateNestedManyWithoutAuthorInput
+  haikuReplyLikes?: Prisma.HaikuReplyLikeCreateNestedManyWithoutUserInput
+  limerickReplies?: Prisma.LimerickReplyCreateNestedManyWithoutAuthorInput
+  limerickReplyLikes?: Prisma.LimerickReplyLikeCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFavoritesInput = {
+  id?: number
+  email: string
+  password: string
+  name?: string | null
+  screenname?: string | null
+  usertype?: $Enums.Usertype
+  haikus?: Prisma.HaikuUncheckedCreateNestedManyWithoutAuthorInput
+  haikuLikes?: Prisma.HaikuLikeUncheckedCreateNestedManyWithoutUserInput
+  limericks?: Prisma.LimerickUncheckedCreateNestedManyWithoutAuthorInput
+  limerickLikes?: Prisma.LimerickLikeUncheckedCreateNestedManyWithoutUserInput
+  haikuComments?: Prisma.HaikuCommentUncheckedCreateNestedManyWithoutAuthorInput
+  haikuCommentLikes?: Prisma.HaikuCommentLikeUncheckedCreateNestedManyWithoutUserInput
+  limerickComments?: Prisma.LimerickCommentUncheckedCreateNestedManyWithoutAuthorInput
+  limerickCommentLikes?: Prisma.LimerickCommentLikeUncheckedCreateNestedManyWithoutUserInput
+  haikuReplies?: Prisma.HaikuReplyUncheckedCreateNestedManyWithoutAuthorInput
+  haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedCreateNestedManyWithoutUserInput
+  limerickReplies?: Prisma.LimerickReplyUncheckedCreateNestedManyWithoutAuthorInput
+  limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFavoritesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFavoritesInput, Prisma.UserUncheckedCreateWithoutFavoritesInput>
+}
+
+export type UserUpsertWithoutFavoritesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFavoritesInput, Prisma.UserUncheckedUpdateWithoutFavoritesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFavoritesInput, Prisma.UserUncheckedCreateWithoutFavoritesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFavoritesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFavoritesInput, Prisma.UserUncheckedUpdateWithoutFavoritesInput>
+}
+
+export type UserUpdateWithoutFavoritesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
+  haikus?: Prisma.HaikuUpdateManyWithoutAuthorNestedInput
+  haikuLikes?: Prisma.HaikuLikeUpdateManyWithoutUserNestedInput
+  limericks?: Prisma.LimerickUpdateManyWithoutAuthorNestedInput
+  limerickLikes?: Prisma.LimerickLikeUpdateManyWithoutUserNestedInput
+  haikuComments?: Prisma.HaikuCommentUpdateManyWithoutAuthorNestedInput
+  haikuCommentLikes?: Prisma.HaikuCommentLikeUpdateManyWithoutUserNestedInput
+  limerickComments?: Prisma.LimerickCommentUpdateManyWithoutAuthorNestedInput
+  limerickCommentLikes?: Prisma.LimerickCommentLikeUpdateManyWithoutUserNestedInput
+  haikuReplies?: Prisma.HaikuReplyUpdateManyWithoutAuthorNestedInput
+  haikuReplyLikes?: Prisma.HaikuReplyLikeUpdateManyWithoutUserNestedInput
+  limerickReplies?: Prisma.LimerickReplyUpdateManyWithoutAuthorNestedInput
+  limerickReplyLikes?: Prisma.LimerickReplyLikeUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFavoritesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  screenname?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  usertype?: Prisma.EnumUsertypeFieldUpdateOperationsInput | $Enums.Usertype
+  haikus?: Prisma.HaikuUncheckedUpdateManyWithoutAuthorNestedInput
+  haikuLikes?: Prisma.HaikuLikeUncheckedUpdateManyWithoutUserNestedInput
+  limericks?: Prisma.LimerickUncheckedUpdateManyWithoutAuthorNestedInput
+  limerickLikes?: Prisma.LimerickLikeUncheckedUpdateManyWithoutUserNestedInput
+  haikuComments?: Prisma.HaikuCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  haikuCommentLikes?: Prisma.HaikuCommentLikeUncheckedUpdateManyWithoutUserNestedInput
+  limerickComments?: Prisma.LimerickCommentUncheckedUpdateManyWithoutAuthorNestedInput
+  limerickCommentLikes?: Prisma.LimerickCommentLikeUncheckedUpdateManyWithoutUserNestedInput
+  haikuReplies?: Prisma.HaikuReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  haikuReplyLikes?: Prisma.HaikuReplyLikeUncheckedUpdateManyWithoutUserNestedInput
+  limerickReplies?: Prisma.LimerickReplyUncheckedUpdateManyWithoutAuthorNestedInput
+  limerickReplyLikes?: Prisma.LimerickReplyLikeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1800,6 +1967,7 @@ export type UserCountOutputType = {
   haikuReplyLikes: number
   limerickReplies: number
   limerickReplyLikes: number
+  favorites: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1815,6 +1983,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   haikuReplyLikes?: boolean | UserCountOutputTypeCountHaikuReplyLikesArgs
   limerickReplies?: boolean | UserCountOutputTypeCountLimerickRepliesArgs
   limerickReplyLikes?: boolean | UserCountOutputTypeCountLimerickReplyLikesArgs
+  favorites?: boolean | UserCountOutputTypeCountFavoritesArgs
 }
 
 /**
@@ -1911,6 +2080,13 @@ export type UserCountOutputTypeCountLimerickReplyLikesArgs<ExtArgs extends runti
   where?: Prisma.LimerickReplyLikeWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFavoritesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FavoriteWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1931,6 +2107,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   haikuReplyLikes?: boolean | Prisma.User$haikuReplyLikesArgs<ExtArgs>
   limerickReplies?: boolean | Prisma.User$limerickRepliesArgs<ExtArgs>
   limerickReplyLikes?: boolean | Prisma.User$limerickReplyLikesArgs<ExtArgs>
+  favorites?: boolean | Prisma.User$favoritesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1975,6 +2152,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   haikuReplyLikes?: boolean | Prisma.User$haikuReplyLikesArgs<ExtArgs>
   limerickReplies?: boolean | Prisma.User$limerickRepliesArgs<ExtArgs>
   limerickReplyLikes?: boolean | Prisma.User$limerickReplyLikesArgs<ExtArgs>
+  favorites?: boolean | Prisma.User$favoritesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1995,6 +2173,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     haikuReplyLikes: Prisma.$HaikuReplyLikePayload<ExtArgs>[]
     limerickReplies: Prisma.$LimerickReplyPayload<ExtArgs>[]
     limerickReplyLikes: Prisma.$LimerickReplyLikePayload<ExtArgs>[]
+    favorites: Prisma.$FavoritePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2409,6 +2588,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   haikuReplyLikes<T extends Prisma.User$haikuReplyLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$haikuReplyLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HaikuReplyLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   limerickReplies<T extends Prisma.User$limerickRepliesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$limerickRepliesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LimerickReplyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   limerickReplyLikes<T extends Prisma.User$limerickReplyLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$limerickReplyLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LimerickReplyLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  favorites<T extends Prisma.User$favoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3122,6 +3302,30 @@ export type User$limerickReplyLikesArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.LimerickReplyLikeScalarFieldEnum | Prisma.LimerickReplyLikeScalarFieldEnum[]
+}
+
+/**
+ * User.favorites
+ */
+export type User$favoritesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Favorite
+   */
+  select?: Prisma.FavoriteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Favorite
+   */
+  omit?: Prisma.FavoriteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FavoriteInclude<ExtArgs> | null
+  where?: Prisma.FavoriteWhereInput
+  orderBy?: Prisma.FavoriteOrderByWithRelationInput | Prisma.FavoriteOrderByWithRelationInput[]
+  cursor?: Prisma.FavoriteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FavoriteScalarFieldEnum | Prisma.FavoriteScalarFieldEnum[]
 }
 
 /**

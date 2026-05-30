@@ -87,3 +87,8 @@ export type LimerickReplyLike = Prisma.LimerickReplyLikeModel
  * 
  */
 export type Word = Prisma.WordModel
+/**
+ * Model Favorite
+ * 
+ */
+export type Favorite = Prisma.FavoriteModel
