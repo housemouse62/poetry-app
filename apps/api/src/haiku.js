@@ -12,10 +12,12 @@ haikuRouter.post(
   verifyToken,
   createLimiter,
   body("title")
+    .escape()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree"])
+    .escape()
     .notEmpty()
     .withMessage("Line cannot be empty")
     .isLength({ max: 100 })
@@ -37,9 +39,9 @@ haikuRouter.post(
           lineOne: req.body.lineOne,
           lineTwo: req.body.lineTwo,
           lineThree: req.body.lineThree,
-          lineOneSyllables: req.body.lineOneSyllables,
-          lineTwoSyllables: req.body.lineTwoSyllables,
-          lineThreeSyllables: req.body.lineThreeSyllables,
+          lineOneSyllables: parseInt(req.body.lineOneSyllables),
+          lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
+          lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
           published: req.body.published,
           authorID: req.user.id,
           screenname: req.user.screenname,
@@ -130,11 +132,13 @@ haikuRouter.patch(
   verifyToken,
   createLimiter,
   body("title")
+    .escape()
     .optional()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree"])
+    .escape()
     .optional()
     .notEmpty()
     .withMessage("Line cannot be empty")
@@ -174,9 +178,9 @@ haikuRouter.patch(
           lineOne: req.body.lineOne,
           lineTwo: req.body.lineTwo,
           lineThree: req.body.lineThree,
-          lineOneSyllables: req.body.lineOneSyllables,
-          lineTwoSyllables: req.body.lineTwoSyllables,
-          lineThreeSyllables: req.body.lineThreeSyllables,
+          lineOneSyllables: parseInt(req.body.lineOneSyllables),
+          lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
+          lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
         },
       });
       return res.status(200).json(haiku);

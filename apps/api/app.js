@@ -12,14 +12,16 @@ import limerickReplyRouter from "./src/limerickReply.js";
 import favoriteRouter from "./src/favorite.js";
 import { globalLimiter } from "./middleware/limiters.js";
 import helmet from "helmet";
+import morgan from "morgan";
 
 const app = express();
 
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(morgan("dev")); // CHANGE TO "combined" FOR PRODUCTION
+app.use(cors({ origin: process.env.CORS_ORIGIN })); // CHANGE ENV VARIABLE FOR PRODUCTION!
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 app.use(globalLimiter);
 app.use("/users", userRouter);

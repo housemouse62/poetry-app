@@ -12,6 +12,7 @@ haikuCommentRouter.post(
   createLimiter,
   verifyToken,
   body("commentbody")
+    .escape()
     .notEmpty()
     .withMessage("Comment cannot be empty")
     .isLength({ max: 600 }),
@@ -73,6 +74,7 @@ haikuCommentRouter.patch(
   verifyToken,
   createLimiter,
   body("commentbody")
+    .escape()
     .notEmpty()
     .withMessage("Comment cannot be empty")
     .isLength({ max: 600 }),

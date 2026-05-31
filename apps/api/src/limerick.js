@@ -12,10 +12,12 @@ limerickRouter.post(
   verifyToken,
   createLimiter,
   body("title")
+    .escape()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
+    .escape()
     .notEmpty()
     .withMessage("Line cannot be empty")
     .isLength({ max: 100 })
@@ -27,6 +29,7 @@ limerickRouter.post(
     "lineFourSyllables",
     "lineFiveSyllables",
   ])
+    .escape()
     .notEmpty()
     .withMessage("Syllables cannot be empty")
     .isInt({ min: 0, max: 9 })
@@ -45,11 +48,11 @@ limerickRouter.post(
           lineThree: req.body.lineThree,
           lineFour: req.body.lineFour,
           lineFive: req.body.lineFive,
-          lineOneSyllables: req.body.lineOneSyllables,
-          lineTwoSyllables: req.body.lineTwoSyllables,
-          lineThreeSyllables: req.body.lineThreeSyllables,
-          lineFourSyllables: req.body.lineFourSyllables,
-          lineFiveSyllables: req.body.lineFiveSyllables,
+          lineOneSyllables: parseInt(req.body.lineOneSyllables),
+          lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
+          lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
+          lineFourSyllables: parseInt(req.body.lineFourSyllables),
+          lineFiveSyllables: parseInt(req.body.lineFiveSyllables),
           rhymeA: req.body.rhymeA,
           rhymeB: req.body.rhymeB,
           rhymeAVerified: req.body.rhymeAVerified,
@@ -146,11 +149,13 @@ limerickRouter.patch(
   verifyToken,
   createLimiter,
   body("title")
+    .escape()
     .optional()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
+    .escape()
     .optional()
     .notEmpty()
     .withMessage("Line cannot be empty")
@@ -198,11 +203,11 @@ limerickRouter.patch(
           lineThree: req.body.lineThree,
           lineFour: req.body.lineFour,
           lineFive: req.body.lineFive,
-          lineOneSyllables: req.body.lineOneSyllables,
-          lineTwoSyllables: req.body.lineTwoSyllables,
-          lineThreeSyllables: req.body.lineThreeSyllables,
-          lineFourSyllables: req.body.lineFourSyllables,
-          lineFiveSyllables: req.body.lineFiveSyllables,
+          lineOneSyllables: parseInt(req.body.lineOneSyllables),
+          lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
+          lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
+          lineFourSyllables: parseInt(req.body.lineFourSyllables),
+          lineFiveSyllables: parseInt(req.body.lineFiveSyllables),
           rhymeA: req.body.rhymeA,
           rhymeB: req.body.rhymeB,
           rhymeAVerified: req.body.rhymeAVerified,
