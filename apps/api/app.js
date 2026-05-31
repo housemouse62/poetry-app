@@ -11,10 +11,12 @@ import haikuReplyRouter from "./src/haikuReply.js";
 import limerickReplyRouter from "./src/limerickReply.js";
 import favoriteRouter from "./src/favorite.js";
 import { globalLimiter } from "./middleware/limiters.js";
+import helmet from "helmet";
 
 const app = express();
 
-app.use(cors());
+app.use(helmet());
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

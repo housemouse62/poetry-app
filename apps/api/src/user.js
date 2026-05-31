@@ -25,6 +25,12 @@ userRouter.patch(
       throw new Error("Email addresses do not match.");
     return true;
   }),
+  body("password")
+    .optional()
+    .isStrongPassword()
+    .withMessage(
+      "Password must be at least 8 characters and include uppercase, number, and symbol",
+    ),
   async (req, res, next) => {
     const formErrors = validationResult(req);
     if (!formErrors.isEmpty()) {
@@ -105,6 +111,11 @@ userRouter.post(
     return true;
   }),
   body("email").isEmail().withMessage("Please enter a valid email address"),
+  body("password")
+    .isStrongPassword()
+    .withMessage(
+      "Password must be at least 8 characters and include uppercase, number, and symbol",
+    ),
 
   async (req, res, next) => {
     const formErrors = validationResult(req);
