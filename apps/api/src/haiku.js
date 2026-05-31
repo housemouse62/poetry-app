@@ -2,31 +2,55 @@ import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { createLimiter } from "../middleware/limiters.js";
+import { body, validationResult } from "express-validator";
 
 const haikuRouter = Router();
 
 // create a haiku
-haikuRouter.post("/", verifyToken, createLimiter, async (req, res, next) => {
-  try {
-    const newHaiku = await prisma.haiku.create({
-      data: {
-        title: req.body.title,
-        lineOne: req.body.lineOne,
-        lineTwo: req.body.lineTwo,
-        lineThree: req.body.lineThree,
-        lineOneSyllables: req.body.lineOneSyllables,
-        lineTwoSyllables: req.body.lineTwoSyllables,
-        lineThreeSyllables: req.body.lineThreeSyllables,
-        published: req.body.published,
-        authorID: req.user.id,
-        screenname: req.user.screenname,
-      },
-    });
-    res.status(201).json(newHaiku);
-  } catch (error) {
-    next(error);
-  }
-});
+haikuRouter.post(
+  "/",
+  verifyToken,
+  createLimiter,
+  body("title")
+    .notEmpty()
+    .withMessage("Title cannot be empty")
+    .isLength({ max: 100 }),
+  body(["lineOne", "lineTwo", "lineThree"])
+    .notEmpty()
+    .withMessage("Line cannot be empty")
+    .isLength({ max: 100 })
+    .withMessage("Line cannot exceed 100 characters"),
+  body(["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables"])
+    .notEmpty()
+    .withMessage("Syllables cannot be empty")
+    .isInt({ min: 0, max: 9 })
+    .withMessage("Syllable count must be a number between 0 and 9"),
+  async (req, res, next) => {
+    const formErrors = validationResult(req);
+    if (!formErrors.isEmpty()) {
+      return res.status(400).json(formErrors);
+    }
+    try {
+      const newHaiku = await prisma.haiku.create({
+        data: {
+          title: req.body.title,
+          lineOne: req.body.lineOne,
+          lineTwo: req.body.lineTwo,
+          lineThree: req.body.lineThree,
+          lineOneSyllables: req.body.lineOneSyllables,
+          lineTwoSyllables: req.body.lineTwoSyllables,
+          lineThreeSyllables: req.body.lineThreeSyllables,
+          published: req.body.published,
+          authorID: req.user.id,
+          screenname: req.user.screenname,
+        },
+      });
+      res.status(201).json(newHaiku);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // get all published haikus
 haikuRouter.get("/", verifyToken, async (req, res, next) => {
@@ -105,7 +129,28 @@ haikuRouter.patch(
   "/:id",
   verifyToken,
   createLimiter,
+  body("title")
+    .optional()
+    .notEmpty()
+    .withMessage("Title cannot be empty")
+    .isLength({ max: 100 }),
+  body(["lineOne", "lineTwo", "lineThree"])
+    .optional()
+    .notEmpty()
+    .withMessage("Line cannot be empty")
+    .isLength({ max: 100 })
+    .withMessage("Line cannot exceed 100 characters"),
+  body(["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables"])
+    .optional()
+    .notEmpty()
+    .withMessage("Syllables cannot be empty")
+    .isInt({ min: 0, max: 9 })
+    .withMessage("Syllable count must be a number between 0 and 9"),
   async (req, res, next) => {
+    const formErrors = validationResult(req);
+    if (!formErrors.isEmpty()) {
+      return res.status(400).json(formErrors);
+    }
     try {
       const haikuID = parseInt(req.params.id);
       if (isNaN(haikuID))

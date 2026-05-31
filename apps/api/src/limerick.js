@@ -2,39 +2,69 @@ import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { createLimiter } from "../middleware/limiters.js";
+import { body, validationResult } from "express-validator";
 
 const limerickRouter = Router();
 
 // create a limerick
-limerickRouter.post("/", verifyToken, createLimiter, async (req, res, next) => {
-  try {
-    const newlimerick = await prisma.limerick.create({
-      data: {
-        title: req.body.title,
-        lineOne: req.body.lineOne,
-        lineTwo: req.body.lineTwo,
-        lineThree: req.body.lineThree,
-        lineFour: req.body.lineFour,
-        lineFive: req.body.lineFive,
-        lineOneSyllables: req.body.lineOneSyllables,
-        lineTwoSyllables: req.body.lineTwoSyllables,
-        lineThreeSyllables: req.body.lineThreeSyllables,
-        lineFourSyllables: req.body.lineFourSyllables,
-        lineFiveSyllables: req.body.lineFiveSyllables,
-        rhymeA: req.body.rhymeA,
-        rhymeB: req.body.rhymeB,
-        rhymeAVerified: req.body.rhymeAVerified,
-        rhymeBVerified: req.body.rhymeBVerified,
-        published: req.body.published,
-        authorID: req.user.id,
-        screenname: req.user.screenname,
-      },
-    });
-    res.status(201).json(newlimerick);
-  } catch (error) {
-    next(error);
-  }
-});
+limerickRouter.post(
+  "/",
+  verifyToken,
+  createLimiter,
+  body("title")
+    .notEmpty()
+    .withMessage("Title cannot be empty")
+    .isLength({ max: 100 }),
+  body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
+    .notEmpty()
+    .withMessage("Line cannot be empty")
+    .isLength({ max: 100 })
+    .withMessage("Line cannot exceed 100 characters"),
+  body([
+    "lineOneSyllables",
+    "lineTwoSyllables",
+    "lineThreeSyllables",
+    "lineFourSyllables",
+    "lineFiveSyllables",
+  ])
+    .notEmpty()
+    .withMessage("Syllables cannot be empty")
+    .isInt({ min: 0, max: 9 })
+    .withMessage("Syllable count must be a number between 0 and 9"),
+  async (req, res, next) => {
+    const formErrors = validationResult(req);
+    if (!formErrors.isEmpty()) {
+      return res.status(400).json(formErrors);
+    }
+    try {
+      const newlimerick = await prisma.limerick.create({
+        data: {
+          title: req.body.title,
+          lineOne: req.body.lineOne,
+          lineTwo: req.body.lineTwo,
+          lineThree: req.body.lineThree,
+          lineFour: req.body.lineFour,
+          lineFive: req.body.lineFive,
+          lineOneSyllables: req.body.lineOneSyllables,
+          lineTwoSyllables: req.body.lineTwoSyllables,
+          lineThreeSyllables: req.body.lineThreeSyllables,
+          lineFourSyllables: req.body.lineFourSyllables,
+          lineFiveSyllables: req.body.lineFiveSyllables,
+          rhymeA: req.body.rhymeA,
+          rhymeB: req.body.rhymeB,
+          rhymeAVerified: req.body.rhymeAVerified,
+          rhymeBVerified: req.body.rhymeBVerified,
+          published: req.body.published,
+          authorID: req.user.id,
+          screenname: req.user.screenname,
+        },
+      });
+      res.status(201).json(newlimerick);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // get all published limericks
 limerickRouter.get("/", verifyToken, async (req, res, next) => {
@@ -115,7 +145,34 @@ limerickRouter.patch(
   "/:id",
   verifyToken,
   createLimiter,
+  body("title")
+    .optional()
+    .notEmpty()
+    .withMessage("Title cannot be empty")
+    .isLength({ max: 100 }),
+  body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
+    .optional()
+    .notEmpty()
+    .withMessage("Line cannot be empty")
+    .isLength({ max: 100 })
+    .withMessage("Line cannot exceed 100 characters"),
+  body([
+    "lineOneSyllables",
+    "lineTwoSyllables",
+    "lineThreeSyllables",
+    "lineFourSyllables",
+    "lineFiveSyllables",
+  ])
+    .optional()
+    .notEmpty()
+    .withMessage("Syllables cannot be empty")
+    .isInt({ min: 0, max: 9 })
+    .withMessage("Syllable count must be a number between 0 and 9"),
   async (req, res, next) => {
+    const formErrors = validationResult(req);
+    if (!formErrors.isEmpty()) {
+      return res.status(400).json(formErrors);
+    }
     try {
       const limerickID = parseInt(req.params.id);
       if (isNaN(limerickID))

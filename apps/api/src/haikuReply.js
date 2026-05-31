@@ -2,6 +2,7 @@ import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { createLimiter } from "../middleware/limiters.js";
+import { body, validationResult } from "express-validator";
 
 const haikuReplyRouter = Router();
 
@@ -10,7 +11,15 @@ haikuReplyRouter.post(
   "/:commentID/replies",
   verifyToken,
   createLimiter,
+  body("replybody")
+    .notEmpty()
+    .withMessage("Comment cannot be empty")
+    .isLength({ max: 600 }),
   async (req, res, next) => {
+    const formErrors = validationResult(req);
+    if (!formErrors.isEmpty()) {
+      return res.status(400).json(formErrors);
+    }
     try {
       const commentID = parseInt(req.params.commentID);
       if (isNaN(commentID))
@@ -65,7 +74,15 @@ haikuReplyRouter.patch(
   "/:replyID",
   verifyToken,
   createLimiter,
+  body("replybody")
+    .notEmpty()
+    .withMessage("Comment cannot be empty")
+    .isLength({ max: 600 }),
   async (req, res, next) => {
+    const formErrors = validationResult(req);
+    if (!formErrors.isEmpty()) {
+      return res.status(400).json(formErrors);
+    }
     try {
       const replyID = parseInt(req.params.replyID);
       if (isNaN(replyID))
