@@ -7,7 +7,11 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verifyToken.js";
 
-const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  skip: () => process.env.NODE_ENV === "test",
+});
 
 const userRouter = Router();
 
@@ -93,6 +97,9 @@ userRouter.patch(
         },
       );
     } catch (err) {
+      if (err.code === "P2002") {
+        return res.status(400).json({ error: "Email already in use" });
+      }
       next(err);
     }
   },
@@ -130,7 +137,7 @@ userRouter.post(
           email: req.body.email,
           password: hashedPassword,
           name: req.body.name || "",
-          screenname: req.body.screenname,
+          screenname: req.body.screenname || "anonymous",
         },
         select: {
           id: true,
