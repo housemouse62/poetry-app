@@ -55,6 +55,32 @@ favoriteRouter.post(
   },
 );
 
+// user can update the privacy of a favorite
+favoriteRouter.patch(
+  "/:poemType/:poemID",
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      const updatedFavorite = await prisma.favorite.update({
+        where: {
+          userID_poemID_poemType: {
+            userID: req.user.id,
+            poemID: parseInt(req.params.poemID),
+            poemType: req.params.poemType,
+          },
+        },
+        data: { privacy: req.body.privacy },
+      });
+      return res.status(200).json(updatedFavorite);
+    } catch (error) {
+      if (error.code === "P2025") {
+        return res.status(404).json({ error: "Favorite not found" });
+      }
+      next(error);
+    }
+  },
+);
+
 // user can delete a favorite from their list
 favoriteRouter.delete(
   "/:poemType/:poemID",

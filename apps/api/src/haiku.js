@@ -171,17 +171,18 @@ haikuRouter.patch(
         return res.status(403).json({ error: "Unauthorized User" });
       }
 
+      const updateData = {};
+      if (req.body.title !== undefined) updateData.title = req.body.title;
+      if (req.body.lineOne !== undefined) updateData.lineOne = req.body.lineOne;
+      if (req.body.lineTwo !== undefined) updateData.lineTwo = req.body.lineTwo;
+      if (req.body.lineThree !== undefined) updateData.lineThree = req.body.lineThree;
+      if (req.body.lineOneSyllables !== undefined) updateData.lineOneSyllables = parseInt(req.body.lineOneSyllables);
+      if (req.body.lineTwoSyllables !== undefined) updateData.lineTwoSyllables = parseInt(req.body.lineTwoSyllables);
+      if (req.body.lineThreeSyllables !== undefined) updateData.lineThreeSyllables = parseInt(req.body.lineThreeSyllables);
+
       const haiku = await prisma.haiku.update({
         where: { id: haikuID },
-        data: {
-          title: req.body.title,
-          lineOne: req.body.lineOne,
-          lineTwo: req.body.lineTwo,
-          lineThree: req.body.lineThree,
-          lineOneSyllables: parseInt(req.body.lineOneSyllables),
-          lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
-          lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
-        },
+        data: updateData,
       });
       return res.status(200).json(haiku);
     } catch (error) {
@@ -236,6 +237,9 @@ haikuRouter.post("/:id/like", verifyToken, async (req, res, next) => {
     });
     return res.status(201).json(like);
   } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(409).json({ error: "Already liked" });
+    }
     next(error);
   }
 });

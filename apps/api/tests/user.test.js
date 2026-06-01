@@ -1,7 +1,7 @@
 import express from "express";
 import request from "supertest";
 import userRouter from "../src/user.js";
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import { prisma } from "../db/prismaClient.js";
 
 const app = express();
@@ -247,5 +247,42 @@ describe("PATCH /users/profile", () => {
       .send({ email: "new@new.com", confirmEmail: "wrong@wrong.com" });
 
     expect(res.status).toBe(400);
+  });
+});
+
+// ─── DELETE /users ────────────────────────────────────────────────────────────
+
+describe("DELETE /users", () => {
+  let token;
+
+  beforeEach(async () => {
+    await request(app).post("/users/create").send(testUser);
+    const loginRes = await request(app)
+      .post("/users/login")
+      .send({ email: testUser.email, password: testUser.password });
+    token = loginRes.body.token;
+  });
+
+  afterEach(async () => {
+    await prisma.user.deleteMany({ where: { email: testUser.email } });
+  });
+
+  test("200 - user can delete their own account", async () => {
+    const res = await request(app)
+      .delete("/users")
+      .set("Authorization", `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.email).toBe(testUser.email);
+
+    const loginAfter = await request(app)
+      .post("/users/login")
+      .send({ email: testUser.email, password: testUser.password });
+    expect(loginAfter.status).toBe(404);
+  });
+
+  test("401 - no token", async () => {
+    const res = await request(app).delete("/users");
+    expect(res.status).toBe(401);
   });
 });

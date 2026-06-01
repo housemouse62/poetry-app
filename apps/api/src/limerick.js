@@ -194,25 +194,26 @@ limerickRouter.patch(
         return res.status(403).json({ error: "Unauthorized User" });
       }
 
+      const updateData = {};
+      if (req.body.title !== undefined) updateData.title = req.body.title;
+      if (req.body.lineOne !== undefined) updateData.lineOne = req.body.lineOne;
+      if (req.body.lineTwo !== undefined) updateData.lineTwo = req.body.lineTwo;
+      if (req.body.lineThree !== undefined) updateData.lineThree = req.body.lineThree;
+      if (req.body.lineFour !== undefined) updateData.lineFour = req.body.lineFour;
+      if (req.body.lineFive !== undefined) updateData.lineFive = req.body.lineFive;
+      if (req.body.lineOneSyllables !== undefined) updateData.lineOneSyllables = parseInt(req.body.lineOneSyllables);
+      if (req.body.lineTwoSyllables !== undefined) updateData.lineTwoSyllables = parseInt(req.body.lineTwoSyllables);
+      if (req.body.lineThreeSyllables !== undefined) updateData.lineThreeSyllables = parseInt(req.body.lineThreeSyllables);
+      if (req.body.lineFourSyllables !== undefined) updateData.lineFourSyllables = parseInt(req.body.lineFourSyllables);
+      if (req.body.lineFiveSyllables !== undefined) updateData.lineFiveSyllables = parseInt(req.body.lineFiveSyllables);
+      if (req.body.rhymeA !== undefined) updateData.rhymeA = req.body.rhymeA;
+      if (req.body.rhymeB !== undefined) updateData.rhymeB = req.body.rhymeB;
+      if (req.body.rhymeAVerified !== undefined) updateData.rhymeAVerified = req.body.rhymeAVerified;
+      if (req.body.rhymeBVerified !== undefined) updateData.rhymeBVerified = req.body.rhymeBVerified;
+
       const limerick = await prisma.limerick.update({
         where: { id: limerickID },
-        data: {
-          title: req.body.title,
-          lineOne: req.body.lineOne,
-          lineTwo: req.body.lineTwo,
-          lineThree: req.body.lineThree,
-          lineFour: req.body.lineFour,
-          lineFive: req.body.lineFive,
-          lineOneSyllables: parseInt(req.body.lineOneSyllables),
-          lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
-          lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
-          lineFourSyllables: parseInt(req.body.lineFourSyllables),
-          lineFiveSyllables: parseInt(req.body.lineFiveSyllables),
-          rhymeA: req.body.rhymeA,
-          rhymeB: req.body.rhymeB,
-          rhymeAVerified: req.body.rhymeAVerified,
-          rhymeBVerified: req.body.rhymeBVerified,
-        },
+        data: updateData,
       });
       return res.status(200).json(limerick);
     } catch (error) {
@@ -270,6 +271,9 @@ limerickRouter.post("/:id/like", verifyToken, async (req, res, next) => {
     });
     return res.status(201).json(like);
   } catch (error) {
+    if (error.code === "P2002") {
+      return res.status(409).json({ error: "Already liked" });
+    }
     next(error);
   }
 });

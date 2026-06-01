@@ -159,6 +159,9 @@ limerickCommentRouter.post(
       });
       return res.status(201).json(like);
     } catch (error) {
+      if (error.code === "P2002") {
+        return res.status(409).json({ error: "Already liked" });
+      }
       next(error);
     }
   },

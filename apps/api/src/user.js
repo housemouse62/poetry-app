@@ -157,6 +157,29 @@ userRouter.post(
   },
 );
 
+userRouter.delete("/", verifyToken, async (req, res, next) => {
+  try {
+    const userID = req.user.id;
+    await prisma.haikuReplyLike.deleteMany({ where: { userID } });
+    await prisma.limerickReplyLike.deleteMany({ where: { userID } });
+    await prisma.haikuCommentLike.deleteMany({ where: { userID } });
+    await prisma.limerickCommentLike.deleteMany({ where: { userID } });
+    await prisma.haikuLike.deleteMany({ where: { userID } });
+    await prisma.limerickLike.deleteMany({ where: { userID } });
+    await prisma.haikuReply.deleteMany({ where: { authorID: userID } });
+    await prisma.limerickReply.deleteMany({ where: { authorID: userID } });
+    await prisma.haikuComment.deleteMany({ where: { authorID: userID } });
+    await prisma.limerickComment.deleteMany({ where: { authorID: userID } });
+    await prisma.favorite.deleteMany({ where: { userID } });
+    await prisma.haiku.deleteMany({ where: { authorID: userID } });
+    await prisma.limerick.deleteMany({ where: { authorID: userID } });
+    const user = await prisma.user.delete({ where: { id: userID } });
+    return res.status(200).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
 userRouter.post("/login", async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
