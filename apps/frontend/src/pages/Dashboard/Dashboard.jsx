@@ -1,13 +1,31 @@
 import { Link } from "react-router";
-import { useWordData } from "../utils/useWordData";
-import "./root.css";
+import { useWordData } from "../../utils/useWordData";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router";
+
+import "./Dashboard.css";
 
 export default function Root() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   useWordData("");
+
   return (
     <>
       <div className="root-app">
         <main className="root-container">
+          <nav aria-label="Page navigation">
+            <button
+              className="haiku-back"
+              aria-label="Logout"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              Logout
+            </button>
+          </nav>
           <div className="root-title-div">
             <h1 className="root-title">make poetry.</h1>
           </div>

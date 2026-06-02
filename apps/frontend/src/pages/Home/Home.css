@@ -1,0 +1,129 @@
+/* root.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Georgia, sans-serif;
+}
+
+.root-app {
+  background: linear-gradient(135deg, #514ed2 0%, #7fa67f 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.root-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.root-title-div {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  margin-bottom: 30px;
+}
+
+.poem-cards {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 15px;
+}
+
+.link {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex: 1 1 0;
+  max-width: 200px;
+  min-width: 150px;
+  text-decoration: none;
+  gap: 20px;
+  border-radius: 15px;
+}
+
+.link:focus-visible {
+  outline: 3px solid #333;
+  outline-offset: 3px;
+}
+
+.poem-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  min-width: 150px;
+  min-height: 180px;
+  border-radius: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.poem-card:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
+.poem-card.limerick {
+  background-color: #10b981;
+}
+
+.poem-card.haiku {
+  background-color: #667eea;
+}
+
+.poem-card h2 {
+  font-size: 48px;
+  margin: 0;
+}
+
+.card-symbol {
+  font-size: 50px;
+}
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111827;
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.card-tagline {
+  color: #111827;
+  font-size: 18px;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.saved-count {
+  color: #111827;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poem-card {
+    transition: none;
+    transform: none;
+  }
+
+  .poem-card:hover {
+    transform: none;
+  }
+}
