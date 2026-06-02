@@ -2,10 +2,10 @@
 import { useState, useRef, useEffect } from "react";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./HaikuApp.css";
-import { saveHaiku, getAllHaikus, deleteHaiku } from "./haikuStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 function HaikuApp() {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ function HaikuApp() {
     line3: "",
   });
 
+  const [error, setError] = useState(null);
   const [saved, setSaved] = useState(false);
   const [showHaikus, setShowHaikus] = useState(false);
   const [savedHaikus, setSavedHaikus] = useState("");
@@ -28,6 +29,10 @@ function HaikuApp() {
     line2: 0,
     line3: 0,
   });
+  const [title, setTitle] = useState("");
+  const [published, setPublished] = useState(false);
+
+  const { user, token } = useAuth();
   const targetSyllables = [5, 7, 5];
   const dialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
@@ -115,6 +120,98 @@ function HaikuApp() {
     });
   };
 
+  const savePoem = async () => {
+    const url = `http://localhost:3000/haiku`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: title,
+          lineOne: lines.line1,
+          lineTwo: lines.line2,
+          lineThree: lines.line3,
+          lineOneSyllables: syllableCounts.line1,
+          lineTwoSyllables: syllableCounts.line2,
+          lineThreeSyllables: syllableCounts.line3,
+          published: published,
+          authorID: user.id,
+          screenname: user.screenname,
+        }),
+      });
+      const nextresponse = await response.json();
+
+      if (nextresponse.id) {
+        setSaved(true);
+        setLines({
+          line1: "",
+          line2: "",
+          line3: "",
+        });
+        setTimeout(() => {
+          setIsFading(true); //Start Fade Out
+          setTimeout(() => {
+            setSaved(false); //Actually remove it
+            setIsFading(false);
+          }, 500);
+        }, 2000);
+        setError(null);
+      } else setError("Failed to save haiku. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchMyHaikus = async () => {
+    const url = `http://localhost:3000/haiku/mine`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+      if (response.ok) {
+        setSavedHaikus(nextresponse);
+        setShowHaikus(true);
+        setShowExample(false);
+        setError(null);
+      } else setError("Cannot show Haikus. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteHaiku = async (id) => {
+    const url = `http://localhost:3000/haiku/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+
+      if (response.ok) {
+        fetchMyHaikus();
+        setShowHaikus(true);
+        setShowExample(false);
+        setError(null);
+      } else setError("Cannot delete. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="haiku-app">
       <main className="haiku-container">
@@ -138,6 +235,16 @@ function HaikuApp() {
             Write a haiku following the 5-7-5 syllable pattern
           </p>
         </header>
+        <div className="title-div">
+          <textarea
+            className="title-input"
+            rows="1"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+          />
+        </div>
         <PoetryLine
           lineNumber={1}
           targetSyllables={targetSyllables[0]}
@@ -191,7 +298,11 @@ function HaikuApp() {
             )}
           </div>
         )}
-
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
         {/* button row */}
         <div className="haiku-button-row">
           {/* Save Button */}
@@ -207,27 +318,13 @@ function HaikuApp() {
               !isComplete && !saved ? "save-haiku-help" : undefined
             }
             onClick={() => {
-              saveHaiku(lines);
-              setSaved(true);
-              setLines({
-                line1: "",
-                line2: "",
-                line3: "",
-              });
-              setTimeout(() => {
-                setIsFading(true); //Start Fade Out
-                setTimeout(() => {
-                  setSaved(false); //Actually remove it
-                  setIsFading(false);
-                }, 500);
-              }, 2000);
-              const newSavedHaikus = getAllHaikus();
-              setSavedHaikus(newSavedHaikus);
+              savePoem();
+              // const newSavedHaikus = getAllHaikus();
+              // setSavedHaikus(newSavedHaikus);
             }}
           >
             Save
           </button>
-
           {/* View Haikus/Hide Haikus button */}
           <button
             className="view-haikus-btn"
@@ -236,16 +333,12 @@ function HaikuApp() {
               if (showHaikus) {
                 setShowHaikus(false);
               } else {
-                const newSavedHaikus = getAllHaikus();
-                setSavedHaikus(newSavedHaikus);
-                setShowHaikus(true);
-                setShowExample(false);
+                fetchMyHaikus();
               }
             }}
           >
             {showHaikus ? "Hide Saved Haikus" : "View Saved Haikus"}
           </button>
-
           {/* clear the fields button*/}
           <button
             disabled={fieldsEmpty}
@@ -260,6 +353,15 @@ function HaikuApp() {
           >
             Clear
           </button>
+        </div>
+        <div className="published-checkbox">
+          <label htmlFor="published">Publish?</label>
+          <input
+            type="checkbox"
+            name="published"
+            checked={published}
+            onChange={(e) => setPublished(e.target.checked)}
+          />
         </div>
         <div className="show-haiku-example-div">
           <button
@@ -296,9 +398,11 @@ function HaikuApp() {
             ) : (
               savedHaikus.map((h) => (
                 <article key={h.id} className="haiku-card" data-haiku-id={h.id}>
-                  <p className="haiku-line">{h.line1}</p>
-                  <p className="haiku-line">{h.line2}</p>
-                  <p className="haiku-line">{h.line3}</p>
+                  <p className="haiku-title">{h.title}</p>
+                  <p className="haiku-line">{h.lineOne}</p>
+                  <p className="haiku-line">{h.lineTwo}</p>
+                  <p className="haiku-line">{h.lineThree}</p>
+                  <p className="haiku-date">{h.createdAt}</p>
 
                   <div className="haiku-card-buttons">
                     <button
@@ -313,12 +417,10 @@ function HaikuApp() {
                       Download
                     </button>
                     <button
-                      aria-label={`Delete haiku: ${h.line1}`}
+                      aria-label={`Delete haiku: ${h.title}`}
                       className="delete-haiku-btn"
                       onClick={() => {
                         deleteHaiku(h.id);
-                        const newSavedHaikus = getAllHaikus();
-                        setSavedHaikus(newSavedHaikus);
                       }}
                     >
                       Delete

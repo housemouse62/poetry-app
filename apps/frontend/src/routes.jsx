@@ -28,7 +28,7 @@ const routes = [
     element: <ProtectedRoute />,
     children: [
       {
-        path: "/",
+        path: "/dashboard",
         element: <Dashboard />,
         errorElement: <ErrorPage />,
       },
