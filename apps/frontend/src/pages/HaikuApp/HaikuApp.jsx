@@ -17,6 +17,8 @@ function HaikuApp() {
   });
 
   const [error, setError] = useState(null);
+  const [editingHaiku, setEditingHaiku] = useState(null);
+  const [editID, setEditID] = useState(null);
   const [saved, setSaved] = useState(false);
   const [showHaikus, setShowHaikus] = useState(false);
   const [savedHaikus, setSavedHaikus] = useState("");
@@ -146,6 +148,7 @@ function HaikuApp() {
 
       if (nextresponse.id) {
         setSaved(true);
+        setTitle("");
         setLines({
           line1: "",
           line2: "",
@@ -207,6 +210,47 @@ function HaikuApp() {
         setShowExample(false);
         setError(null);
       } else setError("Cannot delete. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const editPoem = async (id) => {
+    const url = `http://localhost:3000/haiku/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: title,
+          lineOne: lines.line1,
+          lineTwo: lines.line2,
+          lineThree: lines.line3,
+          lineOneSyllables: syllableCounts.line1,
+          lineTwoSyllables: syllableCounts.line2,
+          lineThreeSyllables: syllableCounts.line3,
+          published: published,
+        }),
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+      if (nextresponse.id) {
+        fetchMyHaikus();
+        setShowHaikus(true);
+        setShowExample(false);
+        setTitle("");
+        setLines({
+          line1: "",
+          line2: "",
+          line3: "",
+        });
+        setEditID(null);
+        setEditingHaiku(null);
+        setError(null);
+      } else setError("Cannot update. Please try again.");
     } catch (error) {
       console.error(error);
     }
@@ -318,12 +362,10 @@ function HaikuApp() {
               !isComplete && !saved ? "save-haiku-help" : undefined
             }
             onClick={() => {
-              savePoem();
-              // const newSavedHaikus = getAllHaikus();
-              // setSavedHaikus(newSavedHaikus);
+              editingHaiku ? editPoem(editID) : savePoem();
             }}
           >
-            Save
+            {editingHaiku ? "Update" : "Save"}
           </button>
           {/* View Haikus/Hide Haikus button */}
           <button
@@ -406,7 +448,24 @@ function HaikuApp() {
 
                   <div className="haiku-card-buttons">
                     <button
-                      aria-label={`Download haiku: ${h.line1}`}
+                      aria-label={`Edit haiku: ${h.title}`}
+                      className="edit-haiku-btn"
+                      onClick={() => {
+                        setEditingHaiku(true);
+                        setEditID(h.id);
+                        setLines({
+                          line1: `${h.lineOne}`,
+                          line2: `${h.lineTwo}`,
+                          line3: `${h.lineThree}`,
+                        });
+                        setTitle(h.title);
+                        setPublished(h.published);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      aria-label={`Download haiku: ${h.title}`}
                       className="download-haiku-btn"
                       onClick={(e) => {
                         downloadTriggerRef.current = e.currentTarget;
