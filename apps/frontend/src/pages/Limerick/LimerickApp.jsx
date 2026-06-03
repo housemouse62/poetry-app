@@ -1,15 +1,11 @@
 // LimerickApp.jsx
 import { useState, useRef, useEffect } from "react";
-import PoetryLine from "../../components/PoetryLine";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
-import {
-  saveLimerick,
-  getAllLimericks,
-  deleteLimerick,
-} from "./limericksStorage";
 import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
+import PoetryLine from "../../components/PoetryLine";
+import { useAuth } from "../../context/AuthContext";
 
 function LimerickApp() {
   const navigate = useNavigate();
@@ -22,6 +18,9 @@ function LimerickApp() {
     line5: "",
   });
 
+  const [error, setError] = useState(null);
+  const [editingLimerick, setEditingLimerick] = useState(null);
+  const [editID, setEditID] = useState(null);
   const [saved, setSaved] = useState(false);
   const [showLimericks, setShowLimericks] = useState(false);
   const [savedLimericks, setSavedLimericks] = useState("");
@@ -36,7 +35,10 @@ function LimerickApp() {
     line4: 0,
     line5: 0,
   });
+  const [title, setTitle] = useState("");
+  const [published, setPublished] = useState(false);
 
+  const { user, token } = useAuth();
   const targetSyllables = ["7 - 10", "7 - 10", "5-8", "5-8", "7 - 10"];
   const dialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
@@ -132,6 +134,160 @@ function LimerickApp() {
     });
   };
 
+  const saveLimerick = async () => {
+    const url = `http://localhost:3000/limerick`;
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: title,
+          lineOne: lines.line1,
+          lineTwo: lines.line2,
+          lineThree: lines.line3,
+          lineFour: lines.line4,
+          lineFive: lines.line5,
+          lineOneSyllables: syllableCounts.line1,
+          lineTwoSyllables: syllableCounts.line2,
+          lineThreeSyllables: syllableCounts.line3,
+          lineFourSyllables: syllableCounts.line4,
+          lineFiveSyllables: syllableCounts.line5,
+          rhymeA: null, // change this once word api is wired up
+          rhymeB: null, // change this once word api is wired up
+          rhymeAVerified: false, // change this once word api is wired up
+          rhymeBVerified: false, // change this once word api is wired up
+          published: published,
+          authorID: user.id,
+          screenname: user.screenname,
+        }),
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+      if (nextresponse.id) {
+        setSaved(true);
+        setTitle("");
+        setLines({
+          line1: "",
+          line2: "",
+          line3: "",
+          line4: "",
+          line5: "",
+        });
+        setTimeout(() => {
+          setIsFading(true); //Start Fade Out
+          setTimeout(() => {
+            setSaved(false); //Actually remove it
+            setIsFading(false);
+          }, 500);
+        }, 2000);
+        setError(null);
+      } else setError("Failed to save limerick. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchMyLimericks = async () => {
+    const url = `http://localhost:3000/limerick/mine`;
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+      if (response.ok) {
+        setSavedLimericks(nextresponse);
+        setShowLimericks(true);
+        setShowExample(false);
+        setError(null);
+      } else setError("Cannot show Limericks. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteLimerick = async (id) => {
+    const url = `http://localhost:3000/limerick/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+
+      if (response.ok) {
+        fetchMyLimericks();
+        setShowLimericks(true);
+        setShowExample(false);
+        setError(null);
+      } else setError("Cannot delete. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const editLimerick = async (id) => {
+    const url = `http://localhost:3000/limerick/${id}`;
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: title,
+          lineOne: lines.line1,
+          lineTwo: lines.line2,
+          lineThree: lines.line3,
+          lineFour: lines.line4,
+          lineFive: lines.line5,
+          lineOneSyllables: syllableCounts.line1,
+          lineTwoSyllables: syllableCounts.line2,
+          lineThreeSyllables: syllableCounts.line3,
+          lineFourSyllables: syllableCounts.line4,
+          lineFiveSyllables: syllableCounts.line5,
+          rhymeA: null, // change this once word api is wired up
+          rhymeB: null, // change this once word api is wired up
+          rhymeAVerified: false, // change this once word api is wired up
+          rhymeBVerified: false, // change this once word api is wired up
+          published: published,
+        }),
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+      if (nextresponse.id) {
+        fetchMyLimericks();
+        setShowLimericks(true);
+        setShowExample(false);
+        setTitle("");
+        setLines({
+          line1: "",
+          line2: "",
+          line3: "",
+          line4: "",
+          line5: "",
+        });
+        setEditID(null);
+        setEditingLimerick(null);
+        setError(null);
+      } else setError("Cannot update. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="limerick-app">
       <main className="limerick-container">
@@ -160,6 +316,16 @@ function LimerickApp() {
             (shown with orange borders).
           </p>
         </header>
+        <div className="title-div">
+          <textarea
+            className="title-input"
+            rows="1"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+          />
+        </div>
         <PoetryLine
           aria-label="Line 1, rhymes with lines 2 and 5"
           lineNumber={1}
@@ -239,15 +405,19 @@ function LimerickApp() {
               </>
             ) : (
               <>
-                <h1 className="limerick-h1">
+                <h3 className="limerick-h3">
                   <span aria-hidden="true">✨</span> You do limerick!{" "}
                   <span aria-hidden="true">✨</span>
-                </h1>
+                </h3>
               </>
             )}
           </div>
         )}
-
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
         {/* button row */}
         <div className="limerick-button-row">
           {/* Save Button */}
@@ -263,27 +433,10 @@ function LimerickApp() {
               !isComplete && !saved ? "save-limerick-help" : undefined
             }
             onClick={() => {
-              saveLimerick(lines);
-              setSaved(true);
-              setLines({
-                line1: "",
-                line2: "",
-                line3: "",
-                line4: "",
-                line5: "",
-              });
-              setTimeout(() => {
-                setIsFading(true); //Start Fade Out
-                setTimeout(() => {
-                  setSaved(false); //Actually remove it
-                  setIsFading(false);
-                }, 500);
-              }, 2000);
-              const newSavedLimericks = getAllLimericks();
-              setSavedLimericks(newSavedLimericks);
+              editingLimerick ? editLimerick(editID) : saveLimerick();
             }}
           >
-            Save
+            {editingLimerick ? "Update" : "Save"}
           </button>
 
           {/* View Limericks/Hide Limericks button */}
@@ -294,10 +447,7 @@ function LimerickApp() {
               if (showLimericks) {
                 setShowLimericks(false);
               } else {
-                const newSavedLimericks = getAllLimericks();
-                setSavedLimericks(newSavedLimericks);
-                setShowLimericks(true);
-                setShowExample(false);
+                fetchMyLimericks();
               }
             }}
           >
@@ -320,6 +470,15 @@ function LimerickApp() {
           >
             Clear
           </button>
+        </div>
+        <div className="published-checkbox">
+          <label htmlFor="published">Publish?</label>
+          <input
+            type="checkbox"
+            name="published"
+            checked={published}
+            onChange={(e) => setPublished(e.target.checked)}
+          />
         </div>
         <div className="show-limerick-example-div">
           <button
@@ -366,15 +525,36 @@ function LimerickApp() {
                   className="limerick-card"
                   data-limerick-id={h.id}
                 >
-                  <p className="limerick-line">{h.line1}</p>
-                  <p className="limerick-line">{h.line2}</p>
-                  <p className="limerick-line">{h.line3}</p>
-                  <p className="limerick-line">{h.line4}</p>
-                  <p className="limerick-line">{h.line5}</p>
+                  <p className="limerick-title">{h.title}</p>
+                  <p className="limerick-line">{h.lineOne}</p>
+                  <p className="limerick-line">{h.lineTwo}</p>
+                  <p className="limerick-line">{h.lineThree}</p>
+                  <p className="limerick-line">{h.lineFour}</p>
+                  <p className="limerick-line">{h.lineFive}</p>
+                  <p className="haiku-date">{h.createdAt}</p>
 
                   <div className="limerick-card-buttons">
                     <button
-                      aria-label={`Download limerick: ${h.line1}`}
+                      aria-label={`Edit haiku: ${h.title}`}
+                      className="edit-haiku-btn"
+                      onClick={() => {
+                        setEditingLimerick(true);
+                        setEditID(h.id);
+                        setLines({
+                          line1: `${h.lineOne}`,
+                          line2: `${h.lineTwo}`,
+                          line3: `${h.lineThree}`,
+                          line4: `${h.lineFour}`,
+                          line5: `${h.lineFive}`,
+                        });
+                        setTitle(h.title);
+                        setPublished(h.published);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      aria-label={`Download limerick: ${h.title}`}
                       className="download-limerick-btn"
                       onClick={(e) => {
                         downloadTriggerRef.current = e.currentTarget;
@@ -389,8 +569,6 @@ function LimerickApp() {
                       className="delete-limerick-btn"
                       onClick={() => {
                         deleteLimerick(h.id);
-                        const newSavedLimericks = getAllLimericks();
-                        setSavedLimericks(newSavedLimericks);
                       }}
                     >
                       Delete

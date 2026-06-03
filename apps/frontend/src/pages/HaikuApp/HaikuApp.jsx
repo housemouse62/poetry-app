@@ -122,7 +122,7 @@ function HaikuApp() {
     });
   };
 
-  const savePoem = async () => {
+  const saveHaiku = async () => {
     const url = `http://localhost:3000/haiku`;
     try {
       const response = await fetch(url, {
@@ -215,7 +215,7 @@ function HaikuApp() {
     }
   };
 
-  const editPoem = async (id) => {
+  const editHaiku = async (id) => {
     const url = `http://localhost:3000/haiku/${id}`;
     try {
       const response = await fetch(url, {
@@ -362,7 +362,7 @@ function HaikuApp() {
               !isComplete && !saved ? "save-haiku-help" : undefined
             }
             onClick={() => {
-              editingHaiku ? editPoem(editID) : savePoem();
+              editingHaiku ? editHaiku(editID) : saveHaiku();
             }}
           >
             {editingHaiku ? "Update" : "Save"}
