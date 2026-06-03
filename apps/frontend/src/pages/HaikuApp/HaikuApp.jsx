@@ -1,11 +1,11 @@
 // HaikuApp.jsx
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./HaikuApp.css";
-import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
+import HaikuCard from "../../components/haikuCard/haikuCard.jsx";
 
 function HaikuApp() {
   const navigate = useNavigate();
@@ -22,8 +22,6 @@ function HaikuApp() {
   const [saved, setSaved] = useState(false);
   const [showHaikus, setShowHaikus] = useState(false);
   const [savedHaikus, setSavedHaikus] = useState("");
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
-  const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
   const [showExample, setShowExample] = useState(false);
   const [syllableCounts, setSyllableCounts] = useState({
@@ -36,45 +34,6 @@ function HaikuApp() {
 
   const { user, token } = useAuth();
   const targetSyllables = [5, 7, 5];
-  const dialogRef = useRef(null);
-  const downloadTriggerRef = useRef(null);
-
-  useEffect(() => {
-    if (!showDownloadModal) return;
-    const dialog = dialogRef.current;
-    const focusable = dialog
-      ? Array.from(
-          dialog.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-          ),
-        )
-      : [];
-    if (focusable.length) focusable[0].focus();
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        setShowDownloadModal(false);
-        downloadTriggerRef.current?.focus();
-        return;
-      }
-      if (e.key === "Tab" && focusable.length) {
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [showDownloadModal]);
 
   // Check if haiku is complete
   const isComplete =
@@ -90,36 +49,6 @@ function HaikuApp() {
       ...prev,
       [lineKey]: value,
     }));
-  };
-
-  const shareAsImage = async (haikuId) => {
-    // Find the specific card element
-    const cardElement = document.querySelector(`[data-haiku-id="${haikuId}"]`);
-    if (!cardElement) return;
-
-    // hide buttons before screenshot
-    const buttons = cardElement.querySelector(".haiku-card-buttons");
-    const originalDisplay = buttons.style.display;
-    buttons.style.display = "none";
-
-    // save and remove background
-    cardElement.style.backgroundColor = "rgb(212, 222, 231)";
-
-    //convert to canvas - take screenshot w/ transparent background;
-    const canvas = await html2canvas(cardElement, { backgroundColor: null });
-
-    // show buttons & background again
-    buttons.style.display = originalDisplay;
-
-    //convert canvas to blob - download
-    canvas.toBlob((blob) => {
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.download = "haiku.png";
-      link.href = url;
-      link.click();
-    });
   };
 
   const saveHaiku = async () => {
@@ -439,93 +368,27 @@ function HaikuApp() {
               <p>No saved haikus, waiting for words of wisdom</p>
             ) : (
               savedHaikus.map((h) => (
-                <article key={h.id} className="haiku-card" data-haiku-id={h.id}>
-                  <p className="haiku-title">{h.title}</p>
-                  <p className="haiku-line">{h.lineOne}</p>
-                  <p className="haiku-line">{h.lineTwo}</p>
-                  <p className="haiku-line">{h.lineThree}</p>
-                  <p className="haiku-date">{h.createdAt}</p>
-
-                  <div className="haiku-card-buttons">
-                    <button
-                      aria-label={`Edit haiku: ${h.title}`}
-                      className="edit-haiku-btn"
-                      onClick={() => {
-                        setEditingHaiku(true);
-                        setEditID(h.id);
-                        setLines({
-                          line1: `${h.lineOne}`,
-                          line2: `${h.lineTwo}`,
-                          line3: `${h.lineThree}`,
-                        });
-                        setTitle(h.title);
-                        setPublished(h.published);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      aria-label={`Download haiku: ${h.title}`}
-                      className="download-haiku-btn"
-                      onClick={(e) => {
-                        downloadTriggerRef.current = e.currentTarget;
-                        setShowDownloadModal(true);
-                        setDownloadID(h.id);
-                      }}
-                    >
-                      Download
-                    </button>
-                    <button
-                      aria-label={`Delete haiku: ${h.title}`}
-                      className="delete-haiku-btn"
-                      onClick={() => {
-                        deleteHaiku(h.id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </article>
+                <HaikuCard
+                  key={h.id}
+                  haiku={h}
+                  onEdit={() => {
+                    setEditingHaiku(true);
+                    setEditID(h.id);
+                    setLines({
+                      line1: `${h.lineOne}`,
+                      line2: `${h.lineTwo}`,
+                      line3: `${h.lineThree}`,
+                    });
+                    setTitle(h.title);
+                    setPublished(h.published);
+                  }}
+                  onDelete={() => deleteHaiku(h.id)}
+                />
               ))
             )}
           </div>
         ) : null}
       </main>
-      {showDownloadModal && (
-        <div className="haiku-dialog-container">
-          <div
-            className="haiku-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="dialogTitle"
-            ref={dialogRef}
-          >
-            <h2 id="dialogTitle">Confirm Download</h2>
-            <div className="haiku-modal-button-row">
-              <button
-                className="confirm-haiku-button"
-                onClick={() => {
-                  shareAsImage(downloadID);
-                  setShowDownloadModal(false);
-                  setDownloadID("");
-                  downloadTriggerRef.current?.focus();
-                }}
-              >
-                Confirm
-              </button>
-              <button
-                className="cancel-haiku-button"
-                onClick={() => {
-                  setShowDownloadModal(false);
-                  downloadTriggerRef.current?.focus();
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
