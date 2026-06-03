@@ -12,12 +12,10 @@ limerickRouter.post(
   verifyToken,
   createLimiter,
   body("title")
-    .escape()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
-    .escape()
     .notEmpty()
     .withMessage("Line cannot be empty")
     .isLength({ max: 100 })
@@ -29,7 +27,6 @@ limerickRouter.post(
     "lineFourSyllables",
     "lineFiveSyllables",
   ])
-    .escape()
     .notEmpty()
     .withMessage("Syllables cannot be empty")
     .isInt({ min: 0, max: 9 })
@@ -149,13 +146,11 @@ limerickRouter.patch(
   verifyToken,
   createLimiter,
   body("title")
-    .escape()
     .optional()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
-    .escape()
     .optional()
     .notEmpty()
     .withMessage("Line cannot be empty")
@@ -198,18 +193,30 @@ limerickRouter.patch(
       if (req.body.title !== undefined) updateData.title = req.body.title;
       if (req.body.lineOne !== undefined) updateData.lineOne = req.body.lineOne;
       if (req.body.lineTwo !== undefined) updateData.lineTwo = req.body.lineTwo;
-      if (req.body.lineThree !== undefined) updateData.lineThree = req.body.lineThree;
-      if (req.body.lineFour !== undefined) updateData.lineFour = req.body.lineFour;
-      if (req.body.lineFive !== undefined) updateData.lineFive = req.body.lineFive;
-      if (req.body.lineOneSyllables !== undefined) updateData.lineOneSyllables = parseInt(req.body.lineOneSyllables);
-      if (req.body.lineTwoSyllables !== undefined) updateData.lineTwoSyllables = parseInt(req.body.lineTwoSyllables);
-      if (req.body.lineThreeSyllables !== undefined) updateData.lineThreeSyllables = parseInt(req.body.lineThreeSyllables);
-      if (req.body.lineFourSyllables !== undefined) updateData.lineFourSyllables = parseInt(req.body.lineFourSyllables);
-      if (req.body.lineFiveSyllables !== undefined) updateData.lineFiveSyllables = parseInt(req.body.lineFiveSyllables);
+      if (req.body.lineThree !== undefined)
+        updateData.lineThree = req.body.lineThree;
+      if (req.body.lineFour !== undefined)
+        updateData.lineFour = req.body.lineFour;
+      if (req.body.lineFive !== undefined)
+        updateData.lineFive = req.body.lineFive;
+      if (req.body.lineOneSyllables !== undefined)
+        updateData.lineOneSyllables = parseInt(req.body.lineOneSyllables);
+      if (req.body.lineTwoSyllables !== undefined)
+        updateData.lineTwoSyllables = parseInt(req.body.lineTwoSyllables);
+      if (req.body.lineThreeSyllables !== undefined)
+        updateData.lineThreeSyllables = parseInt(req.body.lineThreeSyllables);
+      if (req.body.lineFourSyllables !== undefined)
+        updateData.lineFourSyllables = parseInt(req.body.lineFourSyllables);
+      if (req.body.lineFiveSyllables !== undefined)
+        updateData.lineFiveSyllables = parseInt(req.body.lineFiveSyllables);
       if (req.body.rhymeA !== undefined) updateData.rhymeA = req.body.rhymeA;
       if (req.body.rhymeB !== undefined) updateData.rhymeB = req.body.rhymeB;
-      if (req.body.rhymeAVerified !== undefined) updateData.rhymeAVerified = req.body.rhymeAVerified;
-      if (req.body.rhymeBVerified !== undefined) updateData.rhymeBVerified = req.body.rhymeBVerified;
+      if (req.body.rhymeAVerified !== undefined)
+        updateData.rhymeAVerified = req.body.rhymeAVerified;
+      if (req.body.rhymeBVerified !== undefined)
+        updateData.rhymeBVerified = req.body.rhymeBVerified;
+      if (req.body.published !== undefined)
+        updateData.published = req.body.published;
 
       const limerick = await prisma.limerick.update({
         where: { id: limerickID },

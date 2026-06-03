@@ -12,12 +12,10 @@ haikuRouter.post(
   verifyToken,
   createLimiter,
   body("title")
-    .escape()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree"])
-    .escape()
     .notEmpty()
     .withMessage("Line cannot be empty")
     .isLength({ max: 100 })
@@ -132,13 +130,11 @@ haikuRouter.patch(
   verifyToken,
   createLimiter,
   body("title")
-    .escape()
     .optional()
     .notEmpty()
     .withMessage("Title cannot be empty")
     .isLength({ max: 100 }),
   body(["lineOne", "lineTwo", "lineThree"])
-    .escape()
     .optional()
     .notEmpty()
     .withMessage("Line cannot be empty")
@@ -175,10 +171,16 @@ haikuRouter.patch(
       if (req.body.title !== undefined) updateData.title = req.body.title;
       if (req.body.lineOne !== undefined) updateData.lineOne = req.body.lineOne;
       if (req.body.lineTwo !== undefined) updateData.lineTwo = req.body.lineTwo;
-      if (req.body.lineThree !== undefined) updateData.lineThree = req.body.lineThree;
-      if (req.body.lineOneSyllables !== undefined) updateData.lineOneSyllables = parseInt(req.body.lineOneSyllables);
-      if (req.body.lineTwoSyllables !== undefined) updateData.lineTwoSyllables = parseInt(req.body.lineTwoSyllables);
-      if (req.body.lineThreeSyllables !== undefined) updateData.lineThreeSyllables = parseInt(req.body.lineThreeSyllables);
+      if (req.body.lineThree !== undefined)
+        updateData.lineThree = req.body.lineThree;
+      if (req.body.lineOneSyllables !== undefined)
+        updateData.lineOneSyllables = parseInt(req.body.lineOneSyllables);
+      if (req.body.lineTwoSyllables !== undefined)
+        updateData.lineTwoSyllables = parseInt(req.body.lineTwoSyllables);
+      if (req.body.lineThreeSyllables !== undefined)
+        updateData.lineThreeSyllables = parseInt(req.body.lineThreeSyllables);
+      if (req.body.published !== undefined)
+        updateData.published = req.body.published;
 
       const haiku = await prisma.haiku.update({
         where: { id: haikuID },
