@@ -4,25 +4,37 @@ import { body } from "express-validator";
 import verifyAdmin from "../middleware/verifyAdmin.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { createLimiter } from "../middleware/limiters.js";
+import { fetchWordFromAPI } from "./utils/wordsAPI.js";
+import { countSyllables } from "./utils/syllableCounter.js";
 
 const wordRouter = Router();
 
 wordRouter.post("/", verifyToken, createLimiter, async (req, res, next) => {
   try {
-    const word = await prisma.word.findUnique({
-      where: { word: req.body.word },
+    const word = req.body.word;
+
+    const dbWord = await prisma.word.findUnique({
+      where: { word: word },
     });
-    if (word) {
-      return res.status(200).json(word);
+    if (dbWord) {
+      return res.status(200).json(dbWord);
     }
+    const fetchedWord = await fetchWordFromAPI(word);
+
+    let countedSyllables = 0;
+    if (!fetchedWord || !fetchedWord.syllables) {
+      countedSyllables = countSyllables(word);
+    }
+
     const newWord = await prisma.word.create({
       data: {
-        word: req.body.word,
-        source: req.body.source,
-        syllableCount: req.body.syllableCount,
-        data: req.body.data,
+        word: word,
+        source: fetchedWord?.syllables?.count ? "api" : "algorithm",
+        syllableCount: fetchedWord?.syllables?.count || countedSyllables,
+        data: fetchedWord ?? {},
       },
     });
+
     return res.status(201).json(newWord);
   } catch (err) {
     if (err.code === "P2002") {
