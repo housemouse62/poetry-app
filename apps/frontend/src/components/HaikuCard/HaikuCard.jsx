@@ -112,6 +112,9 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
           >
             Delete
           </button>
+          <button aria-label="Flag a word in this haiku" className="flag-btn">
+            🚩
+          </button>
         </div>
       </article>
       {showDownloadModal && (
