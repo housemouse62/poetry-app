@@ -27,6 +27,7 @@ function PoetryLine({
   const flagModalRef = useRef(null);
   const wordModalRef = useRef(null);
   const confirmModalRef = useRef(null);
+  const flagButtonRef = useRef(null);
 
   useFocusTrap(flagModalRef, showFlagModal, () => setShowFlagModal(false));
   useFocusTrap(wordModalRef, showWordModal, () => setShowWordModal(false));
@@ -128,10 +129,11 @@ function PoetryLine({
   );
   const flagButton = (
     <button
-      aria-label="Flag a word in this haiku"
+      ref={flagButtonRef}
+      aria-label="Flag a word in this line"
       className="flag-btn"
       onClick={() => {
-        setShowFlagModal(!showFlagModal);
+        setShowFlagModal(true);
       }}
     >
       🚩
@@ -141,7 +143,7 @@ function PoetryLine({
   const handleWordClick = async (word, syllables) => {
     setFlaggedWord(word);
     setFlaggedSyllables(syllables);
-    setShowWordModal(!showWordModal);
+    setShowWordModal(true);
   };
 
   const handleFlaggedWord = async (word) => {
@@ -224,6 +226,7 @@ function PoetryLine({
                 className="cancel-flag-button"
                 onClick={() => {
                   setShowFlagModal(false);
+                  flagButtonRef.current?.focus();
                 }}
               >
                 X
@@ -245,13 +248,13 @@ function PoetryLine({
                     cached?.syllables?.count || countSyllables(word);
                   return (
                     <div key={index} className="individual-word">
-                      <span
+                      <button
                         className="clickable-word"
                         onClick={() => handleWordClick(word, syllableCount)}
                       >
                         <span className="word-syllables">{syllableCount}</span>
                         <span className="word-text">{word}</span>
-                      </span>
+                      </button>
                     </div>
                   );
                 })}
@@ -307,6 +310,7 @@ function PoetryLine({
                     setFlaggedSyllables(null);
                     setFlaggedWord(null);
                     setShowWordModal(false);
+                    flagModalRef.current?.querySelector("button")?.focus();
                   }}
                 >
                   Yes
