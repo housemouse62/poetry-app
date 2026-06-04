@@ -2,7 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import { useWordData } from "../utils/useWordData";
 import { getWordFromCache } from "../utils/wordCache";
 import { countSyllables } from "../utils/syllableCounter";
+import { useAuth } from "../context/AuthContext";
 import "./PoetryLine.css";
+import { useFocusTrap } from "../utils/useFocusTrap";
 
 function PoetryLine({
   lineNumber,
@@ -19,7 +21,18 @@ function PoetryLine({
   const [flaggedWord, setFlaggedWord] = useState(null);
   const [flaggedSyllables, setFlaggedSyllables] = useState(null);
   const [showWordModal, setShowWordModal] = useState(false);
-  const dialogRef = useRef(null);
+  const [showFlagConfirmModal, setShowFlagConfirmModal] = useState(false);
+  const { token } = useAuth();
+  const [error, setError] = useState(null);
+  const flagModalRef = useRef(null);
+  const wordModalRef = useRef(null);
+  const confirmModalRef = useRef(null);
+
+  useFocusTrap(flagModalRef, showFlagModal, () => setShowFlagModal(false));
+  useFocusTrap(wordModalRef, showWordModal, () => setShowWordModal(false));
+  useFocusTrap(confirmModalRef, showFlagConfirmModal, () =>
+    setShowFlagConfirmModal(false),
+  );
 
   useWordData(currentWord);
 
@@ -125,10 +138,34 @@ function PoetryLine({
     </button>
   );
 
-  const handleWordClick = async (word) => {
-    console.log(word);
+  const handleWordClick = async (word, syllables) => {
     setFlaggedWord(word);
+    setFlaggedSyllables(syllables);
     setShowWordModal(!showWordModal);
+  };
+
+  const handleFlaggedWord = async (word) => {
+    const url = `http://localhost:3000/word/${word}/flag`;
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+
+      if (response.ok) {
+        setFlaggedSyllables(null);
+        setFlaggedWord(null);
+        setShowFlagConfirmModal(true);
+        setError(null);
+      } else setError("Cannot delete. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -167,13 +204,19 @@ function PoetryLine({
         </div>
       </div>
       {showFlagModal && (
-        <div className="flag-dialog-container">
+        <div
+          className="flag-dialog-container"
+          onClick={() => {
+            setShowFlagModal(false);
+          }}
+        >
           <div
             className="flag-dialog"
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialogTitle"
-            ref={dialogRef}
+            ref={flagModalRef}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flag-modal-top-row">
               <h2 id="dialogTitle">Flag Word</h2>{" "}
@@ -189,27 +232,22 @@ function PoetryLine({
             <p>
               Click on the word our syllable counter is counting incorrectly
             </p>
-            <article
-              key={value.id}
-              className="haiku-card"
-              data-haiku-id={value.id}
-            >
+            <article className="haiku-card">
               <p className="haiku-title">{value.title}</p>
-              <p className="clickable-line">
-                <div className="flag-line-labels">
+              <div className="clickable-line">
+                <span className="flag-line-labels">
                   <span>syllables:</span>
                   <span>words:</span>
-                </div>
+                </span>
                 {words.map((word, index) => {
                   const cached = getWordFromCache(word);
                   const syllableCount =
                     cached?.syllables?.count || countSyllables(word);
                   return (
-                    <div className="individual-word">
+                    <div key={index} className="individual-word">
                       <span
-                        key={index}
                         className="clickable-word"
-                        onClick={() => handleWordClick(word)}
+                        onClick={() => handleWordClick(word, syllableCount)}
                       >
                         <span className="word-syllables">{syllableCount}</span>
                         <span className="word-text">{word}</span>
@@ -217,21 +255,25 @@ function PoetryLine({
                     </div>
                   );
                 })}
-              </p>
-              <p className="haiku-line">{value.lineTwo}</p>
-              <p className="haiku-line">{value.lineThree}</p>
+              </div>
             </article>
           </div>
         </div>
       )}
       {showWordModal && (
-        <div className="word-dialog-container">
+        <div
+          className="word-dialog-container"
+          onClick={() => {
+            setShowWordModal(false);
+          }}
+        >
           <div
             className="word-dialog"
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialogTitle"
-            ref={dialogRef}
+            ref={wordModalRef}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="word-modal-top-row">
               <h2 id="dialogTitle">Confirm Flag</h2>{" "}
@@ -244,14 +286,69 @@ function PoetryLine({
                 X
               </button>
             </div>
-            <p>Confirm please </p>
             <article
               key={value.id}
               className="word-card"
               data-haiku-id={value.id}
             >
-              <p className="flagged-word">{flaggedWord}</p>
+              <div className="flag-confirm">
+                <p>Does</p>
+                <p className="flagged-word">
+                  <b>{flaggedWord}</b>
+                </p>
+                <p>have</p>
+                <p className="flagged-word">{flaggedSyllables}</p>
+                <p>{flaggedSyllables > 1 ? "syllables?" : "syllable"}</p>
+              </div>
+              <div className="yes-no-buttons">
+                <button
+                  className="yes-syllable"
+                  onClick={() => {
+                    setFlaggedSyllables(null);
+                    setFlaggedWord(null);
+                    setShowWordModal(false);
+                  }}
+                >
+                  Yes
+                </button>
+                <button
+                  className="no-syllable"
+                  onClick={() => {
+                    handleFlaggedWord(flaggedWord);
+                  }}
+                >
+                  No
+                </button>
+              </div>
             </article>
+          </div>
+        </div>
+      )}
+      {showFlagConfirmModal && (
+        <div
+          className="flagConfirm-dialog-container"
+          onClick={() => setShowFlagConfirmModal(false)}
+        >
+          <div
+            className="word-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref={confirmModalRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="word-modal-top-row">
+              <h4 id="dialogTitle">Word Flagged. Thank you!</h4>{" "}
+              <button
+                className="close-flag"
+                onClick={() => {
+                  setShowFlagConfirmModal(false);
+                  setShowWordModal(false);
+                }}
+              >
+                Thumbs Up!
+              </button>
+            </div>
           </div>
         </div>
       )}

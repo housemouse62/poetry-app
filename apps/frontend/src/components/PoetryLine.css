@@ -163,7 +163,8 @@ header {
 }
 
 .flag-dialog-container,
-.word-dialog-container {
+.word-dialog-container,
+.flagConfirm-dialog-container {
   position: fixed;
   top: 0;
   right: 0;
@@ -231,6 +232,61 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
+}
+
+.flag-confirm {
+  display: flex;
+  gap: 5px;
+}
+
+.yes-no-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.no-syllable {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(245, 50, 89, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.no-syllable:hover {
+  background-color: rgba(219, 35, 72, 1);
+}
+
+.no-syllable:focus-visible {
+  outline: 3px solid rgba(245, 50, 89, 0.8);
+  outline-offset: 2px;
+}
+
+.yes-syllable {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: #667eea;
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.yes-syllable:hover {
+  background-color: #5568d3;
+}
+
+.yes-syllable:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {

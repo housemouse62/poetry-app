@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useFocusTrap } from "../../utils/useFocusTrap";
 import html2canvas from "html2canvas";
 
 function HaikuCard({ haiku, onEdit, onDelete }) {
@@ -7,42 +8,7 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
   const dialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
 
-  useEffect(() => {
-    if (!showDownloadModal) return;
-    const dialog = dialogRef.current;
-    const focusable = dialog
-      ? Array.from(
-          dialog.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-          ),
-        )
-      : [];
-    if (focusable.length) focusable[0].focus();
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        setShowDownloadModal(false);
-        downloadTriggerRef.current?.focus();
-        return;
-      }
-      if (e.key === "Tab" && focusable.length) {
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [showDownloadModal]);
+  useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
 
   const shareAsImage = async (haikuId) => {
     // Find the specific card element
