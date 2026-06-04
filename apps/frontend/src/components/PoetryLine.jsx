@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useWordData } from "../utils/useWordData";
 import { getWordFromCache } from "../utils/wordCache";
 import { countSyllables } from "../utils/syllableCounter";
@@ -15,11 +15,15 @@ function PoetryLine({
   showTarget,
 }) {
   const [currentWord, setCurrentWord] = useState(null);
+  const [showFlagModal, setShowFlagModal] = useState(false);
+  const [flaggedWord, setFlaggedWord] = useState(null);
+  const [flaggedSyllables, setFlaggedSyllables] = useState(null);
+  const [showWordModal, setShowWordModal] = useState(false);
+  const dialogRef = useRef(null);
 
   useWordData(currentWord);
 
   const words = value.split(" ").filter((w) => w.length > 0);
-
   const currentSyllables = words.reduce((total, word) => {
     const cached = getWordFromCache(word);
     return total + (cached?.syllables?.count || countSyllables(word));
@@ -109,35 +113,149 @@ function PoetryLine({
       }}
     />
   );
+  const flagButton = (
+    <button
+      aria-label="Flag a word in this haiku"
+      className="flag-btn"
+      onClick={() => {
+        setShowFlagModal(!showFlagModal);
+      }}
+    >
+      🚩
+    </button>
+  );
+
+  const handleWordClick = async (word) => {
+    console.log(word);
+    setFlaggedWord(word);
+    setShowWordModal(!showWordModal);
+  };
 
   return (
-    <div className="line-group">
-      {!borderColor && <div className="line-header">{syllableCounter}</div>}
+    <>
+      <div className="line-group">
+        {!borderColor && (
+          <div className="line-header">
+            {syllableCounter}
+            {flagButton}
+          </div>
+        )}
 
-      {borderColor ? (
-        <div className={`input-row ${borderColor}`}>
-          {textarea}
-          {syllableCounter}
+        {borderColor ? (
+          <div className={`input-row ${borderColor}`}>
+            {textarea}
+            {syllableCounter}
+            {flagButton}
+          </div>
+        ) : (
+          textarea
+        )}
+
+        <div className="progress-bar" aria-hidden="true">
+          <div
+            className="progress-fill"
+            style={{
+              width: `${progressPercentage}%`,
+              backgroundColor:
+                status === "correct"
+                  ? "#10b981"
+                  : status === "over"
+                    ? "#ef4444"
+                    : "#fbbf24",
+            }}
+          />
         </div>
-      ) : (
-        textarea
-      )}
-
-      <div className="progress-bar" aria-hidden="true">
-        <div
-          className="progress-fill"
-          style={{
-            width: `${progressPercentage}%`,
-            backgroundColor:
-              status === "correct"
-                ? "#10b981"
-                : status === "over"
-                  ? "#ef4444"
-                  : "#fbbf24",
-          }}
-        />
       </div>
-    </div>
+      {showFlagModal && (
+        <div className="flag-dialog-container">
+          <div
+            className="flag-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref={dialogRef}
+          >
+            <div className="flag-modal-top-row">
+              <h2 id="dialogTitle">Flag Word</h2>{" "}
+              <button
+                className="cancel-flag-button"
+                onClick={() => {
+                  setShowFlagModal(false);
+                }}
+              >
+                X
+              </button>
+            </div>
+            <p>
+              Click on the word our syllable counter is counting incorrectly
+            </p>
+            <article
+              key={value.id}
+              className="haiku-card"
+              data-haiku-id={value.id}
+            >
+              <p className="haiku-title">{value.title}</p>
+              <p className="clickable-line">
+                <div className="flag-line-labels">
+                  <span>syllables:</span>
+                  <span>words:</span>
+                </div>
+                {words.map((word, index) => {
+                  const cached = getWordFromCache(word);
+                  const syllableCount =
+                    cached?.syllables?.count || countSyllables(word);
+                  return (
+                    <div className="individual-word">
+                      <span
+                        key={index}
+                        className="clickable-word"
+                        onClick={() => handleWordClick(word)}
+                      >
+                        <span className="word-syllables">{syllableCount}</span>
+                        <span className="word-text">{word}</span>
+                      </span>
+                    </div>
+                  );
+                })}
+              </p>
+              <p className="haiku-line">{value.lineTwo}</p>
+              <p className="haiku-line">{value.lineThree}</p>
+            </article>
+          </div>
+        </div>
+      )}
+      {showWordModal && (
+        <div className="word-dialog-container">
+          <div
+            className="word-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref={dialogRef}
+          >
+            <div className="word-modal-top-row">
+              <h2 id="dialogTitle">Confirm Flag</h2>{" "}
+              <button
+                className="cancel-flag-button"
+                onClick={() => {
+                  setShowWordModal(false);
+                }}
+              >
+                X
+              </button>
+            </div>
+            <p>Confirm please </p>
+            <article
+              key={value.id}
+              className="word-card"
+              data-haiku-id={value.id}
+            >
+              <p className="flagged-word">{flaggedWord}</p>
+            </article>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

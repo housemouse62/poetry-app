@@ -345,26 +345,6 @@ body {
   outline-offset: 2px;
 }
 
-.flag-btn {
-  padding: 5px 10px;
-  margin: 10px 0 0 0;
-  color: white;
-  font-weight: 600;
-  border-radius: 5px;
-  background-color: rgba(241, 229, 231, 0.8);
-  border: 0.2px solid rgba(0, 0, 0, 0.3);
-  transition: background-color 0.2s;
-  cursor: pointer;
-}
-
-.flag-btn:hover {
-  background-color: red;
-}
-
-.flag-btn:focus-visible {
-  outline: 3px solid red;
-  outline-offset: 2px;
-}
 .haiku-dialog-container {
   position: fixed;
   top: 0;
@@ -397,7 +377,9 @@ body {
   .haiku-complete-message,
   .example-haiku,
   .savedHaikus,
-  .haiku-dialog-container {
+  .haiku-dialog-container,
+  .flag-dialog-container,
+  .word-dialog-container {
     animation: none;
   }
 

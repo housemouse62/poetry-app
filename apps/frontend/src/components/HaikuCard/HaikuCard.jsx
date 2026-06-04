@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 
 function HaikuCard({ haiku, onEdit, onDelete }) {
-  const [flag, setFlag] = useState(null);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
   const dialogRef = useRef(null);
@@ -111,9 +110,6 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
             }}
           >
             Delete
-          </button>
-          <button aria-label="Flag a word in this haiku" className="flag-btn">
-            🚩
           </button>
         </div>
       </article>

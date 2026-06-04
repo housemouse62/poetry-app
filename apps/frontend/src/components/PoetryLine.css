@@ -138,3 +138,104 @@ header {
     background-color 0.3s;
   border-radius: 3px;
 }
+
+/* Flagging words */
+
+.flag-btn {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(241, 229, 231, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.flag-btn:hover {
+  background-color: red;
+}
+
+.flag-btn:focus-visible {
+  outline: 3px solid red;
+  outline-offset: 2px;
+}
+
+.flag-dialog-container,
+.word-dialog-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  animation: fadeIn 0.3s;
+}
+
+.flag-dialog,
+.word-dialog {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 30rem;
+  padding: 30px;
+  background-color: white;
+  border-radius: 35px;
+}
+
+.flag-modal-top-row,
+.word-modal-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.cancel-flag-button {
+  padding: 3px 5px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(245, 50, 89, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.cancel-flag-button:hover {
+  background-color: rgba(219, 35, 72, 1);
+}
+
+.cancel-flag-button:focus-visible {
+  outline: 3px solid rgba(245, 50, 89, 0.8);
+  outline-offset: 2px;
+}
+
+.clickable-line {
+  display: flex;
+  gap: 8px;
+}
+
+.flag-line-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-right: 20px;
+  font-style: oblique;
+}
+
+.clickable-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flag-dialog-container,
+  .word-dialog-container {
+    animation: none;
+  }
+}
