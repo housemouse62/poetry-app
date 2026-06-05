@@ -17,7 +17,7 @@ function Register() {
     e.preventDefault();
 
     const fetchUser = async () => {
-      const url = `http://localhost:3000/users/create`;
+      const url = `${import.meta.env.VITE_API_URL}/users/create`;
       try {
         const response = await fetch(url, {
           method: "POST",

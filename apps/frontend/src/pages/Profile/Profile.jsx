@@ -20,7 +20,7 @@ function Profile() {
     e.preventDefault();
 
     const fetchUser = async () => {
-      const url = `http://localhost:3000/users/profile`;
+      const url = `${import.meta.env.VITE_API_URL}/users/profile`;
       try {
         const response = await fetch(url, {
           method: "PATCH",
@@ -60,7 +60,7 @@ function Profile() {
       return;
     }
     const fetchUser = async () => {
-      const url = `http://localhost:3000/users/`;
+      const url = `${import.meta.env.VITE_API_URL}/users/`;
       try {
         const response = await fetch(url, {
           method: "DELETE",

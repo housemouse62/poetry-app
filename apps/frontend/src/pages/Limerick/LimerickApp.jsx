@@ -135,7 +135,7 @@ function LimerickApp() {
   };
 
   const saveLimerick = async () => {
-    const url = `http://localhost:3000/limerick`;
+    const url = `${import.meta.env.VITE_API_URL}/limerick`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -191,7 +191,7 @@ function LimerickApp() {
   };
 
   const fetchMyLimericks = async () => {
-    const url = `http://localhost:3000/limerick/mine`;
+    const url = `${import.meta.env.VITE_API_URL}/limerick/mine`;
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -214,7 +214,7 @@ function LimerickApp() {
   };
 
   const deleteLimerick = async (id) => {
-    const url = `http://localhost:3000/limerick/${id}`;
+    const url = `${import.meta.env.VITE_API_URL}/limerick/${id}`;
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -238,7 +238,7 @@ function LimerickApp() {
   };
 
   const editLimerick = async (id) => {
-    const url = `http://localhost:3000/limerick/${id}`;
+    const url = `${import.meta.env.VITE_API_URL}/limerick/${id}`;
     try {
       const response = await fetch(url, {
         method: "PATCH",

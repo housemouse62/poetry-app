@@ -16,7 +16,7 @@ export const useWordData = (wordToFetch) => {
     const fetchWordData = async () => {
       setLoading(true);
       setError(null);
-      const url = `http://localhost:3000/word/`;
+      const url = `${import.meta.env.VITE_API_URL}/word/`;
 
       // Check Cache for word
       const cached = getWordFromCache(wordToFetch);

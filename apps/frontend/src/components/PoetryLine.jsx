@@ -147,7 +147,7 @@ function PoetryLine({
   };
 
   const handleFlaggedWord = async (word) => {
-    const url = `http://localhost:3000/word/${word}/flag`;
+    const url = `${import.meta.env.VITE_API_URL}/word/${word}/flag`;
     try {
       const response = await fetch(url, {
         method: "PATCH",

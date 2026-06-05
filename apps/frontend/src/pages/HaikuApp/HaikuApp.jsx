@@ -52,7 +52,7 @@ function HaikuApp() {
   };
 
   const saveHaiku = async () => {
-    const url = `http://localhost:3000/haiku`;
+    const url = `${import.meta.env.VITE_API_URL}/haiku`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -98,7 +98,7 @@ function HaikuApp() {
   };
 
   const fetchMyHaikus = async () => {
-    const url = `http://localhost:3000/haiku/mine`;
+    const url = `${import.meta.env.VITE_API_URL}/haiku/mine`;
     try {
       const response = await fetch(url, {
         method: "GET",
@@ -121,7 +121,7 @@ function HaikuApp() {
   };
 
   const deleteHaiku = async (id) => {
-    const url = `http://localhost:3000/haiku/${id}`;
+    const url = `${import.meta.env.VITE_API_URL}/haiku/${id}`;
     try {
       const response = await fetch(url, {
         method: "DELETE",
@@ -145,7 +145,7 @@ function HaikuApp() {
   };
 
   const editHaiku = async (id) => {
-    const url = `http://localhost:3000/haiku/${id}`;
+    const url = `${import.meta.env.VITE_API_URL}/haiku/${id}`;
     try {
       const response = await fetch(url, {
         method: "PATCH",

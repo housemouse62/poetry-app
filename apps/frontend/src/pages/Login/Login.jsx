@@ -13,7 +13,7 @@ function Login() {
     e.preventDefault();
 
     const fetchUser = async () => {
-      const url = `http://localhost:3000/users/login`;
+      const url = `${import.meta.env.VITE_API_URL}/users/login`;
       try {
         const response = await fetch(url, {
           method: "POST",
