@@ -7,6 +7,7 @@ import LimerickApp from "./pages/Limerick/LimerickApp";
 import ErrorPage from "./errorPage";
 
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
+import Profile from "./pages/Profile/Profile.jsx";
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
       {
         path: "/dashboard",
         element: <Dashboard />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "/profile",
+        element: <Profile />,
         errorElement: <ErrorPage />,
       },
       {

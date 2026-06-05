@@ -37,6 +37,59 @@ body {
   margin-bottom: 30px;
 }
 
+.dashboard-nav {
+  display: flex;
+  width: 100%;
+  align-items: start;
+}
+
+.profile-logout-div {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-button {
+  background-color: #10b981;
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: white;
+  padding: 5px 20px;
+  border-radius: 10px 10px 0 0;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.profile-button:hover {
+  background-color: #059669;
+}
+
+.profile-button:focus-visible {
+  outline: 3px solid #10b981;
+  outline-offset: 2px;
+}
+
+.logout-button {
+  background-color: #a8864b;
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: white;
+  padding: 5px 20px;
+  border-radius: 0 0 10px 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+  background-color: #826038;
+}
+
+.logout-button:focus-visible {
+  outline: 3px solid #a8864b;
+  outline-offset: 2px;
+}
+
 .poem-cards {
   display: flex;
   justify-content: center;

@@ -14,17 +14,28 @@ export default function Root() {
     <>
       <div className="root-app">
         <main className="root-container">
-          <nav aria-label="Page navigation">
-            <button
-              className="haiku-back"
-              aria-label="Logout"
-              onClick={() => {
-                logout();
-                navigate("/login");
-              }}
-            >
-              Logout
-            </button>
+          <nav aria-label="Page navigation" className="dashboard-nav">
+            <div className="profile-logout-div">
+              <button
+                className="profile-button"
+                aria-label="Profile"
+                onClick={() => {
+                  navigate("/profile");
+                }}
+              >
+                Profile
+              </button>
+              <button
+                className="logout-button"
+                aria-label="Logout"
+                onClick={() => {
+                  logout();
+                  navigate("/login");
+                }}
+              >
+                Logout
+              </button>
+            </div>
           </nav>
           <div className="root-title-div">
             <h1 className="root-title">make poetry.</h1>

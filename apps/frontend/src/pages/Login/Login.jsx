@@ -30,7 +30,7 @@ function Login() {
         if (nextresponse.token) {
           alert("You are logged in");
           login(nextresponse.user, nextresponse.token);
-          navigate("/");
+          navigate("/dashboard");
         } else alert("Check your login credentials");
       } catch (error) {
         console.error(error);
