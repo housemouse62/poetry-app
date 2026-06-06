@@ -1,12 +1,23 @@
 import { useState, useRef } from "react";
 import { useFocusTrap } from "../../utils/useFocusTrap";
 import html2canvas from "html2canvas";
+import formatDate from "../../utils/formatDate";
+import "./HaikuCard.css";
+import { useAuth } from "../../context/AuthContext";
 
 function HaikuCard({ haiku, onEdit, onDelete }) {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
   const dialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
+  const [likeHaikuState, setLikeHaikuState] = useState(
+    haiku.haikuLikes.length > 0,
+  );
+  const [favoriteHaikuState, setFavoriteHaikuState] = useState(
+    haiku.isFavorited,
+  );
+  const [error, setError] = useState(null);
+  const { token } = useAuth();
 
   useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
 
@@ -40,15 +51,73 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
     });
   };
 
+  const handleLike = async () => {
+    const url = `${import.meta.env.VITE_API_URL}/haiku/${haiku.id}/like`;
+    const method = likeHaikuState ? "DELETE" : "POST";
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+
+      if (response.ok) {
+        setLikeHaikuState(!likeHaikuState);
+      } else setError("Cannot like. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleFavorite = async (id) => {
+    const url = `${import.meta.env.VITE_API_URL}/favorite/haiku/${id}`;
+    const method = favoriteHaikuState ? "DELETE" : "POST";
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const nextresponse = await response.json();
+      console.log(nextresponse);
+
+      if (response.ok) {
+        setFavoriteHaikuState(!favoriteHaikuState);
+      } else setError("Cannot favorite. Please try again.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <article key={haiku.id} className="haiku-card" data-haiku-id={haiku.id}>
-        <p className="haiku-title">{haiku.title}</p>
-        <p className="haiku-line">{haiku.lineOne}</p>
-        <p className="haiku-line">{haiku.lineTwo}</p>
-        <p className="haiku-line">{haiku.lineThree}</p>
-        <p className="haiku-date">{haiku.createdAt}</p>
-
+        <div className="card-top">
+          <div className="card-top-left">
+            <p className="haiku-title">{haiku.title}</p>
+            <p className="haiku-line">{haiku.lineOne}</p>
+            <p className="haiku-line">{haiku.lineTwo}</p>
+            <p className="haiku-line">{haiku.lineThree}</p>
+            <p className="haiku-date">{formatDate(haiku.createdAt)}</p>
+          </div>
+          <div className="card-top-right">
+            <button
+              className="favorite-button"
+              aria-label="Favorite"
+              onClick={() => {
+                setFavoriteHaikuState(!favoriteHaikuState);
+                handleFavorite(haiku.id);
+              }}
+            >
+              {favoriteHaikuState ? "⭐" : "☆"}
+            </button>
+          </div>
+        </div>
         <div className="haiku-card-buttons">
           <button
             aria-label={`Edit haiku: ${haiku.title}`}
@@ -76,6 +145,15 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
             }}
           >
             Delete
+          </button>
+          <button
+            aria-label={`Like haiku: ${haiku.title}`}
+            className="like-haiku-button"
+            onClick={() => {
+              handleLike(haiku.id);
+            }}
+          >
+            {likeHaikuState ? "❤️" : "♡"}
           </button>
         </div>
       </article>
@@ -110,6 +188,11 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
               >
                 Cancel
               </button>
+              {error && (
+                <p className="error-message" role="alert">
+                  {error}
+                </p>
+              )}
             </div>
           </div>
         </div>

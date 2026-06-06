@@ -47,116 +47,120 @@ function Register() {
   }
   return (
     <>
-      <div className="login-div">
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-fields">
-            <div className="login-user">
-              <h1>Register</h1>
-            </div>
-            <div className="form-field">
-              <label className="form-label">
-                <input
-                  type="text"
-                  name="name"
-                  id="name"
-                  className="form-input"
-                  placeholder=" "
-                  value={nameState}
-                  onChange={(e) => setNameState(e.target.value)}
-                  autoComplete="name"
-                  required
-                />
-                <span>Name</span>
-              </label>
-            </div>
-            <div className="form-field">
-              <label className="form-label">
-                <input
-                  type="text"
-                  name="screenname"
-                  id="screenname"
-                  className="form-input"
-                  placeholder=" "
-                  value={screennameState}
-                  onChange={(e) => setScreennameState(e.target.value)}
-                  autoComplete="screenname"
-                />
-                <span>Screenname</span>
-              </label>
-            </div>
-            <div className="form-field">
-              <label className="form-label">
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  className="form-input"
-                  placeholder=" "
-                  value={emailState}
-                  onChange={(e) => setEmailState(e.target.value)}
-                  autoComplete="email"
-                  required
-                />
-                <span>Email</span>
-              </label>
-            </div>
-            <div className="form-field">
-              <label className="form-label">
-                <input
-                  type="email"
-                  name="confirmEmail"
-                  id="confirmEmail"
-                  className="form-input"
-                  placeholder=" "
-                  value={confirmEmailState}
-                  onChange={(e) => setConfirmEmailState(e.target.value)}
-                  autoComplete="email"
-                  required
-                />
-                <span>Confirm Email</span>
-              </label>
-            </div>
-            <div className="form-field">
-              <label className="form-label">
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  className="form-input"
-                  placeholder=" "
-                  value={passwordState}
-                  onChange={(e) => setPasswordState(e.target.value)}
-                  autoComplete="password"
-                  required
-                />
-                <span>Password</span>
-              </label>
-            </div>
-            <div className="form-field">
-              <label className="form-label">
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  className="form-input"
-                  placeholder=" "
-                  value={confirmPasswordState}
-                  onChange={(e) => setConfirmPasswordState(e.target.value)}
-                  autoComplete="password"
-                  required
-                />
-                <span>Password</span>
-              </label>
-            </div>
+      <div className="root-app">
+        <main className="root-container">
+          <div className="register-div">
+            <form className="register-form" onSubmit={handleSubmit}>
+              <div className="form-fields">
+                <div className="register-user">
+                  <h1>Register</h1>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">
+                    <input
+                      type="text"
+                      name="name"
+                      id="name"
+                      className="form-input"
+                      placeholder=" "
+                      value={nameState}
+                      onChange={(e) => setNameState(e.target.value)}
+                      autoComplete="name"
+                      required
+                    />
+                    <span>Name</span>
+                  </label>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">
+                    <input
+                      type="text"
+                      name="screenname"
+                      id="screenname"
+                      className="form-input"
+                      placeholder=" "
+                      value={screennameState}
+                      onChange={(e) => setScreennameState(e.target.value)}
+                      autoComplete="screenname"
+                    />
+                    <span>Screenname</span>
+                  </label>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      className="form-input"
+                      placeholder=" "
+                      value={emailState}
+                      onChange={(e) => setEmailState(e.target.value)}
+                      autoComplete="email"
+                      required
+                    />
+                    <span>Email</span>
+                  </label>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">
+                    <input
+                      type="email"
+                      name="confirmEmail"
+                      id="confirmEmail"
+                      className="form-input"
+                      placeholder=" "
+                      value={confirmEmailState}
+                      onChange={(e) => setConfirmEmailState(e.target.value)}
+                      autoComplete="email"
+                      required
+                    />
+                    <span>Confirm Email</span>
+                  </label>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">
+                    <input
+                      type="password"
+                      name="password"
+                      id="password"
+                      className="form-input"
+                      placeholder=" "
+                      value={passwordState}
+                      onChange={(e) => setPasswordState(e.target.value)}
+                      autoComplete="password"
+                      required
+                    />
+                    <span>Password</span>
+                  </label>
+                </div>
+                <div className="form-field">
+                  <label className="form-label">
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      className="form-input"
+                      placeholder=" "
+                      value={confirmPasswordState}
+                      onChange={(e) => setConfirmPasswordState(e.target.value)}
+                      autoComplete="password"
+                      required
+                    />
+                    <span>Password</span>
+                  </label>
+                </div>
+              </div>
+              <button type="submit" className="form-button login-button">
+                Register
+              </button>
+            </form>
+            <p>Already a registered User?</p>
+            <Link className="login-link" to="/login">
+              Login!
+            </Link>
           </div>
-          <button type="submit" className="form-button login-button">
-            Register
-          </button>
-        </form>
-        <p>Already a registered User?</p>
-        <Link className="login-link" to="/login">
-          Login!
-        </Link>
+        </main>
       </div>
     </>
   );

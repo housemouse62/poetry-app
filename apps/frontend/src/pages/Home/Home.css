@@ -30,30 +30,18 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
-.root-title-div {
+.home-title-div {
   display: flex;
   width: 100%;
   justify-content: end;
   margin-bottom: 30px;
 }
 
-.poem-cards {
+.button-cards {
   display: flex;
   justify-content: center;
   width: 100%;
   gap: 15px;
-}
-
-.link {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  flex: 1 1 0;
-  max-width: 200px;
-  min-width: 150px;
-  text-decoration: none;
-  gap: 20px;
-  border-radius: 15px;
 }
 
 .link:focus-visible {
@@ -61,60 +49,45 @@ body {
   outline-offset: 3px;
 }
 
-.poem-card {
+.home-link-button {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
-  min-width: 150px;
-  min-height: 180px;
+
   border-radius: 15px;
   font-size: 20px;
   font-weight: bold;
+  color: #111827;
+  font-family: Georgia, sans-serif;
 }
 
-.poem-card:hover {
+.home-link-button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: transform 0.2s;
 }
 
-.poem-card.limerick {
+.home-link-button.login {
+  min-width: 150px;
+  min-height: 60px;
+  padding: 20px;
   background-color: #10b981;
 }
 
-.poem-card.haiku {
+.home-link-button.register {
+  min-width: 150px;
+  min-height: 60px;
+  padding: 20px;
   background-color: #667eea;
 }
 
-.poem-card h2 {
-  font-size: 48px;
-  margin: 0;
-}
-
-.card-symbol {
-  font-size: 50px;
-}
-.card-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #111827;
-  text-transform: capitalize;
-  margin: 0;
-}
-
-.card-tagline {
-  color: #111827;
-  font-size: 18px;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.saved-count {
-  color: #111827;
-  font-size: 12px;
-  font-weight: 300;
+.home-link-button.dashboard {
+  margin-top: 15px;
+  min-width: 315px;
+  min-height: 30px;
+  padding: 10px;
+  background-color: #9093a4;
 }
 
 @media (prefers-reduced-motion: reduce) {

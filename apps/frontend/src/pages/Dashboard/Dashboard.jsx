@@ -15,27 +15,25 @@ export default function Root() {
       <div className="root-app">
         <main className="root-container">
           <nav aria-label="Page navigation" className="dashboard-nav">
-            <div className="profile-logout-div">
-              <button
-                className="profile-button"
-                aria-label="Profile"
-                onClick={() => {
-                  navigate("/profile");
-                }}
-              >
-                Profile
-              </button>
-              <button
-                className="logout-button"
-                aria-label="Logout"
-                onClick={() => {
-                  logout();
-                  navigate("/login");
-                }}
-              >
-                Logout
-              </button>
-            </div>
+            <button
+              className="logout-button"
+              aria-label="Logout"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              Logout
+            </button>
+            <button
+              className="profile-button-link"
+              aria-label="Profile"
+              onClick={() => {
+                navigate("/profile");
+              }}
+            >
+              Profile
+            </button>
           </nav>
           <div className="root-title-div">
             <h1 className="root-title">make poetry.</h1>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import "./Profile.css";
 
 function Profile() {
   const [editingState, setEditingState] = useState("");
@@ -13,8 +14,6 @@ function Profile() {
   const [screennameState, setScreennameState] = useState("");
   const { login, user, token, logout } = useAuth();
   const navigate = useNavigate();
-
-  const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
   function handleUpdateSubmit(e) {
     e.preventDefault();
@@ -84,254 +83,269 @@ function Profile() {
 
   return (
     <>
-      <h1>Welcome {user.name}</h1>
-      <h2>Profile Info:</h2>
-      <div className="profile-page">
-        <div className="profile-info">
-          <div className="info-div">
-            <p>
-              <b>Name:</b> {user.name}
-            </p>
+      <div className="profile-app">
+        <main className="profile-container">
+          <nav aria-label="Page navigation" className="profile-nav">
             <button
-              className="update-link"
+              className="dashboard-button"
+              aria-label="Dashboard"
               onClick={() => {
-                setEditingState("name");
+                navigate("/dashboard");
               }}
             >
-              Edit
+              Dashboard
             </button>
-          </div>
-          <div className="info-div">
-            <p>
-              <b>Email:</b> {user.email}
-            </p>
-            <button
-              className="update-link"
-              onClick={() => {
-                setEditingState("email");
-              }}
-            >
-              Edit
-            </button>
-          </div>
-          <div className="info-div">
-            <p>
-              <b>Role:</b> {user ? capitalize(user.usertype) : ""}
-            </p>
-          </div>
-          <div className="info-div">
-            <p>
-              <b>Screenname:</b> {user.screenname}
-            </p>
-            <button
-              className="update-link"
-              onClick={() => {
-                setEditingState("screenname");
-              }}
-            >
-              Edit
-            </button>
-          </div>
-          <div className="info-div">
-            <button
-              className="update-link"
-              onClick={() => {
-                setEditingState("password");
-              }}
-            >
-              Change Password
-            </button>
-          </div>
-          <div className="info-div">
-            <button
-              className="update-link"
-              onClick={() => {
-                setEditingState("deleteUser");
-              }}
-            >
-              Delete User
-            </button>
-          </div>
-        </div>
-        <div className="change-information">
-          {editingState ? (
-            <form
-              className="update-form"
-              onSubmit={
-                editingState === "deleteUser"
-                  ? handleDeleteSubmit
-                  : handleUpdateSubmit
-              }
-            >
-              <legend>
-                {editingState !== "deleteUser"
-                  ? "Update Personal Info:"
-                  : "Confirm Delete User"}{" "}
-              </legend>
-              <div className="form-fields">
-                {editingState === "screenname" ? (
-                  <div className="form-field">
-                    <label className="form-label">
-                      <input
-                        type="text"
-                        name="screenname"
-                        id="screenname"
-                        className="form-input"
-                        placeholder=" "
-                        value={screennameState}
-                        onChange={(e) => setScreennameState(e.target.value)}
-                        autoComplete="name"
-                      />
-                      <span>Screen Name</span>
-                    </label>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {editingState === "name" ? (
-                  <div className="form-field">
-                    <label className="form-label">
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        className="form-input"
-                        placeholder=" "
-                        value={nameState}
-                        onChange={(e) => setNameState(e.target.value)}
-                        autoComplete="name"
-                      />
-                      <span>Name</span>
-                    </label>
-                  </div>
-                ) : (
-                  ""
-                )}
-                {editingState === "email" ? (
-                  <>
-                    <div className="form-field">
-                      <label className="form-label">
-                        <input
-                          type="email"
-                          name="email"
-                          id="email"
-                          className="form-input"
-                          placeholder=" "
-                          value={emailState}
-                          onChange={(e) => setEmailState(e.target.value)}
-                          autoComplete="email"
-                        />
-                        <span>Email</span>
-                      </label>
-                    </div>
-                    <div className="form-field">
-                      <label className="form-label">
-                        <input
-                          type="email"
-                          name="confirmEmail"
-                          id="confirmEmail"
-                          className="form-input"
-                          placeholder=" "
-                          value={confirmEmailState}
-                          onChange={(e) => setConfirmEmailState(e.target.value)}
-                          autoComplete="email"
-                        />
-                        <span>Confirm Email</span>
-                      </label>
-                    </div>{" "}
-                  </>
-                ) : (
-                  ""
-                )}
-                {editingState === "password" ? (
-                  <>
-                    <div className="form-field">
-                      <label className="form-label">
-                        <input
-                          type="password"
-                          name="currentPassword"
-                          id="currentPassword"
-                          className="form-input"
-                          placeholder=" "
-                          value={currentPasswordState}
-                          onChange={(e) =>
-                            setCurrentPasswordState(e.target.value)
-                          }
-                          autoComplete="current-password"
-                        />
-                        <span>Current Password</span>
-                      </label>
-                    </div>
-                    <div className="form-field">
-                      <label className="form-label">
-                        <input
-                          type="password"
-                          name="newPassword"
-                          id="newPassword"
-                          className="form-input"
-                          placeholder=" "
-                          value={newPasswordState}
-                          onChange={(e) => setNewPasswordState(e.target.value)}
-                          autoComplete="current-password"
-                        />
-                        <span>New Password</span>
-                      </label>
-                    </div>
-                    <div className="form-field">
-                      <label className="form-label">
-                        <input
-                          type="password"
-                          name="confirmNewPassword"
-                          id="confirmNewPassword"
-                          className="form-input"
-                          placeholder=" "
-                          value={confirmNewPasswordState}
-                          onChange={(e) =>
-                            setConfirmNewPasswordState(e.target.value)
-                          }
-                          autoComplete="current-password"
-                        />
-                        <span>Confirm New Password</span>
-                      </label>
-                    </div>
-                  </>
-                ) : (
-                  ""
-                )}
-                {editingState === "deleteUser" ? (
-                  <div className="form-field">
-                    <label className="form-label">
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        className="form-input"
-                        placeholder=" "
-                        value={emailState}
-                        onChange={(e) => setEmailState(e.target.value)}
-                        autoComplete="name"
-                      />
-                      <span>Enter user email to confirm delete user</span>
-                    </label>
-                  </div>
-                ) : (
-                  ""
-                )}
-              </div>
-              {editingState ? (
-                <button type="submit" className="form-button">
-                  {editingState !== "deleteUser"
-                    ? "Update Information"
-                    : "Confirm Delete User"}
+          </nav>
+          <h1 className="profile-info-title">Profile Info:</h1>
+          <div className="profile-page">
+            <div className="profile-info">
+              <div className="info-div">
+                <p>
+                  <b>Name:</b> {user.name}
+                </p>
+                <button
+                  className="profile-button edit"
+                  onClick={() => {
+                    setEditingState("name");
+                  }}
+                >
+                  Edit
                 </button>
+              </div>
+              <div className="info-div">
+                <p>
+                  <b>Email:</b> {user.email}
+                </p>
+                <button
+                  className="profile-button edit"
+                  onClick={() => {
+                    setEditingState("email");
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+              <div className="info-div">
+                <p>
+                  <b>Screenname:</b> {user.screenname}
+                </p>
+                <button
+                  className="profile-button edit"
+                  onClick={() => {
+                    setEditingState("screenname");
+                  }}
+                >
+                  Edit
+                </button>
+              </div>
+              <div className="info-div">
+                <button
+                  className="profile-button password"
+                  onClick={() => {
+                    setEditingState("password");
+                  }}
+                >
+                  Change Password
+                </button>
+              </div>
+            </div>
+            <div className="change-information">
+              {editingState ? (
+                <form
+                  className="update-form"
+                  onSubmit={
+                    editingState === "deleteUser"
+                      ? handleDeleteSubmit
+                      : handleUpdateSubmit
+                  }
+                >
+                  <legend>
+                    {editingState !== "deleteUser"
+                      ? "Update Personal Info:"
+                      : "Confirm Delete User"}{" "}
+                  </legend>
+                  <div className="form-fields">
+                    {editingState === "screenname" ? (
+                      <div className="form-field">
+                        <label className="form-label">
+                          <input
+                            type="text"
+                            name="screenname"
+                            id="screenname"
+                            className="form-input"
+                            placeholder=" "
+                            value={screennameState}
+                            onChange={(e) => setScreennameState(e.target.value)}
+                            autoComplete="name"
+                          />
+                          <span>Screen Name</span>
+                        </label>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {editingState === "name" ? (
+                      <div className="form-field">
+                        <label className="form-label">
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            className="form-input"
+                            placeholder=" "
+                            value={nameState}
+                            onChange={(e) => setNameState(e.target.value)}
+                            autoComplete="name"
+                          />
+                          <span>Name</span>
+                        </label>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                    {editingState === "email" ? (
+                      <>
+                        <div className="form-field">
+                          <label className="form-label">
+                            <input
+                              type="email"
+                              name="email"
+                              id="email"
+                              className="form-input"
+                              placeholder=" "
+                              value={emailState}
+                              onChange={(e) => setEmailState(e.target.value)}
+                              autoComplete="email"
+                            />
+                            <span>Email</span>
+                          </label>
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">
+                            <input
+                              type="email"
+                              name="confirmEmail"
+                              id="confirmEmail"
+                              className="form-input"
+                              placeholder=" "
+                              value={confirmEmailState}
+                              onChange={(e) =>
+                                setConfirmEmailState(e.target.value)
+                              }
+                              autoComplete="email"
+                            />
+                            <span>Confirm Email</span>
+                          </label>
+                        </div>{" "}
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    {editingState === "password" ? (
+                      <>
+                        <div className="form-field">
+                          <label className="form-label">
+                            <input
+                              type="password"
+                              name="currentPassword"
+                              id="currentPassword"
+                              className="form-input"
+                              placeholder=" "
+                              value={currentPasswordState}
+                              onChange={(e) =>
+                                setCurrentPasswordState(e.target.value)
+                              }
+                              autoComplete="current-password"
+                            />
+                            <span>Current Password</span>
+                          </label>
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">
+                            <input
+                              type="password"
+                              name="newPassword"
+                              id="newPassword"
+                              className="form-input"
+                              placeholder=" "
+                              value={newPasswordState}
+                              onChange={(e) =>
+                                setNewPasswordState(e.target.value)
+                              }
+                              autoComplete="current-password"
+                            />
+                            <span>New Password</span>
+                          </label>
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">
+                            <input
+                              type="password"
+                              name="confirmNewPassword"
+                              id="confirmNewPassword"
+                              className="form-input"
+                              placeholder=" "
+                              value={confirmNewPasswordState}
+                              onChange={(e) =>
+                                setConfirmNewPasswordState(e.target.value)
+                              }
+                              autoComplete="current-password"
+                            />
+                            <span>Confirm New Password</span>
+                          </label>
+                        </div>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                    {editingState === "deleteUser" ? (
+                      <div className="form-field">
+                        <label className="form-label">
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            className="form-input"
+                            placeholder=" "
+                            value={emailState}
+                            onChange={(e) => setEmailState(e.target.value)}
+                            autoComplete="name"
+                          />
+                          <span>Enter user email to confirm delete user</span>
+                        </label>
+                      </div>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                  {editingState ? (
+                    <button type="submit" className="form-button">
+                      {editingState !== "deleteUser"
+                        ? "Update Information"
+                        : "Confirm Delete User"}
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </form>
               ) : (
                 ""
               )}
-            </form>
-          ) : (
-            ""
-          )}
-        </div>
+            </div>
+          </div>
+          <div className="delete-button">
+            <div className="info-div">
+              <button
+                className="profile-button delete"
+                onClick={() => {
+                  setEditingState("deleteUser");
+                }}
+              >
+                Delete User
+              </button>
+            </div>
+          </div>
+        </main>
       </div>
     </>
   );
