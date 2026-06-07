@@ -71,6 +71,16 @@ body {
   font-size: clamp(1.2rem, 5.5vw, 2rem);
 }
 
+.haiku-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.haiku-h2 {
+  color: #667eea;
+}
+
 .haiku-subtitle {
   color: #666;
   margin-bottom: 30px;
@@ -184,7 +194,7 @@ body {
 
 .savedHaikus-title {
   color: #667eea;
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: 700;
   margin: 10px 0 0 0;
   text-align: center;
