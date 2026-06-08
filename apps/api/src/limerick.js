@@ -86,15 +86,25 @@ limerickRouter.get("/", verifyToken, async (req, res, next) => {
 // get all limericks belonging to the logged-in user
 limerickRouter.get("/mine", verifyToken, async (req, res, next) => {
   try {
-    const mylimericks = await prisma.limerick.findMany({
+    const myLimericks = await prisma.limerick.findMany({
       where: { authorID: req.user.id },
       include: {
         _count: {
           select: { comments: true, limerickLikes: true },
         },
+        limerickLikes: {
+          where: { userID: req.user.id },
+        },
       },
     });
-    res.json(mylimericks);
+    const myFavorites = await prisma.favorite.findMany({
+      where: { userID: req.user.id, poemType: "limerick" },
+    });
+    const limericksWithFavorites = myLimericks.map((limerick) => ({
+      ...limerick,
+      isFavorited: myFavorites.some((f) => f.poemID === limerick.id),
+    }));
+    res.status(200).json(limericksWithFavorites);
   } catch (error) {
     next(error);
   }

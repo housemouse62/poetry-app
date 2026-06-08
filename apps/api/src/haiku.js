@@ -78,9 +78,20 @@ haikuRouter.get("/mine", verifyToken, async (req, res, next) => {
         _count: {
           select: { comments: true, haikuLikes: true },
         },
+        haikuLikes: {
+          where: { userID: req.user.id },
+        },
       },
     });
-    res.status(200).json(myHaikus);
+    const myFavorites = await prisma.favorite.findMany({
+      where: { userID: req.user.id, poemType: "haiku" },
+    });
+    const haikusWithFavorites = myHaikus.map((haiku) => ({
+      ...haiku,
+      isFavorited: myFavorites.some((f) => f.poemID === haiku.id),
+    }));
+    console.log(haikusWithFavorites);
+    res.status(200).json(haikusWithFavorites);
   } catch (error) {
     next(error);
   }
@@ -95,6 +106,7 @@ haikuRouter.get("/:id", verifyToken, async (req, res, next) => {
         _count: { select: { comments: true, haikuLikes: true } },
       },
     });
+
     if (!haiku) {
       return res.status(404).json({ error: "Haiku doesn't exist in database" });
     }
