@@ -27,3 +27,13 @@
   margin-bottom: -10px;
   cursor: pointer;
 }
+
+.haiku-title {
+  margin-bottom: 5px;
+}
+.haiku-date {
+  margin-top: 5px;
+  margin-left: 55px;
+  font-size: 14px;
+  font-weight: 550;
+}

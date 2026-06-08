@@ -6,6 +6,7 @@ import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine";
 import { useAuth } from "../../context/AuthContext";
+import LimerickCard from "../../components/LimerickCard/LimerickCard";
 
 function LimerickApp() {
   const navigate = useNavigate();
@@ -24,8 +25,6 @@ function LimerickApp() {
   const [saved, setSaved] = useState(false);
   const [showLimericks, setShowLimericks] = useState(false);
   const [savedLimericks, setSavedLimericks] = useState("");
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
-  const [downloadID, setDownloadID] = useState("");
   const [isFading, setIsFading] = useState(false);
   const [showExample, setShowExample] = useState(false);
   const [syllableCounts, setSyllablesCounts] = useState({
@@ -40,45 +39,6 @@ function LimerickApp() {
 
   const { user, token } = useAuth();
   const targetSyllables = ["7 - 10", "7 - 10", "5-8", "5-8", "7 - 10"];
-  const dialogRef = useRef(null);
-  const downloadTriggerRef = useRef(null);
-
-  useEffect(() => {
-    if (!showDownloadModal) return;
-    const dialog = dialogRef.current;
-    const focusable = dialog
-      ? Array.from(
-          dialog.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-          ),
-        )
-      : [];
-    if (focusable.length) focusable[0].focus();
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") {
-        setShowDownloadModal(false);
-        downloadTriggerRef.current?.focus();
-        return;
-      }
-      if (e.key === "Tab" && focusable.length) {
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [showDownloadModal]);
 
   // Check if Limericks is complete
   const isComplete =
@@ -100,38 +60,6 @@ function LimerickApp() {
       ...prev,
       [lineKey]: value,
     }));
-  };
-
-  const shareAsImage = async (limerickId) => {
-    // Find the specific card element
-    const cardElement = document.querySelector(
-      `[data-limerick-id="${limerickId}"]`,
-    );
-    if (!cardElement) return;
-
-    // hide buttons before screenshot
-    const buttons = cardElement.querySelector(".limerick-card-buttons");
-    const originalDisplay = buttons.style.display;
-    buttons.style.display = "none";
-
-    // save and remove background
-    cardElement.style.backgroundColor = "rgb(212, 222, 231)";
-
-    //convert to canvas - take screenshot w/ transparent background;
-    const canvas = await html2canvas(cardElement, { backgroundColor: null });
-
-    // show buttons & background again
-    buttons.style.display = originalDisplay;
-
-    //convert canvas to blob - download
-    canvas.toBlob((blob) => {
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.download = "Limericks.png";
-      link.href = url;
-      link.click();
-    });
   };
 
   const saveLimerick = async () => {
@@ -201,7 +129,7 @@ function LimerickApp() {
         },
       });
       const nextresponse = await response.json();
-      console.log(nextresponse);
+      console.log("next response", nextresponse);
       if (response.ok) {
         setSavedLimericks(nextresponse);
         setShowLimericks(true);
@@ -291,7 +219,7 @@ function LimerickApp() {
   return (
     <div className="limerick-app">
       <main className="limerick-container">
-        <nav aria-label="Page navigation">
+        <nav aria-label="Page navigation" className="limerick-nav">
           <button
             className="limerick-back"
             aria-label="Back to dashboard"
@@ -301,124 +229,177 @@ function LimerickApp() {
           >
             dashboard
           </button>
+          {showLimericks && (
+            <h2 className="limerick-h2">
+              <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
+              <span aria-hidden="true">🍀</span>
+            </h2>
+          )}
         </nav>
-        <header>
-          <h1 className="limerick-h1">
-            <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
-            <span aria-hidden="true">🍀</span>
-          </h1>
-          <p className="limerick-subtitle">
-            Lines with matching borders rhyme together.
-          </p>
-          <p className="sr-only">
-            This limerick has an AABBA rhyme scheme. Lines 1, 2, and 5 rhyme
-            together (shown with green borders). Lines 3 and 4 rhyme together
-            (shown with orange borders).
-          </p>
-        </header>
-        <div className="title-div">
-          <textarea
-            className="title-input"
-            rows="1"
-            name="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
-          />
-        </div>
-        <PoetryLine
-          aria-label="Line 1, rhymes with lines 2 and 5"
-          lineNumber={1}
-          targetSyllables={targetSyllables[0]}
-          value={lines.line1}
-          onChange={(value) => updateLine("line1", value)}
-          onSyllableChange={(count) =>
-            setSyllablesCounts((prev) => ({ ...prev, line1: count }))
-          }
-          borderColor={"A"}
-          showTarget={false}
-          placeholderText={`Line 1 (${targetSyllables[0]} syllables)`}
-        />
-        <PoetryLine
-          aria-label="Line 2, rhymes with lines 1 and 5"
-          lineNumber={2}
-          targetSyllables={targetSyllables[1]}
-          value={lines.line2}
-          onChange={(value) => updateLine("line2", value)}
-          onSyllableChange={(count) =>
-            setSyllablesCounts((prev) => ({ ...prev, line2: count }))
-          }
-          borderColor={"A"}
-          showTarget={false}
-          placeholderText={`Line 2 (${targetSyllables[1]} syllables)`}
-        />
-        <PoetryLine
-          aria-label="Line 3, rhymes with line 4"
-          lineNumber={3}
-          targetSyllables={targetSyllables[2]}
-          value={lines.line3}
-          onChange={(value) => updateLine("line3", value)}
-          onSyllableChange={(count) =>
-            setSyllablesCounts((prev) => ({ ...prev, line3: count }))
-          }
-          borderColor={"B"}
-          showTarget={false}
-          placeholderText={`Line 3 (${targetSyllables[2]} syllables)`}
-        />
-        <PoetryLine
-          aria-label="Line 4, rhymes with line 5"
-          lineNumber={4}
-          targetSyllables={targetSyllables[3]}
-          value={lines.line4}
-          onChange={(value) => updateLine("line4", value)}
-          onSyllableChange={(count) =>
-            setSyllablesCounts((prev) => ({ ...prev, line4: count }))
-          }
-          borderColor={"B"}
-          showTarget={false}
-          placeholderText={`Line 4 (${targetSyllables[3]} syllables)`}
-        />
-        <PoetryLine
-          aria-label="Line 5, rhymes with lines 1 and 2"
-          lineNumber={5}
-          targetSyllables={targetSyllables[4]}
-          value={lines.line5}
-          onChange={(value) => updateLine("line5", value)}
-          onSyllableChange={(count) =>
-            setSyllablesCounts((prev) => ({ ...prev, line5: count }))
-          }
-          borderColor={"A"}
-          showTarget={false}
-          placeholderText={`Line 5 (${targetSyllables[4]} syllables)`}
-        />
-        {(isComplete || saved) && (
-          <div
-            className={`limerick-complete-message ${isFading ? "fade-out" : ""}`}
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            {saved ? (
-              <>
-                <span aria-hidden="true">✨</span> Saved!{" "}
-                <span aria-hidden="true">✨</span>
-              </>
+        {showLimericks && (
+          <div className="savedLimericks" key={`view-${showLimericks}`}>
+            <h2 className="savedLimericks-title">Saved Limericks</h2>
+            {savedLimericks.length <= 0 ? (
+              <p>No saved limericks, waiting for words of wisdom</p>
             ) : (
-              <>
-                <h3 className="limerick-h3">
-                  <span aria-hidden="true">✨</span> You do limerick!{" "}
-                  <span aria-hidden="true">✨</span>
-                </h3>
-              </>
+              savedLimericks.map((l) => (
+                <LimerickCard
+                  key={l.id}
+                  limerick={l}
+                  onEdit={() => {
+                    setShowLimericks(false);
+                    setEditingLimerick(true);
+                    setEditID(l.id);
+                    setLines({
+                      line1: `${l.lineOne}`,
+                      line2: `${l.lineTwo}`,
+                      line3: `${l.lineThree}`,
+                      line4: `${l.lineFour}`,
+                      line5: `${l.lineFive}`,
+                    });
+                    setTitle(l.title);
+                    setPublished(l.published);
+                  }}
+                  onDelete={() => deleteLimerick(l.id)}
+                />
+              ))
             )}
           </div>
         )}
-        {error && (
-          <p className="error-message" role="alert">
-            {error}
-          </p>
+        {!showLimericks && (
+          <div className="LimerickForm">
+            <header>
+              <h1 className="limerick-h1">
+                <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
+                <span aria-hidden="true">🍀</span>
+              </h1>
+              <p className="limerick-subtitle">
+                Lines with matching borders rhyme together.
+              </p>
+              <p className="sr-only">
+                This limerick has an AABBA rhyme scheme. Lines 1, 2, and 5 rhyme
+                together (shown with green borders). Lines 3 and 4 rhyme
+                together (shown with orange borders).
+              </p>
+            </header>
+            <div className="title-div">
+              <textarea
+                className="title-input"
+                rows="1"
+                name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Title"
+              />
+            </div>
+            <PoetryLine
+              aria-label="Line 1, rhymes with lines 2 and 5"
+              lineNumber={1}
+              targetSyllables={targetSyllables[0]}
+              value={lines.line1}
+              onChange={(value) => updateLine("line1", value)}
+              onSyllableChange={(count) =>
+                setSyllablesCounts((prev) => ({ ...prev, line1: count }))
+              }
+              borderColor={"A"}
+              showTarget={false}
+              placeholderText={`Line 1 (${targetSyllables[0]} syllables)`}
+            />
+            <PoetryLine
+              aria-label="Line 2, rhymes with lines 1 and 5"
+              lineNumber={2}
+              targetSyllables={targetSyllables[1]}
+              value={lines.line2}
+              onChange={(value) => updateLine("line2", value)}
+              onSyllableChange={(count) =>
+                setSyllablesCounts((prev) => ({ ...prev, line2: count }))
+              }
+              borderColor={"A"}
+              showTarget={false}
+              placeholderText={`Line 2 (${targetSyllables[1]} syllables)`}
+            />
+            <PoetryLine
+              aria-label="Line 3, rhymes with line 4"
+              lineNumber={3}
+              targetSyllables={targetSyllables[2]}
+              value={lines.line3}
+              onChange={(value) => updateLine("line3", value)}
+              onSyllableChange={(count) =>
+                setSyllablesCounts((prev) => ({ ...prev, line3: count }))
+              }
+              borderColor={"B"}
+              showTarget={false}
+              placeholderText={`Line 3 (${targetSyllables[2]} syllables)`}
+            />
+            <PoetryLine
+              aria-label="Line 4, rhymes with line 5"
+              lineNumber={4}
+              targetSyllables={targetSyllables[3]}
+              value={lines.line4}
+              onChange={(value) => updateLine("line4", value)}
+              onSyllableChange={(count) =>
+                setSyllablesCounts((prev) => ({ ...prev, line4: count }))
+              }
+              borderColor={"B"}
+              showTarget={false}
+              placeholderText={`Line 4 (${targetSyllables[3]} syllables)`}
+            />
+            <PoetryLine
+              aria-label="Line 5, rhymes with lines 1 and 2"
+              lineNumber={5}
+              targetSyllables={targetSyllables[4]}
+              value={lines.line5}
+              onChange={(value) => updateLine("line5", value)}
+              onSyllableChange={(count) =>
+                setSyllablesCounts((prev) => ({ ...prev, line5: count }))
+              }
+              borderColor={"A"}
+              showTarget={false}
+              placeholderText={`Line 5 (${targetSyllables[4]} syllables)`}
+            />
+            {(isComplete || saved) && (
+              <div
+                className={`limerick-complete-message ${isFading ? "fade-out" : ""}`}
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              >
+                {saved ? (
+                  <>
+                    <span aria-hidden="true">✨</span> Saved!{" "}
+                    <span aria-hidden="true">✨</span>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="limerick-h3">
+                      <span aria-hidden="true">✨</span> You do limerick!{" "}
+                      <span aria-hidden="true">✨</span>
+                    </h3>
+                  </>
+                )}
+              </div>
+            )}
+            {error && (
+              <p className="error-message" role="alert">
+                {error}
+              </p>
+            )}
+            {/* button row */}
+          </div>
         )}
-        {/* button row */}
+        {!showLimericks && (
+          <div className="published-checkbox">
+            <input
+              id="published"
+              type="checkbox"
+              name="published"
+              checked={published}
+              onChange={(e) => setPublished(e.target.checked)}
+            />
+            <label htmlFor="published" className="check-box" />
+            <span>Publish</span>
+          </div>
+        )}
         <div className="limerick-button-row">
           {/* Save Button */}
           {!isComplete && !saved && (
@@ -426,19 +407,20 @@ function LimerickApp() {
               Complete all five lines with correct syllable counts to save
             </span>
           )}
-          <button
-            disabled={!isComplete || saved}
-            className="save-limerick-btn"
-            aria-describedby={
-              !isComplete && !saved ? "save-limerick-help" : undefined
-            }
-            onClick={() => {
-              editingLimerick ? editLimerick(editID) : saveLimerick();
-            }}
-          >
-            {editingLimerick ? "Update" : "Save"}
-          </button>
-
+          {!showLimericks && (
+            <button
+              disabled={!isComplete || saved}
+              className="save-limerick-btn"
+              aria-describedby={
+                !isComplete && !saved ? "save-limerick-help" : undefined
+              }
+              onClick={() => {
+                editingLimerick ? editLimerick(editID) : saveLimerick();
+              }}
+            >
+              {editingLimerick ? "Update" : "Save"}
+            </button>
+          )}
           {/* View Limericks/Hide Limericks button */}
           <button
             className="view-limericks-btn"
@@ -455,49 +437,44 @@ function LimerickApp() {
           </button>
 
           {/* clear the fields button*/}
-          <button
-            disabled={fieldsEmpty}
-            className="clear-limerick-btn"
-            onClick={() => {
-              setLines({
-                line1: "",
-                line2: "",
-                line3: "",
-                line4: "",
-                line5: "",
-              });
-            }}
-          >
-            Clear
-          </button>
+          {!showLimericks && (
+            <button
+              disabled={fieldsEmpty}
+              className="clear-limerick-btn"
+              onClick={() => {
+                setLines({
+                  line1: "",
+                  line2: "",
+                  line3: "",
+                  line4: "",
+                  line5: "",
+                });
+              }}
+            >
+              Clear
+            </button>
+          )}
         </div>
-        <div className="published-checkbox">
-          <label htmlFor="published">Publish?</label>
-          <input
-            type="checkbox"
-            name="published"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
-          />
-        </div>
-        <div className="show-limerick-example-div">
-          <button
-            className="show-limerick-example-button"
-            aria-expanded={showExample}
-            onClick={() => {
-              if (showExample) {
-                setShowExample(false);
-              } else {
-                setShowLimericks(false);
-                setShowExample(true);
-              }
-            }}
-          >
-            {showExample ? "hide example" : "show example"}
-          </button>
-        </div>
-        {/* Example Limericks & Saved Limericks Area */}
-        {!showLimericks && showExample ? (
+        {!showLimericks && (
+          <div className="show-limerick-example-div">
+            <button
+              className="show-limerick-example-button"
+              aria-expanded={showExample}
+              onClick={() => {
+                if (showExample) {
+                  setShowExample(false);
+                } else {
+                  setShowLimericks(false);
+                  setShowExample(true);
+                }
+              }}
+            >
+              {showExample ? "hide example" : "show example"}
+            </button>
+          </div>
+        )}
+        {/* Example Limericks Area */}
+        {showExample && (
           <div className="example-limerick" key={`view-${showLimericks}`}>
             <div className="example-limerick-title">Example:</div>
             <div className="example-limerick-text">
@@ -513,108 +490,8 @@ function LimerickApp() {
               <br />- Edward Lear
             </div>
           </div>
-        ) : showLimericks ? (
-          <div className="savedLimericks" key={`view-${showLimericks}`}>
-            <h2 className="savedLimericks-title">Saved Limericks</h2>
-            {savedLimericks.length <= 0 ? (
-              <p>No saved limericks, waiting for words of wisdom</p>
-            ) : (
-              savedLimericks.map((h) => (
-                <article
-                  key={h.id}
-                  className="limerick-card"
-                  data-limerick-id={h.id}
-                >
-                  <p className="limerick-title">{h.title}</p>
-                  <p className="limerick-line">{h.lineOne}</p>
-                  <p className="limerick-line">{h.lineTwo}</p>
-                  <p className="limerick-line">{h.lineThree}</p>
-                  <p className="limerick-line">{h.lineFour}</p>
-                  <p className="limerick-line">{h.lineFive}</p>
-                  <p className="haiku-date">{h.createdAt}</p>
-
-                  <div className="limerick-card-buttons">
-                    <button
-                      aria-label={`Edit haiku: ${h.title}`}
-                      className="edit-haiku-btn"
-                      onClick={() => {
-                        setEditingLimerick(true);
-                        setEditID(h.id);
-                        setLines({
-                          line1: `${h.lineOne}`,
-                          line2: `${h.lineTwo}`,
-                          line3: `${h.lineThree}`,
-                          line4: `${h.lineFour}`,
-                          line5: `${h.lineFive}`,
-                        });
-                        setTitle(h.title);
-                        setPublished(h.published);
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      aria-label={`Download limerick: ${h.title}`}
-                      className="download-limerick-btn"
-                      onClick={(e) => {
-                        downloadTriggerRef.current = e.currentTarget;
-                        setShowDownloadModal(true);
-                        setDownloadID(h.id);
-                      }}
-                    >
-                      Download
-                    </button>
-                    <button
-                      aria-label={`Delete limerick: ${h.line1}`}
-                      className="delete-limerick-btn"
-                      onClick={() => {
-                        deleteLimerick(h.id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </article>
-              ))
-            )}
-          </div>
-        ) : null}
+        )}
       </main>
-      {showDownloadModal && (
-        <div className="limerick-dialog-container">
-          <div
-            className="limerick-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="dialogTitle"
-            ref={dialogRef}
-          >
-            <h2 id="dialogTitle">Confirm Download</h2>
-            <div className="limerick-modal-button-row">
-              <button
-                className="confirm-limerick-button"
-                onClick={() => {
-                  shareAsImage(downloadID);
-                  setShowDownloadModal(false);
-                  setDownloadID("");
-                  downloadTriggerRef.current?.focus();
-                }}
-              >
-                Confirm
-              </button>
-              <button
-                className="cancel-limerick-button"
-                onClick={() => {
-                  setShowDownloadModal(false);
-                  downloadTriggerRef.current?.focus();
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

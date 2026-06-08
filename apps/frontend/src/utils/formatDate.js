@@ -3,9 +3,9 @@ export default function formatDate(date) {
     year: "numeric",
     month: "long",
     day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true,
+    // hour: "numeric",
+    // minute: "2-digit",
+    // hour12: true,
   });
   return formattedDate;
 }

@@ -315,6 +315,19 @@ function HaikuApp() {
             {/* button row */}
           </div>
         )}
+        {!showHaikus && (
+          <div className="published-checkbox">
+            <input
+              id="published"
+              type="checkbox"
+              name="published"
+              checked={published}
+              onChange={(e) => setPublished(e.target.checked)}
+            />
+            <label htmlFor="published" className="check-box" />
+            <span>Publish</span>
+          </div>
+        )}
         <div className="haiku-button-row">
           {/* Save Button */}
           {!isComplete && !saved && (
@@ -367,17 +380,6 @@ function HaikuApp() {
             </button>
           )}
         </div>
-        {!showHaikus && (
-          <div className="published-checkbox">
-            <label htmlFor="published">Publish?</label>
-            <input
-              type="checkbox"
-              name="published"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-            />
-          </div>
-        )}
         {!showHaikus && (
           <div className="show-haiku-example-div">
             <button
