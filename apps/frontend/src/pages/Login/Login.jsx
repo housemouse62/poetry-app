@@ -8,6 +8,7 @@ function Login() {
   const [passwordState, setPasswordState] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -28,10 +29,9 @@ function Login() {
         const nextresponse = await response.json();
 
         if (nextresponse.token) {
-          alert("You are logged in");
           login(nextresponse.user, nextresponse.token);
           navigate("/dashboard");
-        } else alert("Check your login credentials");
+        } else setError("Check your login credentials");
       } catch (error) {
         console.error(error);
       }
@@ -85,6 +85,11 @@ function Login() {
                 Log In
               </button>
             </form>
+            {error && (
+              <p className="error-message" role="alert">
+                {error}
+              </p>
+            )}
             <p>Not a registered User?</p>
             <Link className="create-link" to="/register">
               Register here!

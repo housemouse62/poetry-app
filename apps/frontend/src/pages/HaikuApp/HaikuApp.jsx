@@ -252,6 +252,7 @@ function HaikuApp() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
+                aria-label="Haiku title"
               />
             </div>
             <PoetryLine

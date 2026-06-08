@@ -15,6 +15,7 @@ function PoetryLine({
   placeholderText,
   borderColor,
   showTarget,
+  rhymeInfo,
 }) {
   const [currentWord, setCurrentWord] = useState(null);
   const [showFlagModal, setShowFlagModal] = useState(false);
@@ -110,7 +111,7 @@ function PoetryLine({
     <textarea
       className={`line-input ${status}`}
       rows="1"
-      aria-label={`Line ${lineNumber}, ${targetSyllables} syllables`}
+      aria-label={rhymeInfo}
       placeholder={placeholderText}
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -223,6 +224,7 @@ function PoetryLine({
             <div className="flag-modal-top-row">
               <h2 id="dialogTitle">Flag Word</h2>{" "}
               <button
+                aria-label="Close flag dialog"
                 className="cancel-flag-button"
                 onClick={() => {
                   setShowFlagModal(false);
@@ -281,6 +283,7 @@ function PoetryLine({
             <div className="word-modal-top-row">
               <h2 id="dialogTitle">Confirm Flag</h2>{" "}
               <button
+                aria-label="Close confirm dialog"
                 className="cancel-flag-button"
                 onClick={() => {
                   setShowWordModal(false);

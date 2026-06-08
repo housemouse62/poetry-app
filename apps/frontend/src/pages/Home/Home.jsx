@@ -1,10 +1,12 @@
 import { Link } from "react-router";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 import "./Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const message = location.state?.message;
 
   return (
     <>
@@ -46,6 +48,11 @@ export default function Home() {
               </button>
             </div>
           </nav>
+          {message && (
+            <p role="alert" className="success-message">
+              {message}
+            </p>
+          )}
         </main>
       </div>
     </>

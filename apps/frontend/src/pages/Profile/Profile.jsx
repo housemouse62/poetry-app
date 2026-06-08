@@ -12,6 +12,7 @@ function Profile() {
   const [currentPasswordState, setCurrentPasswordState] = useState("");
   const [nameState, setNameState] = useState("");
   const [screennameState, setScreennameState] = useState("");
+  const [error, setError] = useState(null);
   const { login, user, token, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -40,10 +41,9 @@ function Profile() {
         const nextresponse = await response.json();
 
         if (nextresponse.token) {
-          alert("Profile Updated");
           login(nextresponse.user, nextresponse.token);
           navigate("/dashboard");
-        } else alert("Update Failed");
+        } else setError("Update Failed");
       } catch (error) {
         console.error(error);
       }
@@ -55,7 +55,7 @@ function Profile() {
     e.preventDefault();
 
     if (emailState !== user.email) {
-      alert("Email does not match your account email");
+      setError("Email does not match your account email");
       return;
     }
     const fetchUser = async () => {
@@ -70,10 +70,12 @@ function Profile() {
         });
 
         if (response.ok) {
-          alert("Profile deleted");
-          logout();
-          navigate("/");
-        } else alert("Profile delete failed");
+          navigate("/", {
+            state: {
+              message: "* Your account has been successfully deleted. *",
+            },
+          });
+        } else setError("Profile delete failed");
       } catch (error) {
         console.error(error);
       }
@@ -104,6 +106,7 @@ function Profile() {
                   <b>Name:</b> {user.name}
                 </p>
                 <button
+                  aria-label="Edit name"
                   className="profile-button edit"
                   onClick={() => {
                     setEditingState("name");
@@ -117,6 +120,7 @@ function Profile() {
                   <b>Email:</b> {user.email}
                 </p>
                 <button
+                  aria-label="Edit email"
                   className="profile-button edit"
                   onClick={() => {
                     setEditingState("email");
@@ -130,6 +134,7 @@ function Profile() {
                   <b>Screenname:</b> {user.screenname}
                 </p>
                 <button
+                  aria-label="Edit screenname"
                   className="profile-button edit"
                   onClick={() => {
                     setEditingState("screenname");
@@ -159,11 +164,11 @@ function Profile() {
                       : handleUpdateSubmit
                   }
                 >
-                  <legend>
+                  <h2 className="update-confirm-h2">
                     {editingState !== "deleteUser"
                       ? "Update Personal Info:"
                       : "Confirm Delete User"}{" "}
-                  </legend>
+                  </h2>
                   <div className="form-fields">
                     {editingState === "screenname" ? (
                       <div className="form-field">

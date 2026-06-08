@@ -90,6 +90,9 @@ body {
   background-color: #9093a4;
 }
 
+.success-message {
+  margin-top: 15px;
+}
 @media (prefers-reduced-motion: reduce) {
   .poem-card {
     transition: none;

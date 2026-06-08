@@ -125,3 +125,7 @@ body {
   align-items: end;
   width: 100%;
 }
+
+.update-confirm-h2 {
+  font-size: 24px;
+}

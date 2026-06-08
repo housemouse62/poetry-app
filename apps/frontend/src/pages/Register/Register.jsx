@@ -10,6 +10,7 @@ function Register() {
   const [confirmPasswordState, setConfirmPasswordState] = useState("");
   const [nameState, setNameState] = useState("");
   const [screennameState, setScreennameState] = useState("");
+  const [error, setError] = useState(null);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -36,9 +37,27 @@ function Register() {
         const nextresponse = await response.json();
 
         if (nextresponse.id) {
-          alert("You are registered");
-          navigate("/login");
-        } else alert("Registration Failed");
+          const loginResponse = await fetch(
+            `${import.meta.env.VITE_API_URL}/users/login`,
+            {
+              method: "POST",
+              headers: { "Content-type": "application/json" },
+              body: JSON.stringify({
+                email: emailState,
+                password: passwordState,
+              }),
+            },
+          );
+          const loginData = await loginResponse.json();
+          if (loginData.token) {
+            login(loginData.user, loginData.token);
+            navigate("/dashboard");
+          } else {
+            setError(
+              "Registration successful but login failed. Please log in manually.",
+            );
+          }
+        } else setError("Registration Failed");
       } catch (error) {
         console.error(error);
       }
@@ -147,7 +166,7 @@ function Register() {
                       autoComplete="password"
                       required
                     />
-                    <span>Password</span>
+                    <span>Confirm Password</span>
                   </label>
                 </div>
               </div>
@@ -155,6 +174,11 @@ function Register() {
                 Register
               </button>
             </form>
+            {error && (
+              <p className="error-message" role="alert">
+                {error}
+              </p>
+            )}
             <p>Already a registered User?</p>
             <Link className="login-link" to="/login">
               Login!

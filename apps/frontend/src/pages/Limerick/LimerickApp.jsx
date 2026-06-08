@@ -290,10 +290,11 @@ function LimerickApp() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
+                aria-label="Limerick title"
               />
             </div>
             <PoetryLine
-              aria-label="Line 1, rhymes with lines 2 and 5"
+              rhymeInfo="Line 1, rhymes with lines 2 and 5"
               lineNumber={1}
               targetSyllables={targetSyllables[0]}
               value={lines.line1}
@@ -306,7 +307,7 @@ function LimerickApp() {
               placeholderText={`Line 1 (${targetSyllables[0]} syllables)`}
             />
             <PoetryLine
-              aria-label="Line 2, rhymes with lines 1 and 5"
+              rhymeInfo="Line 2, rhymes with lines 1 and 5"
               lineNumber={2}
               targetSyllables={targetSyllables[1]}
               value={lines.line2}
@@ -319,7 +320,7 @@ function LimerickApp() {
               placeholderText={`Line 2 (${targetSyllables[1]} syllables)`}
             />
             <PoetryLine
-              aria-label="Line 3, rhymes with line 4"
+              rhymeInfo="Line 3, rhymes with line 4"
               lineNumber={3}
               targetSyllables={targetSyllables[2]}
               value={lines.line3}
@@ -332,7 +333,7 @@ function LimerickApp() {
               placeholderText={`Line 3 (${targetSyllables[2]} syllables)`}
             />
             <PoetryLine
-              aria-label="Line 4, rhymes with line 5"
+              rhymeInfo="Line 4, rhymes with line 3"
               lineNumber={4}
               targetSyllables={targetSyllables[3]}
               value={lines.line4}
@@ -345,7 +346,7 @@ function LimerickApp() {
               placeholderText={`Line 4 (${targetSyllables[3]} syllables)`}
             />
             <PoetryLine
-              aria-label="Line 5, rhymes with lines 1 and 2"
+              rhymeInfo="Line 5, rhymes with lines 1 and 2"
               lineNumber={5}
               targetSyllables={targetSyllables[4]}
               value={lines.line5}
