@@ -45,7 +45,8 @@ function Profile() {
           navigate("/dashboard");
         } else setError("Update Failed");
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.DEV) console.error(error);
+        setError("Something went wrong. Please try again.");
       }
     };
     fetchUser();
@@ -77,7 +78,8 @@ function Profile() {
           });
         } else setError("Profile delete failed");
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.DEV) console.error(error);
+        setError("Something went wrong. Please try again.");
       }
     };
     fetchUser();

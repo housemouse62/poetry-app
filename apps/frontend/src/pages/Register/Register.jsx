@@ -59,7 +59,8 @@ function Register() {
           }
         } else setError("Registration Failed");
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.DEV) console.error(error);
+        setError("Something went wrong. Please try again.");
       }
     };
     fetchUser();

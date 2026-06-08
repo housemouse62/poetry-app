@@ -62,14 +62,15 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+
+      await response.json();
 
       if (response.ok) {
         setLikeHaikuState(!likeHaikuState);
       } else setError("Cannot like. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -84,14 +85,15 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+
+      await response.json();
 
       if (response.ok) {
         setFavoriteHaikuState(!favoriteHaikuState);
       } else setError("Cannot favorite. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong, please try again");
     }
   };
   return (
@@ -108,7 +110,12 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
           <div className="card-top-right">
             <button
               className="favorite-button"
-              aria-label="Favorite"
+              aria-pressed={favoriteHaikuState}
+              aria-label={
+                favoriteHaikuState
+                  ? `Removie ${haiku.title} from favorites`
+                  : `Add ${haiku.title} to favorites`
+              }
               onClick={() => {
                 setFavoriteHaikuState(!favoriteHaikuState);
                 handleFavorite(haiku.id);
@@ -147,7 +154,12 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
             Delete
           </button>
           <button
-            aria-label={`Like haiku: ${haiku.title}`}
+            aria-pressed={likeHaikuState}
+            aria-label={
+              likeHaikuState
+                ? `Unlike haiku: ${haiku.title}`
+                : `Like haiku: ${haiku.title}`
+            }
             className="like-haiku-button"
             onClick={() => {
               handleLike(haiku.id);
@@ -158,13 +170,20 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
         </div>
       </article>
       {showDownloadModal && (
-        <div className="haiku-dialog-container">
+        <div
+          className="haiku-dialog-container"
+          onClick={() => {
+            setShowDownloadModal(false);
+            downloadTriggerRef.current?.focus();
+          }}
+        >
           <div
             className="haiku-dialog"
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialogTitle"
             ref={dialogRef}
+            onClick={(e) => e.stopPropagation()}
           >
             <h2 id="dialogTitle">Confirm Download</h2>
             <div className="haiku-modal-button-row">

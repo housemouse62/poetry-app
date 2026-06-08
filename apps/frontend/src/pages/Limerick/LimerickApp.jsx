@@ -93,7 +93,7 @@ function LimerickApp() {
         }),
       });
       const nextresponse = await response.json();
-      console.log(nextresponse);
+
       if (nextresponse.id) {
         setSaved(true);
         setTitle("");
@@ -114,7 +114,8 @@ function LimerickApp() {
         setError(null);
       } else setError("Failed to save limerick. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -129,7 +130,7 @@ function LimerickApp() {
         },
       });
       const nextresponse = await response.json();
-      console.log("next response", nextresponse);
+
       if (response.ok) {
         setSavedLimericks(nextresponse);
         setShowLimericks(true);
@@ -137,7 +138,8 @@ function LimerickApp() {
         setError(null);
       } else setError("Cannot show Limericks. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -151,8 +153,8 @@ function LimerickApp() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+
+      await response.json();
 
       if (response.ok) {
         fetchMyLimericks();
@@ -161,7 +163,8 @@ function LimerickApp() {
         setError(null);
       } else setError("Cannot delete. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -194,7 +197,7 @@ function LimerickApp() {
         }),
       });
       const nextresponse = await response.json();
-      console.log(nextresponse);
+
       if (nextresponse.id) {
         fetchMyLimericks();
         setShowLimericks(true);
@@ -212,7 +215,8 @@ function LimerickApp() {
         setError(null);
       } else setError("Cannot update. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 

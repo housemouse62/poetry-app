@@ -39,7 +39,7 @@ export default function Root() {
             <h1 className="root-title">make poetry.</h1>
           </div>
           <div className="poem-cards">
-            <Link to="/haiku" className="link">
+            <Link to="/haiku" className="link" aria-label="Open haiku editor">
               <div className="poem-card haiku">
                 <span aria-hidden="true" className="card-symbol">
                   🌸
@@ -49,7 +49,11 @@ export default function Root() {
                 {/* <p className="saved-count">__ saved</p> */}
               </div>
             </Link>
-            <Link to="/limerick" className="link">
+            <Link
+              to="/limerick"
+              className="link"
+              aria-label="Open limerick editor"
+            >
               <div className="poem-card limerick">
                 <span aria-hidden="true" className="card-symbol">
                   🍀

@@ -157,8 +157,7 @@ function PoetryLine({
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+      await response.json();
 
       if (response.ok) {
         setFlaggedSyllables(null);
@@ -167,7 +166,8 @@ function PoetryLine({
         setError(null);
       } else setError("Cannot delete. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 

@@ -93,7 +93,8 @@ function HaikuApp() {
         setError(null);
       } else setError("Failed to save haiku. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -108,7 +109,6 @@ function HaikuApp() {
         },
       });
       const nextresponse = await response.json();
-      console.log(nextresponse);
       if (response.ok) {
         setSavedHaikus(nextresponse);
         setShowHaikus(true);
@@ -116,7 +116,8 @@ function HaikuApp() {
         setError(null);
       } else setError("Cannot show Haikus. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -130,8 +131,7 @@ function HaikuApp() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+      await response.json();
 
       if (response.ok) {
         fetchMyHaikus();
@@ -140,7 +140,8 @@ function HaikuApp() {
         setError(null);
       } else setError("Cannot delete. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -165,7 +166,6 @@ function HaikuApp() {
         }),
       });
       const nextresponse = await response.json();
-      console.log(nextresponse);
       if (nextresponse.id) {
         fetchMyHaikus();
         setShowHaikus(true);
@@ -181,7 +181,8 @@ function HaikuApp() {
         setError(null);
       } else setError("Cannot update. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 

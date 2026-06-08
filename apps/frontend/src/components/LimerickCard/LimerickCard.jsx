@@ -6,7 +6,6 @@ import "./LimerickCard.css";
 import { useAuth } from "../../context/AuthContext";
 
 function LimerickCard({ limerick, onEdit, onDelete }) {
-  console.log("limerick", limerick);
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
   const dialogRef = useRef(null);
@@ -65,14 +64,14 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+      await response.json();
 
       if (response.ok) {
         setLikeLimerickState(!likeLimerickState);
       } else setError("Cannot like. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
 
@@ -87,14 +86,14 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
           Authorization: `Bearer ${token}`,
         },
       });
-      const nextresponse = await response.json();
-      console.log(nextresponse);
+      await response.json();
 
       if (response.ok) {
         setFavoriteLimerickState(!favoriteLimerickState);
       } else setError("Cannot favorite. Please try again.");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) console.error(error);
+      setError("Something went wrong. Please try again.");
     }
   };
   return (
@@ -167,13 +166,20 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
         </div>
       </article>
       {showDownloadModal && (
-        <div className="limerick-dialog-container">
+        <div
+          className="limerick-dialog-container"
+          onClick={() => {
+            setShowDownloadModal(false);
+            downloadTriggerRef.current?.focus();
+          }}
+        >
           <div
             className="limerick-dialog"
             role="dialog"
             aria-modal="true"
             aria-labelledby="dialogTitle"
             ref={dialogRef}
+            onClick={(e) => e.stopPropagation()}
           >
             <h2 id="dialogTitle">Confirm Download</h2>
             <div className="limerick-modal-button-row">

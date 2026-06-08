@@ -33,7 +33,8 @@ function Login() {
           navigate("/dashboard");
         } else setError("Check your login credentials");
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.DEV) console.error(error);
+        setError("Something went wrong. Please try again.");
       }
     };
     fetchUser();
