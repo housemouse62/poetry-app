@@ -1,0 +1,301 @@
+/* PoetryLine.css */
+.line-group {
+  margin-bottom: 20px;
+}
+
+.line-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Haiku-style: syllable count badge above the textarea */
+.syllable-count {
+  font-size: 0.9em;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.syllable-count.neutral {
+  background: rgb(121, 109, 255);
+  color: white;
+}
+
+.syllable-count.estimated {
+  background: #fbbf24;
+  color: #78350f;
+}
+
+.syllable-count.verified {
+  background: #10b981;
+  color: white;
+}
+
+/* Haiku-style textarea with its own border */
+.line-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "Georgia", serif;
+  font-size: 1.1em;
+  resize: none;
+  transition: border-color 0.3s;
+}
+
+.line-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.line-input.correct {
+  border-color: #10b981;
+}
+
+.line-input.over {
+  border-color: #ef4444;
+}
+
+/* Limerick-style: inline input row — border lives on the wrapper */
+.input-row {
+  display: flex;
+  align-items: stretch;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  border: 2px solid #e5e7eb;
+}
+
+.input-row.A {
+  border-color: #10b981;
+}
+
+.input-row.B {
+  border-color: #f59e0b;
+}
+
+/* Textarea inside inline row has no border of its own */
+.input-row .line-input {
+  border: none;
+  border-radius: 12px 0 0 12px;
+  font-size: 0.9em;
+  transition: none;
+}
+
+.input-row .line-input:focus {
+  outline: none;
+  border-color: transparent;
+}
+
+.input-row .line-input.correct,
+.input-row .line-input.over {
+  border-color: transparent;
+}
+
+/* Syllable count pill attached to the right of the input row */
+.input-row .syllable-count {
+  display: flex;
+  align-items: center;
+  font-size: 0.8em;
+  padding: 3px 12px;
+  border-radius: 0 9px 9px 0;
+  white-space: nowrap;
+}
+
+.input-row .syllable-count.neutral {
+  background: rgb(121, 109, 255);
+  color: white;
+}
+
+.input-row .syllable-count.estimated {
+  background: #fbbf24;
+  color: #78350f;
+}
+
+.input-row .syllable-count.verified {
+  background: #10b981;
+  color: white;
+}
+
+.progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  transition:
+    width 0.3s,
+    background-color 0.3s;
+  border-radius: 3px;
+}
+
+/* Flagging words */
+
+.flag-btn {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(241, 229, 231, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.flag-btn:hover {
+  background-color: red;
+}
+
+.flag-btn:focus-visible {
+  outline: 3px solid red;
+  outline-offset: 2px;
+}
+
+.flag-dialog-container,
+.word-dialog-container,
+.flagConfirm-dialog-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  animation: fadeIn 0.3s;
+}
+
+.flag-dialog,
+.word-dialog {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 30rem;
+  padding: 30px;
+  background-color: white;
+  border-radius: 35px;
+}
+
+.flag-modal-top-row,
+.word-modal-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.cancel-flag-button {
+  padding: 3px 5px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(245, 50, 89, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.cancel-flag-button:hover {
+  background-color: rgba(219, 35, 72, 1);
+}
+
+.cancel-flag-button:focus-visible {
+  outline: 3px solid rgba(245, 50, 89, 0.8);
+  outline-offset: 2px;
+}
+
+.clickable-line {
+  display: flex;
+  gap: 8px;
+}
+
+.flag-line-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin-right: 20px;
+  font-style: oblique;
+}
+
+.clickable-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.flag-confirm {
+  display: flex;
+  gap: 5px;
+}
+
+.yes-no-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+  justify-content: center;
+}
+
+.no-syllable {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(245, 50, 89, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.no-syllable:hover {
+  background-color: rgba(219, 35, 72, 1);
+}
+
+.no-syllable:focus-visible {
+  outline: 3px solid rgba(245, 50, 89, 0.8);
+  outline-offset: 2px;
+}
+
+.yes-syllable {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: #667eea;
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.yes-syllable:hover {
+  background-color: #5568d3;
+}
+
+.yes-syllable:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flag-dialog-container,
+  .word-dialog-container {
+    animation: none;
+  }
+}

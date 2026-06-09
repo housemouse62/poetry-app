@@ -1,0 +1,563 @@
+/* HaikuApp.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Georgia, sans-serif;
+}
+
+.title-div {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.title-input {
+  width: 70%;
+  padding: 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: "Georgia", serif;
+  font-size: 1.1em;
+  resize: none;
+  transition: border-color 0.3s;
+}
+
+.title-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.haiku-app {
+  background: linear-gradient(135deg, #7954f2 0%, #d193fb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.haiku-container {
+  background: white;
+  border-radius: 20px;
+  padding: 0 40px 40px 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.haiku-back {
+  background-color: rgb(212, 222, 231);
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: #666666;
+  padding: 5px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.haiku-back:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.haiku-h1 {
+  color: #667eea;
+  margin-bottom: 10px;
+  font-size: clamp(1.2rem, 5.5vw, 2rem);
+}
+
+.haiku-nav {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.haiku-h2 {
+  color: #667eea;
+}
+
+.haiku-subtitle {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 0.9em;
+}
+
+.haiku-complete-message {
+  margin-top: 30px;
+  padding: 20px;
+  background: #10b981;
+  color: white;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: bold;
+  animation: slideIn 0.5s;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.haiku-complete-message.fade-out {
+  animation: fadeOut 0.5s;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.haiku-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.view-haikus-btn,
+.clear-haikus-btn,
+.save-haikus-btn {
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-haikus-btn {
+  background-color: #10b981;
+}
+
+.save-haikus-btn:hover {
+  background-color: #059669;
+}
+
+.save-haikus-btn:focus-visible {
+  outline: 3px solid #10b981;
+  outline-offset: 2px;
+}
+
+.save-haikus-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.clear-haikus-btn {
+  background-color: #f59e0b;
+}
+
+.clear-haikus-btn:hover {
+  background-color: #d97706;
+}
+
+.clear-haikus-btn:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.clear-haikus-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.view-haikus-btn {
+  background-color: #667eea;
+}
+
+.view-haikus-btn:hover {
+  background-color: #5568d3;
+}
+
+.view-haikus-btn:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.savedHaikus-title {
+  color: #667eea;
+  font-size: 1.2em;
+  font-weight: 700;
+  margin: 10px 0 0 0;
+  text-align: center;
+}
+
+.show-haiku-example-div {
+  display: flex;
+  justify-content: center;
+}
+.show-haiku-example-button {
+  background-color: rgb(212, 222, 231);
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  color: #666666;
+  padding: 5px 20px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.show-haiku-example-button:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.example-haiku {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: rgb(212, 222, 231);
+  border-radius: 12px;
+  border-left: 4px solid #667eea;
+  animation: fadeIn 0.3s;
+}
+
+.example-haiku-title {
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 10px;
+}
+
+.example-haiku-text {
+  font-style: italic;
+  color: #666;
+  line-height: 1.8;
+}
+
+.savedHaikus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.haiku-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 300px;
+  background-color: rgb(212, 222, 231);
+  padding: 20px;
+  margin: 15px;
+  border-radius: 15px;
+  border-left: 4px solid #667eea;
+
+  /* box-shadow: -5px 5px 4px 2px rgba(0, 0, 0, 0.3); */
+}
+
+.haiku-title {
+  font-weight: bold;
+}
+
+.haiku-line {
+  font-family: "Georgia", serif;
+}
+
+.haiku-card-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.edit-haiku-btn {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: #449444;
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.edit-haiku-btn:hover {
+  background-color: #427b42;
+}
+
+.edit-haiku-btn:focus-visible {
+  outline: 3px solid #427b42;
+  outline-offset: 2px;
+}
+
+.download-haiku-btn,
+.confirm-haiku-button {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: #667eea;
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.download-haiku-btn:hover,
+.confirm-haiku-button:hover {
+  background-color: #5568d3;
+}
+
+.download-haiku-btn:focus-visible,
+.confirm-haiku-button:focus-visible {
+  outline: 3px solid #667eea;
+  outline-offset: 2px;
+}
+
+.delete-haiku-btn,
+.cancel-haiku-button {
+  padding: 5px 10px;
+  margin: 10px 0 0 0;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  background-color: rgba(245, 50, 89, 0.8);
+  border: 0.2px solid rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.delete-haiku-btn:hover,
+.cancel-haiku-button:hover {
+  background-color: rgba(219, 35, 72, 1);
+}
+
+.delete-haiku-btn:focus-visible,
+.cancel-haiku-button:focus-visible {
+  outline: 3px solid rgba(245, 50, 89, 0.8);
+  outline-offset: 2px;
+}
+
+.haiku-dialog-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  animation: fadeIn 0.3s;
+}
+
+.haiku-dialog {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  max-width: 30rem;
+  padding: 30px;
+  background-color: white;
+  border-radius: 35px;
+}
+
+.haiku-modal-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .haiku-complete-message,
+  .example-haiku,
+  .savedHaikus,
+  .haiku-dialog-container,
+  .flag-dialog-container,
+  .word-dialog-container {
+    animation: none;
+  }
+
+  .progress-fill {
+    transition: none;
+  }
+}
+
+/* published checkbox */
+.published-checkbox {
+  box-sizing: border-box;
+  --background-color: #fff;
+  --checkbox-height: 25px;
+  display: flex;
+  align-items: end;
+  gap: 10px;
+  margin-top: 16px;
+  justify-content: center;
+  font-family: Georgia, sans-serif;
+  font-size: 18px;
+  font-style: oblique;
+}
+
+@-moz-keyframes dothabottomcheck-19 {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: calc(var(--checkbox-height) / 2);
+  }
+}
+
+@-webkit-keyframes dothabottomcheck-19 {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: calc(var(--checkbox-height) / 2);
+  }
+}
+
+@keyframes dothabottomcheck-19 {
+  0% {
+    height: 0;
+  }
+  100% {
+    height: calc(var(--checkbox-height) / 2);
+  }
+}
+
+@keyframes dothatopcheck-19 {
+  0% {
+    height: 0;
+  }
+  50% {
+    height: 0;
+  }
+  100% {
+    height: calc(var(--checkbox-height) * 1.2);
+  }
+}
+
+@-webkit-keyframes dothatopcheck-19 {
+  0% {
+    height: 0;
+  }
+  50% {
+    height: 0;
+  }
+  100% {
+    height: calc(var(--checkbox-height) * 1.2);
+  }
+}
+
+@-moz-keyframes dothatopcheck-19 {
+  0% {
+    height: 0;
+  }
+  50% {
+    height: 0;
+  }
+  100% {
+    height: calc(var(--checkbox-height) * 1.2);
+  }
+}
+
+.published-label {
+  margin-right: 50px;
+}
+.published-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.published-checkbox .check-box {
+  height: var(--checkbox-height);
+  width: var(--checkbox-height);
+  background-color: transparent;
+  border: calc(var(--checkbox-height) * 0.1) solid #000;
+  border-radius: 5px;
+  position: relative;
+  display: inline-block;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-transition: border-color ease 0.2s;
+  -o-transition: border-color ease 0.2s;
+  -webkit-transition: border-color ease 0.2s;
+  transition: border-color ease 0.2s;
+  cursor: pointer;
+}
+.published-checkbox .check-box::before,
+.published-checkbox .check-box::after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: absolute;
+  height: 0;
+  width: calc(var(--checkbox-height) * 0.2);
+  background-color: #34b93d;
+  display: inline-block;
+  -moz-transform-origin: left top;
+  -ms-transform-origin: left top;
+  -o-transform-origin: left top;
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+  border-radius: 5px;
+  content: " ";
+  -webkit-transition: opacity ease 0.5;
+  -moz-transition: opacity ease 0.5;
+  transition: opacity ease 0.5;
+}
+.published-checkbox .check-box::before {
+  top: calc(var(--checkbox-height) * 0.72);
+  left: calc(var(--checkbox-height) * 0.41);
+  box-shadow: 0 0 0 calc(var(--checkbox-height) * 0.05) var(--background-color);
+  -moz-transform: rotate(-135deg);
+  -ms-transform: rotate(-135deg);
+  -o-transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+  transform: rotate(-135deg);
+}
+.published-checkbox .check-box::after {
+  top: calc(var(--checkbox-height) * 0.37);
+  left: calc(var(--checkbox-height) * 0.05);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+.published-checkbox input[type="checkbox"]:checked + .check-box,
+.published-checkbox .check-box.checked {
+  border-color: #34b93d;
+}
+.published-checkbox input[type="checkbox"]:checked + .check-box::after,
+.published-checkbox .check-box.checked::after {
+  height: calc(var(--checkbox-height) / 2);
+  -moz-animation: dothabottomcheck-19 0.2s ease 0s forwards;
+  -o-animation: dothabottomcheck-19 0.2s ease 0s forwards;
+  -webkit-animation: dothabottomcheck-19 0.2s ease 0s forwards;
+  animation: dothabottomcheck-19 0.2s ease 0s forwards;
+}
+.published-checkbox input[type="checkbox"]:checked + .check-box::before,
+.published-checkbox .check-box.checked::before {
+  height: calc(var(--checkbox-height) * 1.2);
+  -moz-animation: dothatopcheck-19 0.4s ease 0s forwards;
+  -o-animation: dothatopcheck-19 0.4s ease 0s forwards;
+  -webkit-animation: dothatopcheck-19 0.4s ease 0s forwards;
+  animation: dothatopcheck-19 0.4s ease 0s forwards;
+}

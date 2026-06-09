@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Usertype {
+  user
+  admin
+}
+model User {
+  id                Int     @id @default(autoincrement())
+  email             String  @unique
+  password          String
+  name              String?
+  screenname        String?
+  usertype          Usertype  @default(user)
+  haikus            Haiku[]
+  haikuLikes        HaikuLike[]
+  limericks         Limerick[]
+  limerickLikes     LimerickLike[]
+  haikuComments     HaikuComment[]
+  haikuCommentLikes HaikuCommentLike[]
+  limerickComments  LimerickComment[]
+  limerickCommentLikes  LimerickCommentLike[]
+  haikuReplies      HaikuReply[]
+  haikuReplyLikes   HaikuReplyLike[]
+  limerickReplies   LimerickReply[]
+  limerickReplyLikes  LimerickReplyLike[]
+  favorites           Favorite[]
+  
+}
+
+model Haiku {
+  id                  Int     @id @default(autoincrement())
+  title               String
+  lineOne             String
+  lineTwo             String
+  lineThree           String
+  lineOneSyllables    Int
+  lineTwoSyllables    Int
+  lineThreeSyllables  Int
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  author              User?      @relation(fields: [authorID], references: [id])
+  authorID            Int?
+  screenname          String?
+  published           Boolean   @default(false)
+  comments            HaikuComment[]
+  haikuLikes          HaikuLike[]
+}
+
+model HaikuLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  haiku   Haiku @relation(fields: [haikuID], references: [id], onDelete: Cascade)
+  haikuID Int
+  @@unique([userID, haikuID])
+}
+
+model Limerick {
+  id                  Int     @id @default(autoincrement())
+  title               String
+  lineOne             String
+  lineTwo             String
+  lineThree           String
+  lineFour            String
+  lineFive            String
+  lineOneSyllables    Int
+  lineTwoSyllables    Int
+  lineThreeSyllables  Int
+  lineFourSyllables   Int
+  lineFiveSyllables   Int
+  rhymeA              String?
+  rhymeB              String?
+  rhymeAVerified      Boolean   @default(false)
+  rhymeBVerified      Boolean   @default(false)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  author              User?      @relation(fields: [authorID], references: [id])
+  authorID            Int?
+  screenname          String?
+  published           Boolean   @default(false)
+  comments            LimerickComment[]
+limerickLikes         LimerickLike[]
+}
+
+model LimerickLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  limerick   Limerick @relation(fields: [limerickID], references: [id], onDelete: Cascade)
+  limerickID Int
+  @@unique([userID, limerickID])
+}
+
+model HaikuComment {
+  id            Int     @id @default(autoincrement())
+  commentbody   String
+  author        User    @relation(fields: [authorID], references: [id])
+  authorID      Int
+  poem          Haiku    @relation(fields: [poemID], references: [id], onDelete: Cascade)
+  poemID        Int
+  commentLikes  HaikuCommentLike[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  reply         HaikuReply[]
+}
+
+model HaikuCommentLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  comment   HaikuComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID Int
+  @@unique([userID, commentID])
+}
+
+model LimerickComment {
+  id          Int     @id @default(autoincrement())
+  commentbody String
+  author      User    @relation(fields: [authorID], references: [id])
+  authorID    Int
+  poem        Limerick    @relation(fields: [poemID], references: [id], onDelete: Cascade)
+  poemID      Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  reply       LimerickReply[]
+  commentLikes LimerickCommentLike[]
+}
+
+model LimerickCommentLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  comment   LimerickComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID Int
+  @@unique([userID, commentID])
+}
+
+model HaikuReply {
+  id          Int     @id @default(autoincrement())
+  replybody   String
+  author      User   @relation(fields: [authorID], references: [id])
+  authorID    Int
+  comment     HaikuComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  replyLikes  HaikuReplyLike[]
+}
+
+model HaikuReplyLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  reply     HaikuReply @relation(fields: [replyID], references: [id], onDelete: Cascade)
+  replyID   Int
+  @@unique([userID, replyID])
+}
+
+model LimerickReply {
+  id          Int     @id @default(autoincrement())
+  replybody   String
+  author      User   @relation(fields: [authorID], references: [id])
+  authorID    Int
+  comment     LimerickComment @relation(fields: [commentID], references: [id], onDelete: Cascade)
+  commentID   Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  replyLikes LimerickReplyLike[]
+}
+
+model LimerickReplyLike {
+  id        Int     @id @default(autoincrement())
+  user      User    @relation(fields: [userID], references: [id])
+  userID    Int
+  reply     LimerickReply @relation(fields: [replyID], references: [id], onDelete: Cascade)
+  replyID   Int
+  @@unique([userID, replyID])
+}
+
+model Word {
+  id            Int     @id @default(autoincrement())
+  word          String  @unique
+  source        String
+  flagged       Boolean @default(false)
+  syllableCount Int
+  data          Json
+}
+
+model Favorite {
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [userID], references: [id])
+  userID        Int
+  poemID        Int
+  poemType      String   //"haiku" or "limerick"
+  privacy       String  @default("private")
+  createdAt     DateTime @default(now())
+  @@unique([userID, poemID, poemType])
+}

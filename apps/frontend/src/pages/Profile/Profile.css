@@ -1,0 +1,131 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Georgia, sans-serif;
+}
+
+.profile-app {
+  background: linear-gradient(135deg, #514ed2 0%, #7fa67f 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.profile-page {
+  display: flex;
+  gap: 30px;
+}
+
+.profile-nav {
+  display: flex;
+  justify-content: start;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.dashboard-button,
+.profile-button {
+  background-color: #b76ec6;
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  font-weight: bold;
+  color: rgb(7, 7, 7);
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dashboard-button:hover {
+  background-color: #a633ba;
+}
+
+.dashboard-button:focus-visible {
+  outline: 3px solid #b76ec6;
+  outline-offset: 2px;
+}
+
+.profile-button.edit {
+  background-color: rgb(198, 189, 189);
+}
+
+.profile-button.edit:hover {
+  background-color: rgb(163, 154, 154);
+}
+
+.profile-button.edit:focus-visible {
+  outline: 3px solid rgb(198, 189, 189);
+  outline-offset: 2px;
+}
+
+.profile-button.password {
+  background-color: rgb(53, 226, 93);
+}
+
+.profile-button.password:hover {
+  background-color: rgb(45, 197, 81);
+}
+
+.profile-button.password:focus-visible {
+  outline: 3px solid rgb(53, 226, 93);
+  outline-offset: 2px;
+}
+
+.profile-button.delete {
+  background-color: rgb(244, 8, 8);
+}
+
+.profile-button.delete:hover {
+  background-color: rgb(209, 38, 38);
+}
+
+.profile-button.delete:focus-visible {
+  outline: 3px solid rgb(226, 53, 53);
+  outline-offset: 2px;
+}
+
+.profile-info-title {
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.info-div {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-div p {
+  font-size: 20px;
+}
+
+.delete-button {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  width: 100%;
+}
+
+.update-confirm-h2 {
+  font-size: 24px;
+}
