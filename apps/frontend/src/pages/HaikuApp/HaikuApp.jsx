@@ -5,7 +5,7 @@ import "./HaikuApp.css";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import HaikuCard from "../../components/haikuCard/HaikuCard.jsx";
+import HaikuCard from "../../components/HaikuCard/HaikuCard.jsx";
 
 function HaikuApp() {
   const navigate = useNavigate();
