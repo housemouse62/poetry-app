@@ -44,7 +44,7 @@ export default function Home() {
                   navigate("/dashboard");
                 }}
               >
-                Dashboard
+                make poetry
               </button>
             </div>
           </nav>

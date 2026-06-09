@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import "./Login.css";
 
 function Login() {
   const [emailState, setEmailState] = useState("");
@@ -43,6 +44,17 @@ function Login() {
     <>
       <div className="root-app">
         <main className="root-container">
+          <nav aria-label="Page navigation" className="home-nav">
+            <button
+              className="home-button"
+              aria-label="Go to Homepage"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              home
+            </button>
+          </nav>
           <div className="login-div">
             <form className="login-form" onSubmit={handleSubmit}>
               <div className="form-fields">
@@ -91,10 +103,12 @@ function Login() {
                 {error}
               </p>
             )}
-            <p>Not a registered User?</p>
-            <Link className="create-link" to="/register">
-              Register here!
-            </Link>
+            <div className="register-link">
+              <p>Not a registered user?</p>
+              <Link className="create-link" to="/register">
+                Register here!
+              </Link>
+            </div>
           </div>
         </main>
       </div>

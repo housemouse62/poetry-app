@@ -28,3 +28,67 @@ body {
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
+
+.register-nav {
+  display: flex;
+  width: 100%;
+}
+
+label {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+label > span {
+  transition: all 0.2s;
+  transform-origin: top left;
+}
+
+label
+  > :is(input, textarea)[placeholder=" "]:not(:focus):placeholder-shown
+  + span {
+  transform: translateY(1.5em) scale(1.25);
+  pointer-events: none;
+  opacity: 0.5;
+  margin-left: 5px;
+}
+
+.form-input {
+  width: 250px;
+  height: 30px;
+  padding-left: 5px;
+  margin-bottom: 10px;
+}
+
+.form-button {
+  margin-top: 15px;
+  font-size: 0.8rem;
+  width: fit-content;
+  border: 1px solid rgb(91, 117, 53);
+  border-radius: 10px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  margin-bottom: 10px;
+}
+
+.form-button:hover {
+  background: blanchedalmond;
+  color: black;
+}
+
+.form-button:focus-visible {
+  outline: 3px solid rgb(91, 117, 53);
+  outline-offset: 2px;
+}
+
+.error-message {
+  font-weight: bold;
+}
+
+.register-user {
+  display: flex;
+  gap: 5px;
+}

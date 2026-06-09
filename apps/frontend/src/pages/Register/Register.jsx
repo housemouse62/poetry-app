@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router";
+import "./Register.css";
 
 function Register() {
   const [emailState, setEmailState] = useState("");
@@ -69,6 +70,17 @@ function Register() {
     <>
       <div className="root-app">
         <main className="root-container">
+          <nav aria-label="Page navigation" className="register-nav">
+            <button
+              className="home-button"
+              aria-label="Go to Homepage"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              home
+            </button>
+          </nav>
           <div className="register-div">
             <form className="register-form" onSubmit={handleSubmit}>
               <div className="form-fields">
@@ -171,19 +183,21 @@ function Register() {
                   </label>
                 </div>
               </div>
+              {error && (
+                <p className="error-message" role="alert">
+                  {error}
+                </p>
+              )}
               <button type="submit" className="form-button login-button">
                 Register
               </button>
             </form>
-            {error && (
-              <p className="error-message" role="alert">
-                {error}
-              </p>
-            )}
-            <p>Already a registered User?</p>
-            <Link className="login-link" to="/login">
-              Login!
-            </Link>
+            <div className="register-user">
+              <p>Already a registered user?</p>
+              <Link className="login-link" to="/login">
+                Login!
+              </Link>
+            </div>
           </div>
         </main>
       </div>
