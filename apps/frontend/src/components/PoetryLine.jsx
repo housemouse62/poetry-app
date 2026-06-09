@@ -60,7 +60,7 @@ function PoetryLine({
     }
   useEffect(() => {
     onSyllableChange?.(currentSyllables);
-  }, [currentSyllables]);
+  }, [currentSyllables, onSyllableChange]);
 
   // Parse targetSyllables — accepts a number or a range string like "7 - 10" or "5-8"
   const parseTarget = (t) => {

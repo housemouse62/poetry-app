@@ -279,7 +279,7 @@ function Profile() {
                               onChange={(e) =>
                                 setNewPasswordState(e.target.value)
                               }
-                              autoComplete="current-password"
+                              autoComplete="new-password"
                             />
                             <span>New Password</span>
                           </label>
@@ -296,7 +296,7 @@ function Profile() {
                               onChange={(e) =>
                                 setConfirmNewPasswordState(e.target.value)
                               }
-                              autoComplete="current-password"
+                              autoComplete="new-password"
                             />
                             <span>Confirm New Password</span>
                           </label>

@@ -75,7 +75,7 @@ function Login() {
                       placeholder=" "
                       value={passwordState}
                       onChange={(e) => setPasswordState(e.target.value)}
-                      autoComplete="password"
+                      autoComplete="current-password"
                       required
                     />
                     <span>Password</span>

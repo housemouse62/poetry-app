@@ -101,7 +101,7 @@ function Register() {
                       placeholder=" "
                       value={screennameState}
                       onChange={(e) => setScreennameState(e.target.value)}
-                      autoComplete="screenname"
+                      autoComplete="username"
                     />
                     <span>Screenname</span>
                   </label>
@@ -148,7 +148,7 @@ function Register() {
                       placeholder=" "
                       value={passwordState}
                       onChange={(e) => setPasswordState(e.target.value)}
-                      autoComplete="password"
+                      autoComplete="new-password"
                       required
                     />
                     <span>Password</span>
@@ -164,7 +164,7 @@ function Register() {
                       placeholder=" "
                       value={confirmPasswordState}
                       onChange={(e) => setConfirmPasswordState(e.target.value)}
-                      autoComplete="password"
+                      autoComplete="new-password"
                       required
                     />
                     <span>Confirm Password</span>

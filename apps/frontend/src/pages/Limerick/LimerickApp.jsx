@@ -1,8 +1,7 @@
 // LimerickApp.jsx
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
-import html2canvas from "html2canvas";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine";
 import { useAuth } from "../../context/AuthContext";
