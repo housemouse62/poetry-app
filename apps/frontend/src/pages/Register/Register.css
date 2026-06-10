@@ -54,7 +54,7 @@ label
 }
 
 .form-input {
-  width: 250px;
+  min-width: 200px;
   height: 30px;
   padding-left: 5px;
   margin-bottom: 10px;

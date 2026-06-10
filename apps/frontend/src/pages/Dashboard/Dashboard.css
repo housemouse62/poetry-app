@@ -177,3 +177,9 @@ body {
     transform: none;
   }
 }
+
+@media (max-width: 600px) {
+  .card-tagline {
+    font-size: 16px;
+  }
+}

@@ -31,6 +31,7 @@ body {
 
 .profile-page {
   display: flex;
+  width: 100%;
   gap: 30px;
 }
 
@@ -108,6 +109,10 @@ body {
   margin-bottom: 15px;
 }
 
+.profile-info {
+  width: 100%;
+}
+
 .info-div {
   display: flex;
   margin-bottom: 10px;
@@ -121,6 +126,7 @@ body {
 
 .delete-button {
   display: flex;
+  width: 100%;
   justify-content: end;
   align-items: end;
   width: 100%;
@@ -128,4 +134,21 @@ body {
 
 .update-confirm-h2 {
   font-size: 24px;
+}
+
+.password {
+  width: 250px;
+}
+
+.form-label > span {
+  font-weight: bold;
+}
+@media (max-width: 600px) {
+  .profile-container {
+    padding: 15px 15px 0 15px;
+  }
+
+  .profile-button.delete {
+    margin-top: 30px;
+  }
 }

@@ -8,7 +8,10 @@ import { useAuth } from "../../context/AuthContext";
 function LimerickCard({ limerick, onEdit, onDelete }) {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteID, setDeleteID] = useState("");
   const dialogRef = useRef(null);
+  const deleteDialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
   const [likeLimerickState, setLikeLimerickState] = useState(
     limerick.limerickLikes.length > 0,
@@ -149,7 +152,8 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
             aria-label={`Delete limerick: ${limerick.title}`}
             className="delete-limerick-btn"
             onClick={() => {
-              onDelete(limerick.id);
+              setDeleteID(limerick.id);
+              showDeleteModal(true);
             }}
           >
             Delete
@@ -199,6 +203,50 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
                 onClick={() => {
                   setShowDownloadModal(false);
                   downloadTriggerRef.current?.focus();
+                }}
+              >
+                Cancel
+              </button>
+              {error && (
+                <p className="error-message" role="alert">
+                  {error}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {showDeleteModal && (
+        <div
+          className="limerick-dialog-container"
+          onClick={() => {
+            setShowDeleteModal(false);
+          }}
+        >
+          <div
+            className="limerick-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref={deleteDialogRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="dialogTitle">Confirm Delete</h2>
+            <div className="limerick-modal-button-row">
+              <button
+                className="confirm-limerick-button"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  onDelete(deleteID);
+                  setDeleteID("");
+                }}
+              >
+                Confirm
+              </button>
+              <button
+                className="cancel-limerick-button"
+                onClick={() => {
+                  setShowDeleteModal(false);
                 }}
               >
                 Cancel

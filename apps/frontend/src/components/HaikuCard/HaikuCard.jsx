@@ -7,8 +7,11 @@ import { useAuth } from "../../context/AuthContext";
 
 function HaikuCard({ haiku, onEdit, onDelete }) {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [downloadID, setDownloadID] = useState("");
+  const [deleteID, setDeleteID] = useState("");
   const dialogRef = useRef(null);
+  const deleteDialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
   const [likeHaikuState, setLikeHaikuState] = useState(
     haiku.haikuLikes.length > 0,
@@ -20,6 +23,9 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
   const { token } = useAuth();
 
   useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
+  useFocusTrap(deleteDialogRef, showDeleteModal, () =>
+    setShowDeleteModal(false),
+  );
 
   const shareAsImage = async (haikuId) => {
     // Find the specific card element
@@ -148,7 +154,8 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
             aria-label={`Delete haiku: ${haiku.title}`}
             className="delete-haiku-btn"
             onClick={() => {
-              onDelete(haiku.id);
+              setShowDeleteModal(true);
+              setDeleteID(haiku.id);
             }}
           >
             Delete
@@ -203,6 +210,50 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
                 onClick={() => {
                   setShowDownloadModal(false);
                   downloadTriggerRef.current?.focus();
+                }}
+              >
+                Cancel
+              </button>
+              {error && (
+                <p className="error-message" role="alert">
+                  {error}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      {showDeleteModal && (
+        <div
+          className="haiku-dialog-container"
+          onClick={() => {
+            setShowDeleteModal(false);
+          }}
+        >
+          <div
+            className="haiku-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="dialogTitle"
+            ref={deleteDialogRef}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="dialogTitle">Confirm Delete</h2>
+            <div className="haiku-modal-button-row">
+              <button
+                className="confirm-haiku-button"
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  onDelete(deleteID);
+                  setDeleteID("");
+                }}
+              >
+                Confirm
+              </button>
+              <button
+                className="cancel-haiku-button"
+                onClick={() => {
+                  setShowDeleteModal(false);
                 }}
               >
                 Cancel

@@ -270,7 +270,7 @@ function Profile() {
                                 type="password"
                                 name="currentPassword"
                                 id="currentPassword"
-                                className="form-input"
+                                className="form-input password"
                                 placeholder=" "
                                 value={currentPasswordState}
                                 onChange={(e) =>
@@ -287,7 +287,7 @@ function Profile() {
                                 type="password"
                                 name="newPassword"
                                 id="newPassword"
-                                className="form-input"
+                                className="form-input password"
                                 placeholder=" "
                                 value={newPasswordState}
                                 onChange={(e) =>
@@ -304,7 +304,7 @@ function Profile() {
                                 type="password"
                                 name="confirmNewPassword"
                                 id="confirmNewPassword"
-                                className="form-input"
+                                className="form-input password"
                                 placeholder=" "
                                 value={confirmNewPasswordState}
                                 onChange={(e) =>

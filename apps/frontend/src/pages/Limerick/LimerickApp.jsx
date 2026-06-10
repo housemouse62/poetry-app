@@ -19,6 +19,8 @@ function LimerickApp() {
   });
 
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteID, setDeleteID] = useState("");
   const [editingLimerick, setEditingLimerick] = useState(null);
   const [editID, setEditID] = useState(null);
   const [saved, setSaved] = useState(false);
