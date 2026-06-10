@@ -66,10 +66,18 @@ header {
 /* Limerick-style: inline input row — border lives on the wrapper */
 .input-row {
   display: flex;
+  width: 100%;
   align-items: stretch;
   border-radius: 12px;
-  margin-bottom: 8px;
   border: 2px solid #e5e7eb;
+}
+
+.limerick-input-line {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .input-row.A {
@@ -127,7 +135,7 @@ header {
   height: 6px;
   background: #e5e7eb;
   border-radius: 3px;
-  margin-top: 8px;
+  margin-top: 12px;
   overflow: hidden;
 }
 
@@ -143,7 +151,6 @@ header {
 
 .flag-btn {
   padding: 5px 10px;
-  margin: 10px 0 0 0;
   color: white;
   font-weight: 600;
   border-radius: 5px;

@@ -66,6 +66,8 @@ body {
 }
 
 .haiku-h1 {
+  display: flex;
+  gap: 2px;
   color: #667eea;
   margin-bottom: 10px;
   font-size: clamp(1.2rem, 5.5vw, 2rem);
@@ -276,6 +278,16 @@ body {
   font-weight: bold;
 }
 
+.mobile-haiku-h2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.haiku-h2.icon {
+  font-size: 24px;
+}
 .haiku-line {
   font-family: "Georgia", serif;
 }
@@ -560,4 +572,15 @@ body {
   -o-animation: dothatopcheck-19 0.4s ease 0s forwards;
   -webkit-animation: dothatopcheck-19 0.4s ease 0s forwards;
   animation: dothatopcheck-19 0.4s ease 0s forwards;
+}
+
+@media (max-width: 600px) {
+  .haiku-h2 {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .haiku-container {
+    padding: 0 10px 10px;
+  }
 }

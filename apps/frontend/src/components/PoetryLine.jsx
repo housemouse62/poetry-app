@@ -58,9 +58,12 @@ function PoetryLine({
         confidence = "verified";
       }
     }
+  const onSyllableChangeRef = useRef(onSyllableChange);
+  onSyllableChangeRef.current = onSyllableChange;
+
   useEffect(() => {
-    onSyllableChange?.(currentSyllables);
-  }, [currentSyllables, onSyllableChange]);
+    onSyllableChangeRef.current?.(currentSyllables);
+  }, [currentSyllables]);
 
   // Parse targetSyllables — accepts a number or a range string like "7 - 10" or "5-8"
   const parseTarget = (t) => {
@@ -182,9 +185,11 @@ function PoetryLine({
         )}
 
         {borderColor ? (
-          <div className={`input-row ${borderColor}`}>
-            {textarea}
-            {syllableCounter}
+          <div className="limerick-input-line">
+            <div className={`input-row ${borderColor}`}>
+              {textarea}
+              {syllableCounter}
+            </div>
             {flagButton}
           </div>
         ) : (

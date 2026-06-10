@@ -233,10 +233,17 @@ function LimerickApp() {
             dashboard
           </button>
           {showLimericks && (
-            <h2 className="limerick-h2">
-              <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
-              <span aria-hidden="true">🍀</span>
-            </h2>
+            <div className="mobile-limerick-h2">
+              <span aria-hidden="true" className="limerick-h2 icon">
+                🎭
+              </span>{" "}
+              <h2 className="limerick-h2">
+                <span>Let's Limerick!</span>{" "}
+              </h2>
+              <span aria-hidden="true" className="limerick-h2 icon">
+                🍀
+              </span>
+            </div>
           )}
         </nav>
         {showLimericks && (

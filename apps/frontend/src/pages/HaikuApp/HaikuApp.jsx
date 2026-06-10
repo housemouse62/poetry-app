@@ -200,10 +200,17 @@ function HaikuApp() {
             dashboard
           </button>
           {showHaikus && (
-            <h2 className="haiku-h2">
-              <span aria-hidden="true">🌸</span> Do You Do Haiku?{" "}
-              <span aria-hidden="true">🪷</span>
-            </h2>
+            <div className="mobile-haiku-h2">
+              <span aria-hidden="true" className="haiku-h2 icon">
+                🌸
+              </span>
+              <h2 className="haiku-h2">
+                <span>Do You Do Haiku?</span>
+              </h2>
+              <span aria-hidden="true" className="haiku-h2 icon">
+                🪷
+              </span>
+            </div>
           )}
         </nav>
         {showHaikus && (
