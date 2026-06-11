@@ -19,8 +19,6 @@ function LimerickApp() {
   });
 
   const [error, setError] = useState(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteID, setDeleteID] = useState("");
   const [editingLimerick, setEditingLimerick] = useState(null);
   const [editID, setEditID] = useState(null);
   const [saved, setSaved] = useState(false);
@@ -110,6 +108,7 @@ function LimerickApp() {
           setTimeout(() => {
             setSaved(false); //Actually remove it
             setIsFading(false);
+            setPublished(false);
           }, 500);
         }, 2000);
         setError(null);
