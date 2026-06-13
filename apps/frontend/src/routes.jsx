@@ -5,6 +5,7 @@ import Login from "./pages/Login/Login.jsx";
 import HaikuApp from "./pages/HaikuApp/HaikuApp";
 import LimerickApp from "./pages/Limerick/LimerickApp";
 import ErrorPage from "./errorPage";
+import Poetry from "./pages/Poetry/Poetry.jsx";
 
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
@@ -46,6 +47,11 @@ const routes = [
       {
         path: "/limerick",
         element: <LimerickApp />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "/poems",
+        element: <Poetry />,
         errorElement: <ErrorPage />,
       },
     ],

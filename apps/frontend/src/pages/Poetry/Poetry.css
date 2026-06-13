@@ -1,0 +1,79 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Georgia, sans-serif;
+}
+
+.poetry-app {
+  background: linear-gradient(135deg, #7954f2 0%, #d193fb 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.poetry-container {
+  background: white;
+  border-radius: 20px;
+  padding: 0 40px 40px 40px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.poetry-feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.poetry-feed-title {
+  margin-top: 20px;
+}
+
+.poetry-title {
+  margin-bottom: 5px;
+}
+
+.poetry-date {
+  margin-top: 5px;
+  margin-left: 55px;
+  font-size: 14px;
+  font-weight: 550;
+}
+
+.poetry-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 300px;
+  padding: 20px;
+  margin: 15px;
+  border-radius: 15px;
+}
+
+.poetry-title {
+  font-weight: bold;
+}
+
+.horiz-line-top {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.horiz-line-bottom {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+hr {
+  width: 80%;
+}
