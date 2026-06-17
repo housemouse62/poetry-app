@@ -57,8 +57,21 @@ body {
   border-radius: 15px;
 }
 
+.read-title-div {
+  display: flex;
+  justify-content: end;
+  margin-bottom: 15px;
+}
+
 .poetry-title {
   font-weight: bold;
+}
+
+.drop-downs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
 }
 
 .horiz-line-top {

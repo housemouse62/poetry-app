@@ -50,11 +50,10 @@ function Poetry() {
     <>
       <div className="poetry-app">
         <div className="poetry-container">
-          <h2 className="poetry-feed-title">make poetry</h2>
-          <div className="horiz-line-top">
-            <hr />
+          <div className="read-title-div">
+            <h2 className="poetry-feed-title">read poetry.</h2>
           </div>
-          <div className="dropDowns">
+          <div className="drop-downs">
             <select onChange={(e) => setDate(e.target.value)} value={date}>
               <option value="all">All dates</option>
               <option value="24hours">24 hours</option>
@@ -62,14 +61,17 @@ function Poetry() {
               <option value="7days">7 days</option>
             </select>
             <select onChange={(e) => setType(e.target.value)} value={type}>
-              <option value="all">All</option>
+              <option value="all">All types</option>
               <option value="haiku">Haikus</option>
               <option value="limerick">Limericks</option>
             </select>
             <select onChange={(e) => setSort(e.target.value)} value={sort}>
-              <option value="all">All</option>
+              <option value="all">All poems</option>
               <option value="likes">Likes</option>
             </select>
+          </div>
+          <div className="horiz-line-bottom">
+            <hr />
           </div>
           {savedPoems.map((p) => (
             <div key={p.id + p.poemType}>

@@ -26,6 +26,16 @@ export default function Root() {
               Logout
             </button>
             <button
+              className="feed-button"
+              aria-label="Open poems feed"
+              onClick={() => {
+                navigate("/poems");
+              }}
+            >
+              read poetry.
+            </button>
+
+            <button
               className="profile-button-link"
               aria-label="Profile"
               onClick={() => {
@@ -38,6 +48,7 @@ export default function Root() {
           <div className="root-title-div">
             <h1 className="root-title">make poetry.</h1>
           </div>
+
           <div className="poem-cards">
             <Link to="/haiku" className="link" aria-label="Open haiku editor">
               <div className="poem-card haiku">
