@@ -63,7 +63,14 @@ haikuRouter.get("/", verifyToken, async (req, res, next) => {
         },
       },
     });
-    res.json(allHaikus);
+    const alllimericks = await prisma.limerick.findMany({
+      where: { published: true },
+      include: {
+        _count: {
+          select: { comments: true, limerickLikes: true },
+        },
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -83,7 +90,6 @@ haikuRouter.get("/mine", verifyToken, async (req, res, next) => {
         },
       },
     });
-    console.log(myHaikus);
     const myFavorites = await prisma.favorite.findMany({
       where: { userID: req.user.id, poemType: "haiku" },
     });
