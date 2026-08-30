@@ -81,6 +81,30 @@ afterAll(async () => {
 // ─── POST /limerickComment/:poemID ────────────────────────────────────────────
 
 describe("POST /limerickComment/:poemID", () => {
+  test("owner can comment on their own unpublished limerick", async () => {
+    const poem = await request(app)
+      .post("/limerick")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...testLimerick, published: false, title: "Private owner limerick" });
+    const res = await request(app)
+      .post(`/limerickComment/${poem.body.id}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ commentbody: "Owner note" });
+    expect(res.status).toBe(201);
+  });
+
+  test("other users cannot comment on an unpublished limerick", async () => {
+    const poem = await request(app)
+      .post("/limerick")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...testLimerick, published: false, title: "Private blocked limerick" });
+    const res = await request(app)
+      .post(`/limerickComment/${poem.body.id}`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ commentbody: "Should not be visible" });
+    expect(res.status).toBe(403);
+  });
+
   test("201 - creates a comment on a limerick", async () => {
     const res = await request(app)
       .post(`/limerickComment/${limerickID}`)
@@ -99,6 +123,24 @@ describe("POST /limerickComment/:poemID", () => {
       .send({ commentbody: "" });
 
     expect(res.status).toBe(400);
+  });
+
+  test("400 - whitespace-only comment body", async () => {
+    const res = await request(app)
+      .post(`/limerickComment/${limerickID}`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ commentbody: "   " });
+    expect(res.status).toBe(400);
+  });
+
+  test("201 - accepts a 600-character comment body", async () => {
+    const body = "a".repeat(600);
+    const res = await request(app)
+      .post(`/limerickComment/${limerickID}`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ commentbody: body });
+    expect(res.status).toBe(201);
+    expect(res.body.commentbody).toHaveLength(600);
   });
 
   test("404 - limerick not found", async () => {
@@ -122,6 +164,33 @@ describe("POST /limerickComment/:poemID", () => {
 // ─── GET /limerickComment/:poemID ─────────────────────────────────────────────
 
 describe("GET /limerickComment/:poemID", () => {
+  test("owner can read comments on their own unpublished limerick", async () => {
+    const poem = await request(app)
+      .post("/limerick")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...testLimerick, published: false, title: "Private readable limerick" });
+    await createComment(authorToken, poem.body.id, "Owner-readable comment");
+    const res = await request(app)
+      .get(`/limerickComment/${poem.body.id}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.map((comment) => comment.commentbody)).toContain(
+      "Owner-readable comment",
+    );
+  });
+
+  test("other users cannot read comments on an unpublished limerick", async () => {
+    const poem = await request(app)
+      .post("/limerick")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...testLimerick, published: false, title: "Private comments limerick" });
+    await createComment(authorToken, poem.body.id, "Private owner comment");
+    const res = await request(app)
+      .get(`/limerickComment/${poem.body.id}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
+  });
+
   test("200 - returns comments for a limerick", async () => {
     await createComment(authorToken, limerickID, "First comment");
     await createComment(otherToken, limerickID, "Second comment");
@@ -133,6 +202,18 @@ describe("GET /limerickComment/:poemID", () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBeGreaterThanOrEqual(2);
+  });
+
+  test("200 - returns comments in deterministic creation order", async () => {
+    await createComment(authorToken, limerickID, "Ordering comment one");
+    await createComment(authorToken, limerickID, "Ordering comment two");
+    const res = await request(app)
+      .get(`/limerickComment/${limerickID}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    const bodies = res.body.map((comment) => comment.commentbody);
+    expect(bodies.indexOf("Ordering comment one")).toBeLessThan(
+      bodies.indexOf("Ordering comment two"),
+    );
   });
 
   test("404 - limerick not found", async () => {

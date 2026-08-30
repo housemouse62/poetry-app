@@ -335,6 +335,22 @@ describe("GET /feed - date filter", () => {
 // ─── GET /feed - pagination ───────────────────────────────────────────────────
 
 describe("GET /feed - pagination", () => {
+  test.each([
+    "/feed?page=0",
+    "/feed?page=1.5",
+    "/feed?pageSize=0",
+    "/feed?pageSize=1001",
+    "/feed?type=sonnet",
+    "/feed?date=yesterday",
+    "/feed?sort=random",
+  ])("400 - rejects invalid query: %s", async (url) => {
+    const res = await request(app)
+      .get(url)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Invalid feed query");
+  });
+
   test("200 - pageSize limits the number of returned results", async () => {
     const res = await request(app)
       .get("/feed?pageSize=3")

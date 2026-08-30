@@ -44,6 +44,16 @@ async function createReply(token, cID, body = "A reply") {
   return res.body;
 }
 
+async function createPrivateComment() {
+  const user = await prisma.user.findUnique({ where: { email: TEST_USER.email } });
+  const poem = await prisma.limerick.create({
+    data: { ...testLimerick, title: "Private reply limerick", published: false, authorID: user.id },
+  });
+  return prisma.limerickComment.create({
+    data: { commentbody: "Private comment", authorID: user.id, poemID: poem.id },
+  });
+}
+
 beforeAll(async () => {
   await cleanup();
 
@@ -89,6 +99,24 @@ afterAll(async () => {
 // ─── POST /limerickReply/:commentID/replies ───────────────────────────────────
 
 describe("POST /limerickReply/:commentID/replies", () => {
+  test("owner can reply on their own unpublished limerick", async () => {
+    const comment = await createPrivateComment();
+    const res = await request(app)
+      .post(`/limerickReply/${comment.id}/replies`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ replybody: "Private owner reply" });
+    expect(res.status).toBe(201);
+  });
+
+  test("other users cannot reply on an unpublished limerick", async () => {
+    const comment = await createPrivateComment();
+    const res = await request(app)
+      .post(`/limerickReply/${comment.id}/replies`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ replybody: "Blocked reply" });
+    expect(res.status).toBe(403);
+  });
+
   test("201 - creates a reply to a comment", async () => {
     const res = await request(app)
       .post(`/limerickReply/${commentID}/replies`)
@@ -107,6 +135,24 @@ describe("POST /limerickReply/:commentID/replies", () => {
       .send({ replybody: "" });
 
     expect(res.status).toBe(400);
+  });
+
+  test("400 - whitespace-only reply body", async () => {
+    const res = await request(app)
+      .post(`/limerickReply/${commentID}/replies`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ replybody: "   " });
+    expect(res.status).toBe(400);
+  });
+
+  test("201 - accepts a 600-character reply body", async () => {
+    const body = "a".repeat(600);
+    const res = await request(app)
+      .post(`/limerickReply/${commentID}/replies`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ replybody: body });
+    expect(res.status).toBe(201);
+    expect(res.body.replybody).toHaveLength(600);
   });
 
   test("404 - comment not found", async () => {
@@ -130,6 +176,27 @@ describe("POST /limerickReply/:commentID/replies", () => {
 // ─── GET /limerickReply/:commentID ────────────────────────────────────────────
 
 describe("GET /limerickReply/:commentID", () => {
+  test("owner can read replies on their own unpublished limerick", async () => {
+    const comment = await createPrivateComment();
+    await createReply(authorToken, comment.id, "Owner-readable reply");
+    const res = await request(app)
+      .get(`/limerickReply/${comment.id}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.map((reply) => reply.replybody)).toContain(
+      "Owner-readable reply",
+    );
+  });
+
+  test("other users cannot read replies on an unpublished limerick", async () => {
+    const comment = await createPrivateComment();
+    await createReply(authorToken, comment.id, "Private reply");
+    const res = await request(app)
+      .get(`/limerickReply/${comment.id}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
+  });
+
   test("200 - returns replies for a comment", async () => {
     await createReply(authorToken, commentID, "Reply one");
     await createReply(otherToken, commentID, "Reply two");
@@ -141,6 +208,18 @@ describe("GET /limerickReply/:commentID", () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBeGreaterThanOrEqual(2);
+  });
+
+  test("200 - returns replies in deterministic creation order", async () => {
+    await createReply(authorToken, commentID, "Ordering reply one");
+    await createReply(authorToken, commentID, "Ordering reply two");
+    const res = await request(app)
+      .get(`/limerickReply/${commentID}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    const bodies = res.body.map((reply) => reply.replybody);
+    expect(bodies.indexOf("Ordering reply one")).toBeLessThan(
+      bodies.indexOf("Ordering reply two"),
+    );
   });
 
   test("404 - comment not found", async () => {

@@ -36,6 +36,16 @@ async function createReply(token, cID, body = "A reply") {
   return res.body;
 }
 
+async function createPrivateComment() {
+  const user = await prisma.user.findUnique({ where: { email: TEST_USER.email } });
+  const poem = await prisma.haiku.create({
+    data: { ...testHaiku, title: "Private reply haiku", published: false, authorID: user.id },
+  });
+  return prisma.haikuComment.create({
+    data: { commentbody: "Private comment", authorID: user.id, poemID: poem.id },
+  });
+}
+
 beforeAll(async () => {
   await cleanup();
 
@@ -81,6 +91,24 @@ afterAll(async () => {
 // ─── POST /haikuReply/:commentID/replies ──────────────────────────────────────
 
 describe("POST /haikuReply/:commentID/replies", () => {
+  test("owner can reply on their own unpublished haiku", async () => {
+    const comment = await createPrivateComment();
+    const res = await request(app)
+      .post(`/haikuReply/${comment.id}/replies`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ replybody: "Private owner reply" });
+    expect(res.status).toBe(201);
+  });
+
+  test("other users cannot reply on an unpublished haiku", async () => {
+    const comment = await createPrivateComment();
+    const res = await request(app)
+      .post(`/haikuReply/${comment.id}/replies`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ replybody: "Blocked reply" });
+    expect(res.status).toBe(403);
+  });
+
   test("201 - creates a reply to a comment", async () => {
     const res = await request(app)
       .post(`/haikuReply/${commentID}/replies`)
@@ -99,6 +127,24 @@ describe("POST /haikuReply/:commentID/replies", () => {
       .send({ replybody: "" });
 
     expect(res.status).toBe(400);
+  });
+
+  test("400 - whitespace-only reply body", async () => {
+    const res = await request(app)
+      .post(`/haikuReply/${commentID}/replies`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ replybody: "   " });
+    expect(res.status).toBe(400);
+  });
+
+  test("201 - accepts a 600-character reply body", async () => {
+    const body = "a".repeat(600);
+    const res = await request(app)
+      .post(`/haikuReply/${commentID}/replies`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ replybody: body });
+    expect(res.status).toBe(201);
+    expect(res.body.replybody).toHaveLength(600);
   });
 
   test("404 - comment not found", async () => {
@@ -122,6 +168,27 @@ describe("POST /haikuReply/:commentID/replies", () => {
 // ─── GET /haikuReply/:commentID ───────────────────────────────────────────────
 
 describe("GET /haikuReply/:commentID", () => {
+  test("owner can read replies on their own unpublished haiku", async () => {
+    const comment = await createPrivateComment();
+    await createReply(authorToken, comment.id, "Owner-readable reply");
+    const res = await request(app)
+      .get(`/haikuReply/${comment.id}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(200);
+    expect(res.body.map((reply) => reply.replybody)).toContain(
+      "Owner-readable reply",
+    );
+  });
+
+  test("other users cannot read replies on an unpublished haiku", async () => {
+    const comment = await createPrivateComment();
+    await createReply(authorToken, comment.id, "Private reply");
+    const res = await request(app)
+      .get(`/haikuReply/${comment.id}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
+  });
+
   test("200 - returns replies for a comment", async () => {
     await createReply(authorToken, commentID, "Reply one");
     await createReply(otherToken, commentID, "Reply two");
@@ -133,6 +200,18 @@ describe("GET /haikuReply/:commentID", () => {
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.length).toBeGreaterThanOrEqual(2);
+  });
+
+  test("200 - returns replies in deterministic creation order", async () => {
+    await createReply(authorToken, commentID, "Ordering reply one");
+    await createReply(authorToken, commentID, "Ordering reply two");
+    const res = await request(app)
+      .get(`/haikuReply/${commentID}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    const bodies = res.body.map((reply) => reply.replybody);
+    expect(bodies.indexOf("Ordering reply one")).toBeLessThan(
+      bodies.indexOf("Ordering reply two"),
+    );
   });
 
   test("404 - comment not found", async () => {

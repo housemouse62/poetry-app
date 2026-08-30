@@ -279,6 +279,9 @@ limerickRouter.post("/:id/like", verifyToken, async (req, res, next) => {
       where: { id: limerickID },
     });
     if (!limerick) return res.status(404).json({ error: "Limerick Not Found" });
+    if (!limerick.published && limerick.authorID !== req.user.id) {
+      return res.status(403).json({ error: "Unauthorized Credentials" });
+    }
 
     const like = await prisma.limerickLike.create({
       data: {
@@ -306,6 +309,9 @@ limerickRouter.delete("/:id/like", verifyToken, async (req, res, next) => {
       where: { id: limerickID },
     });
     if (!limerick) return res.status(404).json({ error: "Limerick Not Found" });
+    if (!limerick.published && limerick.authorID !== req.user.id) {
+      return res.status(403).json({ error: "Unauthorized Credentials" });
+    }
 
     const like = await prisma.limerickLike.delete({
       where: {

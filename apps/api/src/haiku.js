@@ -242,6 +242,9 @@ haikuRouter.post("/:id/like", verifyToken, async (req, res, next) => {
       where: { id: haikuID },
     });
     if (!haiku) return res.status(404).json({ error: "Haiku Not Found" });
+    if (!haiku.published && haiku.authorID !== req.user.id) {
+      return res.status(403).json({ error: "Unauthorized Credentials" });
+    }
 
     const like = await prisma.haikuLike.create({
       data: {
@@ -269,6 +272,9 @@ haikuRouter.delete("/:id/like", verifyToken, async (req, res, next) => {
       where: { id: haikuID },
     });
     if (!haiku) return res.status(404).json({ error: "Haiku Not Found" });
+    if (!haiku.published && haiku.authorID !== req.user.id) {
+      return res.status(403).json({ error: "Unauthorized Credentials" });
+    }
 
     const like = await prisma.haikuLike.delete({
       where: {

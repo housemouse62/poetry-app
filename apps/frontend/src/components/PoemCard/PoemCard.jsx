@@ -1,178 +1,291 @@
-import { useState, useRef } from "react";
-import { useFocusTrap } from "../../utils/useFocusTrap";
-import html2canvas from "html2canvas";
+import { useEffect, useRef, useState } from "react";
 import formatDate from "../../utils/formatDate";
 import "./PoemCard.css";
 import { useAuth } from "../../context/AuthContext";
 import CommentCard from "../CommentCard/CommentCard";
 
 function PoemCard({ poem, poemType }) {
-  const [showDownloadModal, setShowDownloadModal] = useState(false);
-  const dialogRef = useRef(null);
-  const [likePoemState, setLikePoemState] = useState(
+  const { token } = useAuth();
+  const [liked, setLiked] = useState(
     poem.haikuLikes?.length > 0 || poem.limerickLikes?.length > 0,
   );
-  const [favoritePoemState, setFavoritePoemState] = useState(poem.isFavorited);
-  const [error, setError] = useState(null);
-  const { token } = useAuth();
+  const [favorited, setFavorited] = useState(Boolean(poem.isFavorited));
   const [likeCount, setLikeCount] = useState(
     poemType === "haiku" ? poem._count.haikuLikes : poem._count.limerickLikes,
   );
+  const [commentCount, setCommentCount] = useState(poem._count.comments);
   const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
+  const [commentBody, setCommentBody] = useState("");
+  const [commentsLoaded, setCommentsLoaded] = useState(false);
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [commentSubmitting, setCommentSubmitting] = useState(false);
+  const [likePending, setLikePending] = useState(false);
+  const [favoritePending, setFavoritePending] = useState(false);
+  const [error, setError] = useState(null);
+  const commentInputRef = useRef(null);
+  const commentsRequestRef = useRef({ id: 0, controller: null });
+  const mountedRef = useRef(true);
+  const commentsID = `comments-${poemType}-${poem.id}`;
 
-  useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      commentsRequestRef.current.id += 1;
+      commentsRequestRef.current.controller?.abort();
+    };
+  }, []);
 
-  const handleLike = async (poemType, poemID) => {
-    const url = `${import.meta.env.VITE_API_URL}/${poemType}/${poemID}/like`;
-    const method = likePoemState ? "DELETE" : "POST";
+  const request = async (url, options = {}) => {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        ...options.headers,
+      },
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || "Request failed");
+    return result;
+  };
+
+  const handleLike = async () => {
+    if (likePending) return;
+    setLikePending(true);
+    setError(null);
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      await response.json();
-
-      if (response.ok) {
-        setLikePoemState(!likePoemState);
-        setLikeCount(likePoemState ? likeCount - 1 : likeCount + 1);
-      } else setError("Cannot like. Please try again.");
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
-      setError("Something went wrong. Please try again.");
+      await request(
+        `${import.meta.env.VITE_API_URL}/${poemType}/${poem.id}/like`,
+        { method: liked ? "DELETE" : "POST" },
+      );
+      if (!mountedRef.current) return;
+      setLiked((current) => !current);
+      setLikeCount((current) => current + (liked ? -1 : 1));
+    } catch (requestError) {
+      if (!mountedRef.current) return;
+      if (import.meta.env.DEV) console.error(requestError);
+      setError("Cannot update this like. Please try again.");
+    } finally {
+      if (mountedRef.current) setLikePending(false);
     }
   };
 
-  const handleFavorite = async (poemType, poemID) => {
-    const url = `${import.meta.env.VITE_API_URL}/favorite/${poemType}/${poemID}`;
-    const method = favoritePoemState ? "DELETE" : "POST";
+  const handleFavorite = async () => {
+    if (favoritePending) return;
+    setFavoritePending(true);
+    setError(null);
     try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
+      await request(
+        `${import.meta.env.VITE_API_URL}/favorite/${poemType}/${poem.id}`,
+        {
+          method: favorited ? "DELETE" : "POST",
+          ...(favorited
+            ? {}
+            : { body: JSON.stringify({ privacy: "private" }) }),
         },
-      });
-
-      await response.json();
-
-      if (response.ok) {
-        setFavoritePoemState(!favoritePoemState);
-      } else setError("Cannot favorite. Please try again.");
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
-      setError("Something went wrong, please try again");
+      );
+      if (!mountedRef.current) return;
+      setFavorited((current) => !current);
+    } catch (requestError) {
+      if (!mountedRef.current) return;
+      if (import.meta.env.DEV) console.error(requestError);
+      setError("Cannot update this favorite. Please try again.");
+    } finally {
+      if (mountedRef.current) setFavoritePending(false);
     }
   };
 
-  const getComments = async (poemType, poemID) => {
-    const commentUrl = `${import.meta.env.VITE_API_URL}/${poemType}comment/${poemID}`;
+  const loadComments = async () => {
+    commentsRequestRef.current.controller?.abort();
+    const controller = new AbortController();
+    const requestID = commentsRequestRef.current.id + 1;
+    commentsRequestRef.current = { id: requestID, controller };
+    setCommentsLoading(true);
+    setError(null);
     try {
-      const response = await fetch(commentUrl, {
-        method: "GET",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const nextresponse = await response.json();
-      console.log(nextresponse);
-      if (response.ok) {
-        setComments(nextresponse);
+      const result = await request(
+        `${import.meta.env.VITE_API_URL}/${poemType}comment/${poem.id}`,
+        { signal: controller.signal },
+      );
+      if (commentsRequestRef.current.id !== requestID) return false;
+      setComments(result);
+      setCommentCount(result.length);
+      setCommentsLoaded(true);
+      return true;
+    } catch (requestError) {
+      if (requestError.name === "AbortError") return false;
+      if (commentsRequestRef.current.id !== requestID) return false;
+      if (import.meta.env.DEV) console.error(requestError);
+      setError("Cannot load comments. Please try again.");
+      return false;
+    } finally {
+      if (commentsRequestRef.current.id === requestID) {
+        commentsRequestRef.current.controller = null;
+        setCommentsLoading(false);
       }
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
-      setError("Something went wrong, please try again");
     }
   };
+
+  const toggleComments = () => {
+    const opening = !showComments;
+    setShowComments(opening);
+    if (opening && !commentsLoaded) {
+      loadComments();
+    } else if (!opening && commentsLoading) {
+      commentsRequestRef.current.id += 1;
+      commentsRequestRef.current.controller?.abort();
+      commentsRequestRef.current.controller = null;
+      setCommentsLoading(false);
+    }
+  };
+
+  const createComment = async (event) => {
+    event.preventDefault();
+    const trimmedComment = commentBody.trim();
+    if (!trimmedComment || commentSubmitting) return;
+
+    setCommentSubmitting(true);
+    setError(null);
+    try {
+      await request(
+        `${import.meta.env.VITE_API_URL}/${poemType}comment/${poem.id}`,
+        {
+          method: "POST",
+          body: JSON.stringify({ commentbody: trimmedComment }),
+        },
+      );
+      if (!mountedRef.current) return;
+      setCommentBody("");
+      await loadComments();
+      if (!mountedRef.current) return;
+      commentInputRef.current?.focus();
+    } catch (requestError) {
+      if (!mountedRef.current) return;
+      if (import.meta.env.DEV) console.error(requestError);
+      setError("Cannot add your comment. Please try again.");
+    } finally {
+      if (mountedRef.current) setCommentSubmitting(false);
+    }
+  };
+
   return (
-    <>
-      <div>
-        <article className="poetry-card" data-poem-id={poem.id}>
-          <div className="poetry-card-top">
-            <div className="poetry-card-top-left">
-              <p className="poetry-title">{poem.title}</p>
-              <p className="poetry-line">{poem.lineOne}</p>
-              <p className="poetry-line">{poem.lineTwo}</p>
-              <p className="poetry-line">{poem.lineThree}</p>
-              {poem.lineFour && <p className="poetry-line">{poem.lineFour}</p>}
-              {poem.lineFive && <p className="poetry-line">{poem.lineFive}</p>}
-              <p className="poetry-user">{poem.screenname}</p>
-              <p className="poetry-date">{formatDate(poem.createdAt)}</p>
-              {likeCount > 0 && (
-                <span>
-                  {likeCount} {likeCount === 1 ? "like" : "likes"}
-                </span>
-              )}
-              {poem._count.comments > 0 && (
-                <button
-                  className="comment-count"
-                  onClick={() => {
-                    !showComments && getComments(poem.poemType, poem.id);
-                    {
-                      setShowComments(!showComments);
-                    }
-                  }}
-                >
-                  {poem._count.comments}{" "}
-                  {poem._count.comments === 1 ? "comment" : "comments"}
-                </button>
-              )}
-            </div>
-            <div className="card-top-right">
-              <button
-                className="favorite-button"
-                aria-pressed={favoritePoemState}
-                aria-label={
-                  favoritePoemState
-                    ? `Remove ${poem.title} from favorites`
-                    : `Add ${poem.title} to favorites`
-                }
-                onClick={() => {
-                  handleFavorite(poemType, poem.id);
-                }}
-              >
-                {favoritePoemState ? "⭐" : "☆"}
-              </button>
-            </div>
-          </div>
-          <div className="haiku-card-buttons">
-            <button
-              aria-pressed={likePoemState}
-              aria-label={
-                likePoemState
-                  ? `Unlike haiku: ${poem.title}`
-                  : `Like haiku: ${poem.title}`
-              }
-              className="like-haiku-button"
-              onClick={() => {
-                handleLike(poem.poemType, poem.id);
-              }}
+    <div className="poem-feed-item">
+      <article
+        className="poetry-card"
+        data-poem-id={poem.id}
+        aria-labelledby={`poem-title-${poemType}-${poem.id}`}
+      >
+        <div className="poetry-card-top">
+          <div className="poetry-card-top-left">
+            <h2
+              className="poetry-title"
+              id={`poem-title-${poemType}-${poem.id}`}
             >
-              {likePoemState ? "❤️" : "♡"}
+              {poem.title}
+            </h2>
+            <p className="poetry-line">{poem.lineOne}</p>
+            <p className="poetry-line">{poem.lineTwo}</p>
+            <p className="poetry-line">{poem.lineThree}</p>
+            {poem.lineFour && <p className="poetry-line">{poem.lineFour}</p>}
+            {poem.lineFive && <p className="poetry-line">{poem.lineFive}</p>}
+            <p className="poetry-user">~ {poem.screenname}</p>
+            <p className="poetry-date">{formatDate(poem.createdAt)}</p>
+          </div>
+          <div className="poetry-card-top-right">
+            <button
+              type="button"
+              className="favorite-button"
+              aria-pressed={favorited}
+              aria-label={
+                favorited
+                  ? `Remove ${poem.title} from favorites`
+                  : `Add ${poem.title} to favorites`
+              }
+              disabled={favoritePending}
+              onClick={handleFavorite}
+            >
+              {favorited ? "⭐" : "☆"}
             </button>
           </div>
-        </article>
-        {showComments ? (
-          <div className="comments-area">
-            {comments.map((c) => (
-              <CommentCard comment={c} poemType={poem.poemType} key={c.id} />
-            ))}
-          </div>
-        ) : (
-          ""
-        )}
-        <div className="horiz-line-bottom">
-          <hr />
         </div>
-      </div>
-    </>
+
+        <div className="poetry-card-buttons">
+          <button
+            type="button"
+            aria-pressed={liked}
+            aria-label={liked ? `Unlike poem: ${poem.title}` : `Like poem: ${poem.title}`}
+            className="like-poetry-button"
+            disabled={likePending}
+            onClick={handleLike}
+          >
+            {liked ? "❤️" : "♡"}
+          </button>
+          <span aria-live="polite">
+            {likeCount} {likeCount === 1 ? "like" : "likes"}
+          </span>
+          <button
+            type="button"
+            className="comment-count-button"
+            aria-expanded={showComments}
+            aria-controls={commentsID}
+            onClick={toggleComments}
+          >
+            {showComments ? "Hide" : "Show"} {commentCount}{" "}
+            {commentCount === 1 ? "comment" : "comments"}
+          </button>
+        </div>
+
+        {error && (
+          <p className="interaction-error" role="alert">
+            {error}
+          </p>
+        )}
+      </article>
+
+      {showComments && (
+        <section
+          className="comments-area"
+          id={commentsID}
+          aria-label={`Comments on ${poem.title}`}
+        >
+          <form className="comment-form" onSubmit={createComment}>
+            <label htmlFor={`comment-input-${poemType}-${poem.id}`}>
+              Add a comment
+            </label>
+            <textarea
+              id={`comment-input-${poemType}-${poem.id}`}
+              ref={commentInputRef}
+              value={commentBody}
+              maxLength={600}
+              onChange={(event) => setCommentBody(event.target.value)}
+            />
+            <button
+              type="submit"
+              disabled={!commentBody.trim() || commentSubmitting}
+            >
+              {commentSubmitting ? "Posting…" : "Post comment"}
+            </button>
+          </form>
+
+          {commentsLoading && <p role="status">Loading comments…</p>}
+          {!commentsLoading && commentsLoaded && comments.length === 0 && (
+            <p>No comments yet. Start the conversation.</p>
+          )}
+          {!commentsLoading &&
+            comments.map((comment) => (
+              <CommentCard
+                comment={comment}
+                poemType={poemType}
+                key={comment.id}
+              />
+            ))}
+        </section>
+      )}
+
+      <hr className="poetry-divider" />
+    </div>
   );
 }
 

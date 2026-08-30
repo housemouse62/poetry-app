@@ -1,8 +1,6 @@
 import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
-import { createLimiter } from "../middleware/limiters.js";
-import { body, validationResult } from "express-validator";
 
 const feedRouter = Router();
 
@@ -26,8 +24,24 @@ feedRouter.get("/", verifyToken, async (req, res, next) => {
   if (date === "7days") dateQuery = new Date(Date.now() - 86400000 * 7);
   const dateFilter = dateQuery ? { createdAt: { gte: dateQuery } } : {};
 
-  const parsedPage = parseInt(page);
-  const parsedPageSize = parseInt(pageSize);
+  const parsedPage = Number(page);
+  const parsedPageSize = Number(pageSize);
+  const validTypes = new Set(["all", "haiku", "limerick"]);
+  const validDates = new Set(["all", "24hours", "3days", "7days"]);
+  const validSorts = new Set(["all", "likes"]);
+
+  if (
+    !Number.isInteger(parsedPage) ||
+    parsedPage < 1 ||
+    !Number.isInteger(parsedPageSize) ||
+    parsedPageSize < 1 ||
+    parsedPageSize > 1000 ||
+    !validTypes.has(type) ||
+    !validDates.has(date) ||
+    !validSorts.has(sort)
+  ) {
+    return res.status(400).json({ error: "Invalid feed query" });
+  }
 
   try {
     let limericks = [];
@@ -87,8 +101,8 @@ feedRouter.get("/", verifyToken, async (req, res, next) => {
 
     if (sort === "likes") {
       allPoems.sort((a, b) => {
-        const likeA = a._count.haikuLikes || a._count.limerickLikes;
-        const likeB = b._count.haikuLikes || b._count.limerickLikes;
+        const likeA = a._count.haikuLikes ?? a._count.limerickLikes;
+        const likeB = b._count.haikuLikes ?? b._count.limerickLikes;
         if (likeA < likeB) {
           return 1;
         }
@@ -96,7 +110,9 @@ feedRouter.get("/", verifyToken, async (req, res, next) => {
           return -1;
         }
 
-        return 0;
+        const dateDifference = new Date(b.createdAt) - new Date(a.createdAt);
+        if (dateDifference !== 0) return dateDifference;
+        return `${a.poemType}-${a.id}`.localeCompare(`${b.poemType}-${b.id}`);
       });
     } else {
       allPoems.sort((a, b) => {
@@ -109,7 +125,7 @@ feedRouter.get("/", verifyToken, async (req, res, next) => {
           return -1;
         }
 
-        return 0;
+        return `${a.poemType}-${a.id}`.localeCompare(`${b.poemType}-${b.id}`);
       });
     }
 
