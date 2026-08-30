@@ -63,14 +63,7 @@ haikuRouter.get("/", verifyToken, async (req, res, next) => {
         },
       },
     });
-    const alllimericks = await prisma.limerick.findMany({
-      where: { published: true },
-      include: {
-        _count: {
-          select: { comments: true, limerickLikes: true },
-        },
-      },
-    });
+    return res.status(200).json(allHaikus);
   } catch (error) {
     next(error);
   }
