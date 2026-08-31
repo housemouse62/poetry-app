@@ -59,6 +59,8 @@ async function createLimerick(overrides = {}) {
   return res.body;
 }
 
+const poemKey = (poem) => `${poem.poemType}-${poem.id}`;
+
 beforeAll(async () => {
   await cleanup();
 
@@ -367,8 +369,8 @@ describe("GET /feed - pagination", () => {
       .get("/feed?pageSize=2&page=2")
       .set("Authorization", `Bearer ${authorToken}`);
 
-    const ids1 = res1.body.paginated.map((p) => p.id);
-    const ids2 = res2.body.paginated.map((p) => p.id);
+    const ids1 = res1.body.paginated.map(poemKey);
+    const ids2 = res2.body.paginated.map(poemKey);
     expect(ids1.some((id) => ids2.includes(id))).toBe(false);
   });
 
@@ -386,8 +388,9 @@ describe("GET /feed - pagination", () => {
         .get(`/feed?pageSize=${pageSize}&page=${page}`)
         .set("Authorization", `Bearer ${authorToken}`);
       for (const poem of res.body.paginated) {
-        expect(allIds.has(poem.id)).toBe(false);
-        allIds.add(poem.id);
+        const id = poemKey(poem);
+        expect(allIds.has(id)).toBe(false);
+        allIds.add(id);
       }
     }
     expect(allIds.size).toBe(totalPoems);
