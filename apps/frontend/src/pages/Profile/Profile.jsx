@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router";
 import "./Profile.css";
 
@@ -12,8 +12,8 @@ function Profile() {
   const [currentPasswordState, setCurrentPasswordState] = useState("");
   const [nameState, setNameState] = useState("");
   const [screennameState, setScreennameState] = useState("");
-  const [error, setError] = useState(null);
-  const { login, user, token, logout } = useAuth();
+  const [, setError] = useState(null);
+  const { login, user, token } = useAuth();
   const navigate = useNavigate();
 
   function handleUpdateSubmit(e) {

@@ -2,12 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useWordData } from "../utils/useWordData";
 import { getWordFromCache } from "../utils/wordCache";
 import { countSyllables } from "../utils/syllableCounter";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import "./PoetryLine.css";
 import { useFocusTrap } from "../utils/useFocusTrap";
 
 function PoetryLine({
-  lineNumber,
   targetSyllables,
   value,
   onChange,
@@ -24,7 +23,7 @@ function PoetryLine({
   const [showWordModal, setShowWordModal] = useState(false);
   const [showFlagConfirmModal, setShowFlagConfirmModal] = useState(false);
   const { token } = useAuth();
-  const [error, setError] = useState(null);
+  const [, setError] = useState(null);
   const flagModalRef = useRef(null);
   const wordModalRef = useRef(null);
   const confirmModalRef = useRef(null);
@@ -59,7 +58,10 @@ function PoetryLine({
       }
     }
   const onSyllableChangeRef = useRef(onSyllableChange);
-  onSyllableChangeRef.current = onSyllableChange;
+
+  useEffect(() => {
+    onSyllableChangeRef.current = onSyllableChange;
+  }, [onSyllableChange]);
 
   useEffect(() => {
     onSyllableChangeRef.current?.(currentSyllables);

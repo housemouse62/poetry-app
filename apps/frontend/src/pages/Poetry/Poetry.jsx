@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Poetry.css";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { useAuth } from "../../context/useAuth";
 import PoemCard from "../../components/PoemCard/PoemCard.jsx";
 
 function Poetry() {

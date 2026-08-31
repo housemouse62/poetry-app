@@ -3,7 +3,7 @@ import { useFocusTrap } from "../../utils/useFocusTrap";
 import html2canvas from "html2canvas";
 import formatDate from "../../utils/formatDate";
 import "./LimerickCard.css";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 
 function LimerickCard({ limerick, onEdit, onDelete }) {
   const [showDownloadModal, setShowDownloadModal] = useState(false);

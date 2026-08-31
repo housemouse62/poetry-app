@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useEffectEvent } from "react";
 
 export function useFocusTrap(ref, isOpen, onClose) {
+  const close = useEffectEvent(() => onClose(false));
+
   useEffect(() => {
     if (!isOpen) return;
     const dialog = ref.current;
@@ -14,7 +16,7 @@ export function useFocusTrap(ref, isOpen, onClose) {
     if (focusable.length) focusable[0].focus();
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
-        onClose(false);
+        close();
         return;
       }
       if (e.key === "Tab" && focusable.length) {
@@ -35,5 +37,5 @@ export function useFocusTrap(ref, isOpen, onClose) {
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, [isOpen]);
+  }, [isOpen, ref]);
 }

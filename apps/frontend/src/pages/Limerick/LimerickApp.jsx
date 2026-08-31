@@ -4,7 +4,7 @@ import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import LimerickCard from "../../components/LimerickCard/LimerickCard";
 
 function LimerickApp() {

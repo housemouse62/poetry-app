@@ -4,7 +4,7 @@ import { countSyllables } from "../../utils/syllableCounter";
 import "./HaikuApp.css";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine.jsx";
-import { useAuth } from "../../context/AuthContext.jsx";
+import { useAuth } from "../../context/useAuth";
 import HaikuCard from "../../components/HaikuCard/HaikuCard.jsx";
 
 function HaikuApp() {

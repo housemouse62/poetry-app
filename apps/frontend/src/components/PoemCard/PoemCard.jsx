@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import formatDate from "../../utils/formatDate";
 import "./PoemCard.css";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import CommentCard from "../CommentCard/CommentCard";
 
 function PoemCard({ poem, poemType }) {

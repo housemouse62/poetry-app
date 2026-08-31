@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { render } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import LimerickApp from "./LimerickApp";
@@ -23,6 +23,29 @@ const renderWithRouter = (component) => {
     },
   ]);
   return render(<RouterProvider router={router} />);
+};
+
+const fillCompleteLimerick = () => {
+  const lines = [
+    screen.getByPlaceholderText(/line 1/i),
+    screen.getByPlaceholderText(/line 2/i),
+    screen.getByPlaceholderText(/line 3/i),
+    screen.getByPlaceholderText(/line 4/i),
+    screen.getByPlaceholderText(/line 5/i),
+  ];
+  const values = [
+    "There was an Old Man with a beard,",
+    'Who said, "It is just as I feared!',
+    "Two Owls and a Hen,",
+    "Four Larks and a Wren,",
+    'Have all built their nests in my beard!"',
+  ];
+
+  lines.forEach((line, index) => {
+    fireEvent.change(line, { target: { value: values[index] } });
+  });
+
+  return lines;
 };
 
 let mockLimericks;
@@ -65,42 +88,18 @@ describe("App Component", () => {
   });
 
   it("save button appears when Limerick is complete", async () => {
-    const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     const buttonNode = screen.getByRole("button", { name: /^save$/i });
     expect(buttonNode).toBeVisible();
   });
 
   it("displays 'You do Limerick!' when all lines have something typed", async () => {
-    const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     const wellDone = screen.getByRole("heading", {
       name: /You do limerick/i,
@@ -113,18 +112,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     expect(mockLimericks).toHaveLength(0);
 
@@ -135,21 +123,9 @@ describe("App Component", () => {
   });
 
   it("doesn't display 'saved' before the limerick is saved", async () => {
-    const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     const saved = screen.queryByText(/saved!/i);
     expect(saved).not.toBeInTheDocument;
@@ -159,18 +135,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     const buttonNode = screen.getByRole("button", { name: /^save$/i });
     await user.click(buttonNode);
@@ -182,18 +147,7 @@ describe("App Component", () => {
   it("clears the inputs fields after saving", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    const [line1] = fillCompleteLimerick();
 
     const buttonNode = screen.getByRole("button", { name: /^save$/i });
     await user.click(buttonNode);
@@ -216,18 +170,7 @@ describe("App Component", () => {
   it("all fields clear when user clicks clear button", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    const [line1, line2, line3, line4, line5] = fillCompleteLimerick();
 
     const buttonNode = screen.getByRole("button", { name: /clear/i });
     await user.click(buttonNode);
@@ -274,18 +217,7 @@ describe("App Component", () => {
   it("displays the saved limericks when the view saved limericks button is pressed", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
     await user.click(saveButtonNode);
@@ -303,18 +235,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
     await user.click(saveButtonNode);
@@ -332,18 +253,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     // Save Limerick
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
@@ -375,18 +285,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     // Save Limerick
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
@@ -411,18 +310,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     // Save Limerick
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
@@ -449,18 +337,7 @@ describe("App Component", () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     // Save Limerick
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
@@ -488,18 +365,7 @@ describe("App Component", () => {
   it("confirm download modal goes away when user clicks cancel", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
-    // Type a complete limerick
-    const line1 = screen.getByPlaceholderText(/line 1/i);
-    const line2 = screen.getByPlaceholderText(/line 2/i);
-    const line3 = screen.getByPlaceholderText(/line 3/i);
-    const line4 = screen.getByPlaceholderText(/line 4/i);
-    const line5 = screen.getByPlaceholderText(/line 5/i);
-
-    await user.type(line1, `There was an Old Man with a beard,`);
-    await user.type(line2, `Who said, "It is just as I feared!`);
-    await user.type(line3, `Two Owls and a Hen,`);
-    await user.type(line4, `Four Larks and a Wren,`);
-    await user.type(line5, `Have all built their nests in my beard!"`);
+    fillCompleteLimerick();
 
     // Save Limerick
     const saveButtonNode = screen.getByRole("button", { name: /^save$/i });

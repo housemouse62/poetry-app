@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWordFromCache, saveWordToCache } from "./wordCache";
 import { countSyllables } from "./syllableCounter";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export const useWordData = (wordToFetch) => {
   const [wordData, setWordData] = useState(null);
@@ -67,7 +67,7 @@ export const useWordData = (wordToFetch) => {
       }
     };
     fetchWordData();
-  }, [wordToFetch]);
+  }, [wordToFetch, token]);
 
   return { wordData, confidence, loading, error };
 };
