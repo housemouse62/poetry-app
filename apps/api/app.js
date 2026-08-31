@@ -10,6 +10,7 @@ import limerickCommentRouter from "./src/limerickComment.js";
 import haikuReplyRouter from "./src/haikuReply.js";
 import limerickReplyRouter from "./src/limerickReply.js";
 import favoriteRouter from "./src/favorite.js";
+import feedRouter from "./src/feed.js";
 import { globalLimiter } from "./middleware/limiters.js";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -33,6 +34,7 @@ app.use("/limerickComment", limerickCommentRouter);
 app.use("/haikuReply", haikuReplyRouter);
 app.use("/limerickReply", limerickReplyRouter);
 app.use("/favorite", favoriteRouter);
+app.use("/feed", feedRouter);
 
 app.use((req, res) => {
   res.status(404).json({ error: "Route not found" });

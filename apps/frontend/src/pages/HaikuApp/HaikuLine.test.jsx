@@ -1,8 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { render } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import * as WordFind from "../../utils/useWordData";
-import HaikuLine from "./HaikuLine";
+import PoetryLine from "../../components/PoetryLine";
 import HaikuApp from "./HaikuApp";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { useState } from "react";
@@ -176,7 +177,7 @@ const renderWithRouter = (component) => {
   return render(<RouterProvider router={router} />);
 };
 
-describe("Haiku Line Word Validation", () => {
+describe("PoetryLine Word Validation", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
@@ -263,9 +264,11 @@ describe("Haiku Line Word Validation", () => {
       const [inputValue, setInputValue] = useState("");
 
       return (
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={5}
+          showTarget={true}
+          placeholderText="line 1"
           value={inputValue}
           onChange={setInputValue}
         />
@@ -297,9 +300,11 @@ describe("Haiku Line Word Validation", () => {
       const [inputValue, setInputValue] = useState("");
 
       return (
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={5}
+          showTarget={true}
+          placeholderText="line 1"
           value={inputValue}
           onChange={setInputValue}
         />
@@ -330,9 +335,11 @@ describe("Haiku Line Word Validation", () => {
     function TestWrapper() {
       const [inputValue, setInputValue] = useState("");
       return (
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={5}
+          showTarget={true}
+          placeholderText="line 1"
           value={inputValue}
           onChange={setInputValue}
         />
@@ -368,9 +375,11 @@ describe("Haiku Line Word Validation", () => {
     function TestWrapper() {
       const [inputValue, setInputValue] = useState("");
       return (
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={5}
+          showTarget={true}
+          placeholderText="line 1"
           value={inputValue}
           onChange={setInputValue}
         />
@@ -391,9 +400,11 @@ describe("Haiku Line Word Validation", () => {
     function TestWrapper() {
       const [inputValue, setInputValue] = useState("");
       return (
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={5}
+          showTarget={true}
+          placeholderText="line 1"
           value={inputValue}
           onChange={setInputValue}
         />
@@ -433,9 +444,11 @@ describe("Haiku Line Word Validation", () => {
     function TestWrapper() {
       const [inputValue, setInputValue] = useState("");
       return (
-        <HaikuLine
+        <PoetryLine
           lineNumber={1}
           targetSyllables={5}
+          showTarget={true}
+          placeholderText="line 1"
           value={inputValue}
           onChange={setInputValue}
         />

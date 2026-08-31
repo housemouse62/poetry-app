@@ -12,8 +12,9 @@ haikuReplyRouter.post(
   verifyToken,
   createLimiter,
   body("replybody")
+    .trim()
     .notEmpty()
-    .withMessage("Comment cannot be empty")
+    .withMessage("Reply cannot be empty")
     .isLength({ max: 600 }),
   async (req, res, next) => {
     const formErrors = validationResult(req);
@@ -27,8 +28,12 @@ haikuReplyRouter.post(
 
       const comment = await prisma.haikuComment.findUnique({
         where: { id: commentID },
+        include: { poem: { select: { published: true, authorID: true } } },
       });
       if (!comment) return res.status(404).json({ error: "Comment Not Found" });
+      if (!comment.poem.published && comment.poem.authorID !== req.user.id) {
+        return res.status(403).json({ error: "Unauthorized Credentials" });
+      }
 
       const newReply = await prisma.haikuReply.create({
         data: {
@@ -53,11 +58,16 @@ haikuReplyRouter.get("/:commentID", verifyToken, async (req, res, next) => {
 
     const comment = await prisma.haikuComment.findUnique({
       where: { id: commentID },
+      include: { poem: { select: { published: true, authorID: true } } },
     });
     if (!comment) return res.status(404).json({ error: "Comment Not Found" });
+    if (!comment.poem.published && comment.poem.authorID !== req.user.id) {
+      return res.status(403).json({ error: "Unauthorized Credentials" });
+    }
 
     const commentReplies = await prisma.haikuReply.findMany({
       where: { commentID: commentID },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       include: {
         _count: { select: { replyLikes: true } },
         author: { select: { screenname: true } },
@@ -75,8 +85,9 @@ haikuReplyRouter.patch(
   verifyToken,
   createLimiter,
   body("replybody")
+    .trim()
     .notEmpty()
-    .withMessage("Comment cannot be empty")
+    .withMessage("Reply cannot be empty")
     .isLength({ max: 600 }),
   async (req, res, next) => {
     const formErrors = validationResult(req);

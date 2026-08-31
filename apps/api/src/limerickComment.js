@@ -12,6 +12,7 @@ limerickCommentRouter.post(
   verifyToken,
   createLimiter,
   body("commentbody")
+    .trim()
     .notEmpty()
     .withMessage("Comment cannot be empty")
     .isLength({ max: 600 }),
@@ -29,6 +30,9 @@ limerickCommentRouter.post(
         where: { id: poemID },
       });
       if (!poem) return res.status(404).json({ error: "limerick Not Found" });
+      if (!poem.published && poem.authorID !== req.user.id) {
+        return res.status(403).json({ error: "Unauthorized Credentials" });
+      }
       const newComment = await prisma.limerickComment.create({
         data: {
           commentbody: req.body.commentbody,
@@ -53,9 +57,13 @@ limerickCommentRouter.get("/:poemID", verifyToken, async (req, res, next) => {
       where: { id: poemID },
     });
     if (!poem) return res.status(404).json({ error: "limerick Not Found" });
+    if (!poem.published && poem.authorID !== req.user.id) {
+      return res.status(403).json({ error: "Unauthorized Credentials" });
+    }
 
     const poemComments = await prisma.limerickComment.findMany({
       where: { poemID: poemID },
+      orderBy: [{ createdAt: "asc" }, { id: "asc" }],
       include: {
         _count: { select: { reply: true, commentLikes: true } },
         author: { select: { screenname: true } },
@@ -73,6 +81,7 @@ limerickCommentRouter.patch(
   verifyToken,
   createLimiter,
   body("commentbody")
+    .trim()
     .notEmpty()
     .withMessage("Comment cannot be empty")
     .isLength({ max: 600 }),

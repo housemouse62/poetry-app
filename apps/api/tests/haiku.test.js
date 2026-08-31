@@ -354,6 +354,22 @@ describe("POST /haiku/:id/like", () => {
     expect(res.status).toBe(409);
   });
 
+  test("201 - owner can like their own unpublished haiku", async () => {
+    const haiku = await createHaiku({ published: false });
+    const res = await request(app)
+      .post(`/haiku/${haiku.id}/like`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(201);
+  });
+
+  test("403 - non-owner cannot like an unpublished haiku", async () => {
+    const haiku = await createHaiku({ published: false });
+    const res = await request(app)
+      .post(`/haiku/${haiku.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
+  });
+
   test("404 - haiku not found", async () => {
     const res = await request(app)
       .post("/haiku/999999/like")
@@ -385,5 +401,17 @@ describe("DELETE /haiku/:id/like", () => {
       .set("Authorization", `Bearer ${otherToken}`);
 
     expect(res.status).toBe(404);
+  });
+
+  test("403 - non-owner cannot unlike after a haiku becomes unpublished", async () => {
+    const haiku = await createHaiku();
+    await request(app)
+      .post(`/haiku/${haiku.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    await prisma.haiku.update({ where: { id: haiku.id }, data: { published: false } });
+    const res = await request(app)
+      .delete(`/haiku/${haiku.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
   });
 });

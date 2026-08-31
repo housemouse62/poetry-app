@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { getAllLimericks } from "./limericksStorage";
+import { screen, waitFor } from "@testing-library/react";
+import { render } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import LimerickApp from "./LimerickApp";
 import { createMemoryRouter, RouterProvider } from "react-router";
@@ -25,16 +25,43 @@ const renderWithRouter = (component) => {
   return render(<RouterProvider router={router} />);
 };
 
+let mockLimericks;
+
+const mockApi = async (url, options = {}) => {
+  const method = options.method || "GET";
+
+  if (url.endsWith("/word/")) {
+    return { ok: false, status: 404, json: async () => ({}) };
+  }
+  if (url.endsWith("/limerick") && method === "POST") {
+    const limerick = {
+      id: mockLimericks.length + 1,
+      ...JSON.parse(options.body),
+      limerickLikes: [],
+      isFavorited: false,
+      _count: { comments: 0, limerickLikes: 0 },
+    };
+    mockLimericks.push(limerick);
+    return { ok: true, status: 201, json: async () => limerick };
+  }
+  if (url.endsWith("/limerick/mine") && method === "GET") {
+    return { ok: true, status: 200, json: async () => [...mockLimericks] };
+  }
+  if (/\/limerick\/\d+$/.test(url) && method === "DELETE") {
+    const id = Number(url.split("/").pop());
+    mockLimericks = mockLimericks.filter((limerick) => limerick.id !== id);
+    return { ok: true, status: 200, json: async () => ({ id }) };
+  }
+
+  return { ok: false, status: 404, json: async () => ({}) };
+};
+
 describe("App Component", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
-
-    // Mock fetch to return fallback-style responses
-    globalThis.fetch.mockResolvedValue({
-      ok: false,
-      status: 404,
-    });
+    mockLimericks = [];
+    globalThis.fetch.mockImplementation(mockApi);
   });
 
   it("save button appears when Limerick is complete", async () => {
@@ -77,12 +104,12 @@ describe("App Component", () => {
 
     const wellDone = screen.getByRole("heading", {
       name: /You do limerick/i,
-      level: 1,
+      level: 3,
     });
-    expect(wellDone).toBeVisible;
+    expect(wellDone).toBeVisible();
   });
 
-  it("saves a limerick to local storage when the save button is clicked", async () => {
+  it("saves a limerick through the API when the save button is clicked", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
@@ -99,14 +126,12 @@ describe("App Component", () => {
     await user.type(line4, `Four Larks and a Wren,`);
     await user.type(line5, `Have all built their nests in my beard!"`);
 
-    const beforeSavingLimericks = getAllLimericks();
-    expect(beforeSavingLimericks).toHaveLength(0);
+    expect(mockLimericks).toHaveLength(0);
 
     const buttonNode = screen.getByRole("button", { name: /^save$/i });
     await user.click(buttonNode);
 
-    const savedLimericks = getAllLimericks();
-    expect(savedLimericks).toHaveLength(1);
+    await waitFor(() => expect(mockLimericks).toHaveLength(1));
   });
 
   it("doesn't display 'saved' before the limerick is saved", async () => {
@@ -234,7 +259,7 @@ describe("App Component", () => {
     expect(savedLimericks).toBeVisible();
   });
 
-  it("returns a 'no limericks' message when the localStorage contains no limericks", async () => {
+  it("returns a 'no limericks' message when the API returns no limericks", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
     const buttonNode = screen.getByRole("button", {
@@ -303,7 +328,7 @@ describe("App Component", () => {
     expect(deleteButton).toBeVisible();
   });
 
-  it("delete button removes limerick from stored limericks", async () => {
+  it("delete button removes a limerick returned by the API", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
 
@@ -334,9 +359,16 @@ describe("App Component", () => {
     const deleteButton = screen.getByRole("button", { name: /delete/i });
     await user.click(deleteButton);
 
+    const confirmButton = screen.getByRole("button", { name: /confirm/i });
+    await user.click(confirmButton);
+
     // Ensure the limerick is deleted
-    const limerickText = screen.queryByText(/it is me here hi/i);
-    expect(limerickText).not.toBeInTheDocument();
+    await waitFor(() => {
+      const limerickText = screen.queryByText(
+        /There was an Old Man with a beard,/i,
+      );
+      expect(limerickText).not.toBeInTheDocument();
+    });
   });
 
   it("confirm download modal pops up when user clicks download", async () => {

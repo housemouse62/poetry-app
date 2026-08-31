@@ -86,7 +86,15 @@ body {
   min-width: 315px;
   min-height: 30px;
   padding: 10px;
-  background-color: #9093a4;
+  background-color: #06d47b;
+}
+
+.home-link-button.feed {
+  margin-bottom: 15px;
+  min-width: 315px;
+  min-height: 30px;
+  padding: 10px;
+  background-color: #c66eaa;
 }
 
 .success-message {

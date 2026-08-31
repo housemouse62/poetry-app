@@ -40,12 +40,35 @@ favoriteRouter.post(
   createLimiter,
   async (req, res, next) => {
     try {
+      const poemID = Number(req.params.poemID);
+      const poemType = req.params.poemType;
+      const privacy = req.body?.privacy ?? "private";
+
+      if (!Number.isInteger(poemID) || poemID < 1) {
+        return res.status(400).json({ error: "Invalid Poem ID" });
+      }
+      if (poemType !== "haiku" && poemType !== "limerick") {
+        return res.status(400).json({ error: "Invalid Poem Type" });
+      }
+      if (privacy !== "private" && privacy !== "public") {
+        return res.status(400).json({ error: "Invalid Privacy" });
+      }
+
+      const poem =
+        poemType === "haiku"
+          ? await prisma.haiku.findUnique({ where: { id: poemID } })
+          : await prisma.limerick.findUnique({ where: { id: poemID } });
+      if (!poem) return res.status(404).json({ error: "Poem Not Found" });
+      if (!poem.published && poem.authorID !== req.user.id) {
+        return res.status(403).json({ error: "Unauthorized Credentials" });
+      }
+
       const newFavorite = await prisma.favorite.create({
         data: {
           userID: req.user.id,
-          poemID: parseInt(req.params.poemID),
-          poemType: req.params.poemType,
-          privacy: req.body.privacy,
+          poemID,
+          poemType,
+          privacy,
         },
       });
       res.status(201).json(newFavorite);

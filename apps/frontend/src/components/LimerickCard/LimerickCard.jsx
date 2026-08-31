@@ -153,7 +153,7 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
             className="delete-limerick-btn"
             onClick={() => {
               setDeleteID(limerick.id);
-              showDeleteModal(true);
+              setShowDeleteModal(true);
             }}
           >
             Delete

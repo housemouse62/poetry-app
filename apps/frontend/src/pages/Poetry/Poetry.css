@@ -1,0 +1,40 @@
+.poetry-app {
+  background: linear-gradient(135deg, #7954f2 0%, #d193fb 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  font-family: Georgia, sans-serif;
+}
+
+.poetry-container {
+  background: white;
+  border-radius: 20px;
+  padding: 20px 40px 40px;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.poetry-feed { display: flex; flex-direction: column; }
+.read-title-div { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+.drop-downs { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+.drop-downs label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; font-weight: 600; }
+.drop-downs select { max-width: 100%; }
+.poetry-divider { width: 80%; margin: 0 auto; }
+.feed-status { margin: 24px 0; text-align: center; }
+.feed-pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; }
+.feed-pagination p { text-align: center; }
+.feed-pagination button:disabled { cursor: not-allowed; opacity: 0.55; }
+
+.poetry-app button:focus-visible,
+.poetry-app select:focus-visible,
+.poetry-app textarea:focus-visible { outline: 3px solid #4b21c6; outline-offset: 3px; }
+
+@media (max-width: 520px) {
+  .poetry-app { padding: 10px; }
+  .poetry-container { padding: 18px 16px 30px; }
+  .drop-downs { flex-wrap: wrap; }
+  .drop-downs label { flex: 1 1 120px; }
+  .feed-pagination { flex-wrap: wrap; justify-content: center; }
+}

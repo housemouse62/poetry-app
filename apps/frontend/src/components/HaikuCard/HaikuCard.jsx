@@ -119,7 +119,7 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
               aria-pressed={favoriteHaikuState}
               aria-label={
                 favoriteHaikuState
-                  ? `Removie ${haiku.title} from favorites`
+                  ? `Remove ${haiku.title} from favorites`
                   : `Add ${haiku.title} to favorites`
               }
               onClick={() => {

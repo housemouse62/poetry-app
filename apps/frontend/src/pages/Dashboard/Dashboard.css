@@ -58,11 +58,34 @@ body {
 }
 
 .profile-button-link:hover {
-  background-color: #059669;
+  background-color: #9a5da6;
 }
 
 .profile-button-link:focus-visible {
   outline: 3px solid #b76ec6;
+  outline-offset: 2px;
+}
+
+.feed-button {
+  background-color: #c66eaa;
+  font-size: 16px;
+  font-family: Georgia, sans-serif;
+  font-weight: bold;
+  color: rgb(7, 7, 7);
+  padding: 5px 20px;
+  border-radius: 10px;
+  border: none;
+  border-bottom: 1px solid rgb(69, 22, 158);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.feed-button:hover {
+  background-color: #9c5886;
+}
+
+.feed-button:focus-visible {
+  outline: 3px solid #c66eaa;
   outline-offset: 2px;
 }
 

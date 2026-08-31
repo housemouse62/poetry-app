@@ -146,6 +146,14 @@ describe("GET /favorite/:userID", () => {
 // ─── POST /favorite/:poemType/:poemID ─────────────────────────────────────────
 
 describe("POST /favorite/:poemType/:poemID", () => {
+  test("201 - defaults an omitted privacy value to private", async () => {
+    const res = await request(app)
+      .post(`/favorite/haiku/${haikuID}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(201);
+    expect(res.body.privacy).toBe("private");
+  });
+
   test("201 - adds a haiku to favorites", async () => {
     const res = await request(app)
       .post(`/favorite/haiku/${haikuID}`)
@@ -167,6 +175,52 @@ describe("POST /favorite/:poemType/:poemID", () => {
     expect(res.status).toBe(201);
     expect(res.body.poemType).toBe("limerick");
     expect(res.body.privacy).toBe("public");
+  });
+
+  test.each([
+    ["haiku", testHaiku],
+    ["limerick", testLimerick],
+  ])("201 - owner can favorite their unpublished %s", async (poemType, poem) => {
+    const create = await request(app)
+      .post(`/${poemType}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...poem, published: false, title: `Private ${poemType}` });
+    const res = await request(app)
+      .post(`/favorite/${poemType}/${create.body.id}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ privacy: "private" });
+    expect(res.status).toBe(201);
+  });
+
+  test.each([
+    ["haiku", testHaiku],
+    ["limerick", testLimerick],
+  ])("403 - non-owner cannot favorite an unpublished %s", async (poemType, poem) => {
+    const create = await request(app)
+      .post(`/${poemType}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...poem, published: false, title: `Blocked ${poemType}` });
+    const res = await request(app)
+      .post(`/favorite/${poemType}/${create.body.id}`)
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({ privacy: "private" });
+    expect(res.status).toBe(403);
+  });
+
+  test("404 - rejects a nonexistent poem", async () => {
+    const res = await request(app)
+      .post("/favorite/haiku/999999")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ privacy: "private" });
+    expect(res.status).toBe(404);
+  });
+
+  test("400 - rejects an unsupported poem type", async () => {
+    const res = await request(app)
+      .post(`/favorite/sonnet/${haikuID}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ privacy: "private" });
+    expect(res.status).toBe(400);
   });
 
   test("401 - no token", async () => {

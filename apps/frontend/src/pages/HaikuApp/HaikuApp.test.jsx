@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import { getAllHaikus } from "./haikuStorage";
+import { screen, waitFor } from "@testing-library/react";
+import { render } from "../../../tests/test-utils";
 import userEvent from "@testing-library/user-event";
 import HaikuApp from "./HaikuApp";
 import { createMemoryRouter, RouterProvider } from "react-router";
@@ -20,15 +20,43 @@ const renderWithRouter = (component) => {
   return render(<RouterProvider router={router} />);
 };
 
+let mockHaikus;
+
+const mockApi = async (url, options = {}) => {
+  const method = options.method || "GET";
+
+  if (url.endsWith("/word/")) {
+    return { ok: false, status: 404, json: async () => ({}) };
+  }
+  if (url.endsWith("/haiku") && method === "POST") {
+    const haiku = {
+      id: mockHaikus.length + 1,
+      ...JSON.parse(options.body),
+      haikuLikes: [],
+      isFavorited: false,
+      _count: { comments: 0, haikuLikes: 0 },
+    };
+    mockHaikus.push(haiku);
+    return { ok: true, status: 201, json: async () => haiku };
+  }
+  if (url.endsWith("/haiku/mine") && method === "GET") {
+    return { ok: true, status: 200, json: async () => [...mockHaikus] };
+  }
+  if (/\/haiku\/\d+$/.test(url) && method === "DELETE") {
+    const id = Number(url.split("/").pop());
+    mockHaikus = mockHaikus.filter((haiku) => haiku.id !== id);
+    return { ok: true, status: 200, json: async () => ({ id }) };
+  }
+
+  return { ok: false, status: 404, json: async () => ({}) };
+};
+
 describe("App Component", () => {
   beforeEach(() => {
     //Clear localStorage before each test
     localStorage.clear();
-    // Mock fetch to return fallback-style responses
-    globalThis.fetch.mockResolvedValue({
-      ok: false,
-      status: 404,
-    });
+    mockHaikus = [];
+    globalThis.fetch.mockImplementation(mockApi);
   });
 
   it("save button appears when haiku is complete", async () => {
@@ -63,9 +91,9 @@ describe("App Component", () => {
       name: /You do haiku/i,
       level: 1,
     });
-    expect(wellDone).toBeVisible;
+    expect(wellDone).toBeVisible();
   });
-  it("saves a haiku to local storage when the save button is clicked", async () => {
+  it("saves a haiku through the API when the save button is clicked", async () => {
     const user = userEvent.setup();
     renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
@@ -77,14 +105,12 @@ describe("App Component", () => {
     await user.type(line2, "I hope you are feeling well");
     await user.type(line3, "I am waiting here");
 
-    const beforeSavingHaikus = getAllHaikus();
-    expect(beforeSavingHaikus).toHaveLength(0);
+    expect(mockHaikus).toHaveLength(0);
 
     const buttonNode = screen.getByRole("button", { name: /^save$/i });
     await user.click(buttonNode);
 
-    const savedHaikus = getAllHaikus();
-    expect(savedHaikus).toHaveLength(1);
+    await waitFor(() => expect(mockHaikus).toHaveLength(1));
   });
 
   it("doesn't display 'saved' before the haiku is saved", async () => {
@@ -192,7 +218,7 @@ describe("App Component", () => {
     expect(savedHaikus).toBeVisible();
   });
 
-  it("returns a 'no haikus' message when the localStorage contains no haikus", async () => {
+  it("returns a 'no haikus' message when the API returns no haikus", async () => {
     const user = userEvent.setup();
     renderWithRouter(<HaikuApp />);
     const buttonNode = screen.getByRole("button", {
@@ -252,7 +278,7 @@ describe("App Component", () => {
     expect(deleteButton).toBeVisible();
   });
 
-  it("delete button removes haiku from stored haikus", async () => {
+  it("delete button removes a haiku returned by the API", async () => {
     const user = userEvent.setup();
     renderWithRouter(<HaikuApp />);
     // Type a complete haiku (5-7-5 syllables)
@@ -278,9 +304,14 @@ describe("App Component", () => {
     const deleteButton = screen.getByRole("button", { name: /delete/i });
     await user.click(deleteButton);
 
+    const confirmButton = screen.getByRole("button", { name: /confirm/i });
+    await user.click(confirmButton);
+
     // Ensure the haiku is deleted
-    const haikuText = screen.queryByText(/it is me here hi/i);
-    expect(haikuText).not.toBeInTheDocument();
+    await waitFor(() => {
+      const haikuText = screen.queryByText(/it is me here hi/i);
+      expect(haikuText).not.toBeInTheDocument();
+    });
   });
 
   it("confirm download modal pops up when user clicks download", async () => {

@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router";
+import { screen } from "@testing-library/react";
+import { renderWithRouter } from "../tests/test-utils";
+import { createMemoryRouter } from "react-router";
 import userEvent from "@testing-library/user-event";
 import routes from "./routes";
 
@@ -9,7 +10,7 @@ describe("Poetry-App", () => {
     // Create a test router starting at "/"
     const router = createMemoryRouter(routes, { initialEntries: ["/"] });
 
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
     const helloWorld = screen.getByRole("heading", {
       name: /make poetry./i,
@@ -22,7 +23,7 @@ describe("Poetry-App", () => {
     // Create a test router starting at "/haiku"
     const router = createMemoryRouter(routes, { initialEntries: ["/haiku"] });
 
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
     const doyou = screen.getByRole("heading", {
       name: /Do You Do Haiku/i,
@@ -37,7 +38,7 @@ describe("Poetry-App", () => {
       initialEntries: ["/limerick"],
     });
 
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
     const limerick = screen.getByRole("heading", {
       name: /Let's Limerick/i,
@@ -46,13 +47,18 @@ describe("Poetry-App", () => {
     expect(limerick).toBeVisible();
   });
 
-  it("when user click haiku link, the haiku route (/haiku) renders", async () => {
+  it("navigates from home through the dashboard to the haiku editor", async () => {
     // Create a test router starting at "/"
     const router = createMemoryRouter(routes, { initialEntries: ["/"] });
     const user = userEvent.setup();
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
-    const haikuLink = screen.getByRole("link", { name: /haiku/i });
+    const makePoetryButton = screen.getByText("make poetry", {
+      selector: "button",
+    });
+    await user.click(makePoetryButton);
+
+    const haikuLink = screen.getByRole("link", { name: /open haiku editor/i });
     await user.click(haikuLink);
 
     const doyou = screen.getByRole("heading", {
@@ -62,13 +68,20 @@ describe("Poetry-App", () => {
     expect(doyou).toBeVisible();
   });
 
-  it("when user click limerick link, the limerick route (/limerick) renders", async () => {
+  it("navigates from home through the dashboard to the limerick editor", async () => {
     // Create a test router starting at "/"
     const router = createMemoryRouter(routes, { initialEntries: ["/"] });
     const user = userEvent.setup();
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
-    const limerickLink = screen.getByRole("link", { name: /limerick/i });
+    const makePoetryButton = screen.getByText("make poetry", {
+      selector: "button",
+    });
+    await user.click(makePoetryButton);
+
+    const limerickLink = screen.getByRole("link", {
+      name: /open limerick editor/i,
+    });
     await user.click(limerickLink);
 
     const doyou = screen.getByRole("heading", {
@@ -81,7 +94,7 @@ describe("Poetry-App", () => {
   it("when directed to non-existing page, error page renders", () => {
     // Create a test router starting at non-existant page "/noPage"
     const router = createMemoryRouter(routes, { initialEntries: ["/noPage"] });
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
     const errorPage = screen.getByText("Oops!");
     expect(errorPage).toBeVisible();
@@ -91,9 +104,14 @@ describe("Poetry-App", () => {
     // Create a test router starting at root page ("/")
     const router = createMemoryRouter(routes, { initialEntries: ["/"] });
     const user = userEvent.setup();
-    render(<RouterProvider router={router} />);
+    renderWithRouter(router);
 
-    const haikuLink = screen.getByRole("link", { name: /haiku/i });
+    const makePoetryButton = screen.getByText("make poetry", {
+      selector: "button",
+    });
+    await user.click(makePoetryButton);
+
+    const haikuLink = screen.getByRole("link", { name: /open haiku editor/i });
     await user.click(haikuLink);
 
     const backButton = screen.getByRole("button", { name: /dashboard/i });

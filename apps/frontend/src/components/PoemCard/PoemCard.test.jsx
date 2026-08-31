@@ -1,0 +1,182 @@
+import { act, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { describe, expect, test } from "vitest";
+import { render } from "../../../tests/test-utils";
+import PoemCard from "./PoemCard";
+
+const poem = {
+  id: 7,
+  poemType: "haiku",
+  title: "Still Water",
+  lineOne: "An old silent pond",
+  lineTwo: "A frog jumps into the pond",
+  lineThree: "Splash! Silence again",
+  screenname: "poet",
+  createdAt: "2026-01-01T00:00:00.000Z",
+  isFavorited: false,
+  haikuLikes: [],
+  _count: { haikuLikes: 0, comments: 0 },
+};
+
+const response = (body, ok = true) =>
+  Promise.resolve({ ok, json: () => Promise.resolve(body) });
+
+const deferredResponse = () => {
+  let resolve;
+  const promise = new Promise((next) => {
+    resolve = (body, ok = true) =>
+      next({ ok, json: () => Promise.resolve(body) });
+  });
+  return { promise, resolve };
+};
+
+describe("PoemCard", () => {
+  test("allows comments to open when the poem has no comments", async () => {
+    const user = userEvent.setup();
+    fetch.mockReturnValueOnce(response([]));
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    const toggle = screen.getByRole("button", { name: "Show 0 comments" });
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(await screen.findByLabelText("Add a comment")).toBeInTheDocument();
+    expect(screen.getByText("No comments yet. Start the conversation.")).toBeInTheDocument();
+  });
+
+  test("creates a comment and refreshes the displayed comments", async () => {
+    const user = userEvent.setup();
+    const createdComment = {
+      id: 12,
+      commentbody: "Lovely poem",
+      createdAt: "2026-01-02T00:00:00.000Z",
+      author: { screenname: "reader" },
+      _count: { reply: 0 },
+    };
+    fetch
+      .mockReturnValueOnce(response([]))
+      .mockReturnValueOnce(response({ id: 12 }, true))
+      .mockReturnValueOnce(response([createdComment]));
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await screen.findByText("No comments yet. Start the conversation.");
+    await user.type(screen.getByLabelText("Add a comment"), "Lovely poem");
+    await user.click(screen.getByRole("button", { name: "Post comment" }));
+
+    expect(await screen.findByText("Lovely poem")).toBeInTheDocument();
+    expect(fetch.mock.calls[1][1]).toMatchObject({
+      method: "POST",
+      body: JSON.stringify({ commentbody: "Lovely poem" }),
+    });
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Hide 1 comment" })).toBeInTheDocument(),
+    );
+  });
+
+  test("adds and removes a private favorite with accessible state", async () => {
+    const user = userEvent.setup();
+    fetch
+      .mockReturnValueOnce(response({ id: 1, privacy: "private" }))
+      .mockReturnValueOnce(response({ id: 1 }));
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    const addButton = screen.getByRole("button", {
+      name: "Add Still Water to favorites",
+    });
+    expect(addButton).toHaveAttribute("aria-pressed", "false");
+    await user.click(addButton);
+    expect(fetch.mock.calls[0][1]).toMatchObject({
+      method: "POST",
+      body: JSON.stringify({ privacy: "private" }),
+    });
+
+    const removeButton = await screen.findByRole("button", {
+      name: "Remove Still Water from favorites",
+    });
+    expect(removeButton).toHaveAttribute("aria-pressed", "true");
+    await user.click(removeButton);
+    expect(fetch.mock.calls[1][1].method).toBe("DELETE");
+    expect(
+      await screen.findByRole("button", {
+        name: "Add Still Water to favorites",
+      }),
+    ).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("prevents duplicate favorite requests while one is pending", async () => {
+    const user = userEvent.setup();
+    const pending = deferredResponse();
+    fetch.mockReturnValueOnce(pending.promise);
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    const button = screen.getByRole("button", {
+      name: "Add Still Water to favorites",
+    });
+    await user.click(button);
+    expect(button).toBeDisabled();
+    await user.click(button);
+    expect(fetch).toHaveBeenCalledTimes(1);
+    await act(() => pending.resolve({ id: 1, privacy: "private" }));
+  });
+
+  test("keeps favorite state and shows an error when favorite creation fails", async () => {
+    const user = userEvent.setup();
+    fetch.mockReturnValueOnce(response({ error: "failed" }, false));
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    const button = screen.getByRole("button", {
+      name: "Add Still Water to favorites",
+    });
+    await user.click(button);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Cannot update this favorite. Please try again.",
+    );
+    expect(button).toHaveAttribute("aria-pressed", "false");
+    expect(button).not.toBeDisabled();
+  });
+
+  test("ignores an older comment load after close and reopen", async () => {
+    const user = userEvent.setup();
+    const older = deferredResponse();
+    const newer = deferredResponse();
+    fetch
+      .mockReturnValueOnce(older.promise)
+      .mockReturnValueOnce(newer.promise);
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await user.click(screen.getByRole("button", { name: "Hide 0 comments" }));
+    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await act(() => newer.resolve([]));
+    expect(await screen.findByText("No comments yet. Start the conversation.")).toBeInTheDocument();
+    await act(() => older.resolve([{ id: 99, commentbody: "Stale" }]));
+    expect(screen.queryByText("Stale")).not.toBeInTheDocument();
+  });
+
+  test("keeps loading until the post-submission comment refresh finishes", async () => {
+    const user = userEvent.setup();
+    const initial = deferredResponse();
+    const refresh = deferredResponse();
+    const createdComment = {
+      id: 12,
+      commentbody: "Newest comment",
+      createdAt: "2026-01-02T00:00:00.000Z",
+      author: { screenname: "reader" },
+      _count: { reply: 0 },
+    };
+    fetch
+      .mockReturnValueOnce(initial.promise)
+      .mockReturnValueOnce(response({ id: 12 }))
+      .mockReturnValueOnce(refresh.promise);
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await user.type(screen.getByLabelText("Add a comment"), "Newest comment");
+    await user.click(screen.getByRole("button", { name: "Post comment" }));
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+    await act(() => initial.resolve([]));
+    expect(screen.getByText("Loading comments…")).toBeInTheDocument();
+    await act(() => refresh.resolve([createdComment]));
+    expect(await screen.findByText("Newest comment")).toBeInTheDocument();
+  });
+});

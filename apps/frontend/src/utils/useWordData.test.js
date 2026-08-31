@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useWordData } from "./useWordData";
 import { saveWordToCache, getWordFromCache } from "./wordCache";
-import { renderHook, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
+import { renderHook } from "../../tests/test-utils";
 
 describe("WordFind hook", () => {
   const mockApiResponse = {

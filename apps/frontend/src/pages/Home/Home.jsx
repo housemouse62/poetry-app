@@ -16,6 +16,17 @@ export default function Home() {
             <h1 className="home-title">make poetry.</h1>
           </div>
           <nav aria-label="Page navigation">
+            <div className="dashboard-link">
+              <button
+                className="home-link-button feed"
+                aria-label="Dashboard"
+                onClick={() => {
+                  navigate("/poems");
+                }}
+              >
+                read poetry
+              </button>
+            </div>
             <div className="button-cards">
               <button
                 className="home-link-button login"

@@ -91,6 +91,7 @@ function HaikuApp() {
           }, 500);
         }, 2000);
         setError(null);
+        setPublished(false);
       } else setError("Failed to save haiku. Please try again.");
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);

@@ -346,6 +346,22 @@ describe("POST /limerick/:id/like", () => {
     expect(res.status).toBe(409);
   });
 
+  test("201 - owner can like their own unpublished limerick", async () => {
+    const limerick = await createLimerick({ published: false });
+    const res = await request(app)
+      .post(`/limerick/${limerick.id}/like`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    expect(res.status).toBe(201);
+  });
+
+  test("403 - non-owner cannot like an unpublished limerick", async () => {
+    const limerick = await createLimerick({ published: false });
+    const res = await request(app)
+      .post(`/limerick/${limerick.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
+  });
+
   test("404 - limerick not found", async () => {
     const res = await request(app)
       .post("/limerick/999999/like")
@@ -377,5 +393,20 @@ describe("DELETE /limerick/:id/like", () => {
       .set("Authorization", `Bearer ${otherToken}`);
 
     expect(res.status).toBe(404);
+  });
+
+  test("403 - non-owner cannot unlike after a limerick becomes unpublished", async () => {
+    const limerick = await createLimerick();
+    await request(app)
+      .post(`/limerick/${limerick.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    await prisma.limerick.update({
+      where: { id: limerick.id },
+      data: { published: false },
+    });
+    const res = await request(app)
+      .delete(`/limerick/${limerick.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    expect(res.status).toBe(403);
   });
 });
