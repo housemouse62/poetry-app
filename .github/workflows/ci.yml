@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: make_poetry_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d make_poetry_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/make_poetry_test
+      JWT_SECRET: ci-only-test-secret
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint frontend
+        run: npm run lint --workspace=apps/frontend
+
+      - name: Check API JavaScript syntax
+        shell: bash
+        run: |
+          find apps/api -type f -name '*.js' \
+            -not -path '*/generated/*' \
+            -not -path '*/node_modules/*' \
+            -print0 | xargs -0 -n1 node --check
+
+      - name: Test frontend
+        run: npm test --workspace=apps/frontend -- --run
+
+      - name: Build frontend
+        run: npm run build --workspace=apps/frontend
+
+      - name: Apply test database migrations
+        working-directory: apps/api
+        run: npx prisma migrate deploy --schema=prisma/schema.prisma
+
+      - name: Run API integration tests
+        working-directory: apps/api
+        run: npm test -- --run
