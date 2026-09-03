@@ -28,6 +28,7 @@ function PoetryLine({
   const wordModalRef = useRef(null);
   const confirmModalRef = useRef(null);
   const flagButtonRef = useRef(null);
+  const selectedWordButtonRef = useRef(null);
 
   useFocusTrap(flagModalRef, showFlagModal, () => setShowFlagModal(false));
   useFocusTrap(wordModalRef, showWordModal, () => setShowWordModal(false));
@@ -259,7 +260,10 @@ function PoetryLine({
                     <div key={index} className="individual-word">
                       <button
                         className="clickable-word"
-                        onClick={() => handleWordClick(word, syllableCount)}
+                        onClick={(e) => {
+                          selectedWordButtonRef.current = e.currentTarget;
+                          handleWordClick(word, syllableCount);
+                        }}
                       >
                         <span className="word-syllables">{syllableCount}</span>
                         <span className="word-text">{word}</span>
@@ -320,7 +324,7 @@ function PoetryLine({
                     setFlaggedSyllables(null);
                     setFlaggedWord(null);
                     setShowWordModal(false);
-                    flagModalRef.current?.querySelector("button")?.focus();
+                    selectedWordButtonRef.current?.focus();
                   }}
                 >
                   Yes
@@ -358,6 +362,7 @@ function PoetryLine({
                 onClick={() => {
                   setShowFlagConfirmModal(false);
                   setShowWordModal(false);
+                  selectedWordButtonRef.current?.focus();
                 }}
               >
                 Thumbs Up!

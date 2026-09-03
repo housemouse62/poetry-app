@@ -23,6 +23,9 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
   const { token } = useAuth();
 
   useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
+  useFocusTrap(deleteDialogRef, showDeleteModal, () =>
+    setShowDeleteModal(false),
+  );
 
   const shareAsImage = async (limerickId) => {
     // Find the specific card element
