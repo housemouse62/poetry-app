@@ -179,4 +179,45 @@ describe("PoemCard", () => {
     await act(() => refresh.resolve([createdComment]));
     expect(await screen.findByText("Newest comment")).toBeInTheDocument();
   });
+
+  test("cancels then confirms comment deletion, updates the count, and focuses the comment input", async () => {
+    const user = userEvent.setup();
+    const ownedComment = {
+      id: 12,
+      commentbody: "Delete this comment",
+      createdAt: "2026-01-02T00:00:00.000Z",
+      authorID: 1,
+      author: { screenname: "testuser" },
+      commentLikes: [],
+      _count: { reply: 0, commentLikes: 0 },
+    };
+    fetch
+      .mockReturnValueOnce(response([ownedComment]))
+      .mockReturnValueOnce(response(ownedComment));
+    render(
+      <PoemCard
+        poem={{ ...poem, _count: { ...poem._count, comments: 1 } }}
+        poemType="haiku"
+      />,
+    );
+
+    await user.click(screen.getByRole("button", { name: "Show 1 comment" }));
+    await screen.findByText("Delete this comment");
+    const deleteButton = screen.getByRole("button", {
+      name: "Delete comment by testuser",
+    });
+    await user.click(deleteButton);
+    const cancel = screen.getByRole("button", { name: "Cancel delete" });
+    expect(cancel).toHaveFocus();
+    await user.click(cancel);
+    expect(deleteButton).toHaveFocus();
+
+    await user.click(deleteButton);
+    await user.click(screen.getByRole("button", { name: "Confirm delete" }));
+
+    expect(screen.queryByText("Delete this comment")).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Hide 0 comments" })).toBeVisible();
+    expect(screen.getByLabelText("Add a comment")).toHaveFocus();
+    expect(screen.getByRole("status")).toHaveTextContent("Comment deleted.");
+  });
 });

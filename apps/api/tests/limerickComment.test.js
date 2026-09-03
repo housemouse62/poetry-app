@@ -164,6 +164,28 @@ describe("POST /limerickComment/:poemID", () => {
 // ─── GET /limerickComment/:poemID ─────────────────────────────────────────────
 
 describe("GET /limerickComment/:poemID", () => {
+  test("includes only the current user's comment like for hydration", async () => {
+    const comment = await createComment(
+      authorToken,
+      limerickID,
+      "Liked by reader",
+    );
+    await request(app)
+      .post(`/limerickComment/${comment.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    await request(app)
+      .post(`/limerickComment/${comment.id}/like`)
+      .set("Authorization", `Bearer ${authorToken}`);
+
+    const res = await request(app)
+      .get(`/limerickComment/${limerickID}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    const hydrated = res.body.find((item) => item.id === comment.id);
+
+    expect(hydrated.commentLikes).toHaveLength(1);
+    expect(hydrated._count.commentLikes).toBe(2);
+  });
+
   test("owner can read comments on their own unpublished limerick", async () => {
     const poem = await request(app)
       .post("/limerick")

@@ -176,6 +176,24 @@ describe("POST /limerickReply/:commentID/replies", () => {
 // ─── GET /limerickReply/:commentID ────────────────────────────────────────────
 
 describe("GET /limerickReply/:commentID", () => {
+  test("includes only the current user's reply like for hydration", async () => {
+    const reply = await createReply(authorToken, commentID, "Liked reply");
+    await request(app)
+      .post(`/limerickReply/${reply.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    await request(app)
+      .post(`/limerickReply/${reply.id}/like`)
+      .set("Authorization", `Bearer ${authorToken}`);
+
+    const res = await request(app)
+      .get(`/limerickReply/${commentID}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    const hydrated = res.body.find((item) => item.id === reply.id);
+
+    expect(hydrated.replyLikes).toHaveLength(1);
+    expect(hydrated._count.replyLikes).toBe(2);
+  });
+
   test("owner can read replies on their own unpublished limerick", async () => {
     const comment = await createPrivateComment();
     await createReply(authorToken, comment.id, "Owner-readable reply");
