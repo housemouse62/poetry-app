@@ -1,242 +1,63 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useWordData } from "./useWordData";
-import { saveWordToCache, getWordFromCache } from "./wordCache";
+import { describe, expect, it, vi } from "vitest";
 import { waitFor } from "@testing-library/react";
 import { renderHook } from "../../tests/test-utils";
+import { useWordData } from "./useWordData";
+import { getWordFromCache, saveWordToCache } from "./wordCache";
 
-describe("WordFind hook", () => {
-  const mockApiResponse = {
-    word: "hello",
-    results: [
-      {
-        definition: "an expression of greeting",
-        partOfSpeech: "noun",
-        synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-        typeOf: ["greeting", "salutation"],
-        examples: ["every morning they exchanged polite hellos"],
-      },
-    ],
-    syllables: {
-      count: 2,
-      list: ["hel", "lo"],
-    },
-    pronunciation: {
-      all: "hɛ'loʊ",
-    },
-    frequency: 5.83,
-  };
+const response = (body, ok = true) =>
+  Promise.resolve({ ok, status: ok ? 200 : 503, json: () => Promise.resolve(body) });
+const apiWord = {
+  word: "hello",
+  source: "api",
+  flagged: false,
+  syllables: { count: 2, list: ["hel", "lo"] },
+  pronunciation: { all: "hɛ'loʊ" },
+  data: { syllables: { count: 2, list: ["hel", "lo"] } },
+};
 
-  beforeEach(() => {
-    localStorage.clear();
-    vi.restoreAllMocks();
-  });
-  it("returns cached word data without calling API", () => {
-    // Save "hello" data to cache
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    // Mock fetch to track if it gets called
-    const fetchSpy = vi.spyOn(globalThis, "fetch");
-
-    // Use the hook
-    const { result } = renderHook(() => useWordData("hello"));
-
-    // Should have data from cache
-    expect(result.current.wordData).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    // Should NOT have called fetch
-    expect(fetchSpy).not.toHaveBeenCalled();
+describe("useWordData", () => {
+  it("uses a fresh API cache entry without requesting and reports verified", async () => {
+    saveWordToCache("hello", apiWord);
+    const { result } = renderHook(() => useWordData(" HELLO "));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.wordData).toEqual(apiWord);
+    expect(result.current.confidence).toBe("verified");
+    expect(fetch).not.toHaveBeenCalled();
   });
 
-  it("calls API when cache doesn't have the word", async () => {
-    // Mock fetch to return successful API response
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockApiResponse),
-    });
-
-    // Use the hook
-    const { result } = renderHook(() => useWordData("hello"));
-
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(result.current.wordData).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-    expect(fetchSpy).toHaveBeenCalled();
-  });
-
-  it("caches successful API fetch results", async () => {
-    // Mock fetch to return successful API response
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => Promise.resolve(mockApiResponse),
-    });
-
-    // Use the hook
-    const { result } = renderHook(() => useWordData("hello"));
-
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
-    expect(result.current.wordData).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    const hello = getWordFromCache("hello");
-
-    expect(hello).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-  });
-  it("hook returns confidence level", async () => {
-    // Save "hello" data to cache
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    // Use the hook
-    const { result } = renderHook(() => useWordData("hello"));
-
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
-
+  it("refreshes an expired entry and overwrites stale data", async () => {
+    saveWordToCache("hello", { ...apiWord, syllables: { count: 3 } }, 0);
+    fetch.mockReturnValueOnce(response(apiWord));
+    const { result } = renderHook(() => useWordData("Hello"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/word/"),
+      expect.objectContaining({ body: JSON.stringify({ word: "hello" }) }),
+    );
+    expect(getWordFromCache("hello")).toEqual(apiWord);
     expect(result.current.confidence).toBe("verified");
   });
 
-  it("uses countSyllables when word is not in API and returns 'estimated' confidence level", async () => {
-    // Mock fetch fail
-    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Network error"));
-
-    // Use the hook
+  it("reports a normalized server algorithm response as estimated", async () => {
+    const algorithmWord = { ...apiWord, source: "algorithm" };
+    fetch.mockReturnValueOnce(response(algorithmWord));
     const { result } = renderHook(() => useWordData("hello"));
-
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.wordData).toEqual(algorithmWord);
     expect(result.current.confidence).toBe("estimated");
-
-    expect(result.current.wordData).toEqual({
-      word: "hello",
-      syllables: { count: 2 }, // from countSyllables
-      source: "fallback",
-    });
+    expect(getWordFromCache("hello")).toEqual(algorithmWord);
   });
 
-  
+  it("uses but does not persist a frontend network fallback", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("Network error"));
+    const { result } = renderHook(() => useWordData("hello"));
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.wordData).toEqual({
+      word: "hello",
+      syllables: { count: 2 },
+      source: "fallback",
+    });
+    expect(result.current.confidence).toBe("estimated");
+    expect(getWordFromCache("hello")).toEqual({});
+  });
 });

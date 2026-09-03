@@ -196,6 +196,7 @@ model Word {
   flagged       Boolean @default(false)
   syllableCount Int
   data          Json
+  refreshedAt   DateTime @default(now())
 }
 
 model Favorite {

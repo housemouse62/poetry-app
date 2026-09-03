@@ -12,6 +12,7 @@ const mockCherryResponse = {
   ok: true,
   json: async () => ({
     word: "cherry",
+    source: "api",
     results: [
       {
         definition:
@@ -100,6 +101,7 @@ const mockBlossomResponse = {
   ok: true,
   json: async () => ({
     word: "blossom",
+    source: "api",
     results: [
       {
         definition: "develop or come to a promising stage",

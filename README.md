@@ -114,6 +114,13 @@ Word data follows a layered fallback:
 4. If the frontend request itself fails, the frontend also falls back to its
    local estimator and marks the result as estimated.
 
+API-sourced database entries are refreshed lazily after 30 days, while
+algorithm-sourced entries are refreshed after 24 hours. Browser entries use a
+versioned cache and expire after 7 days for API data or 1 hour for algorithm
+data. Transient frontend fallbacks are not persisted. `/word` responses expose
+`word`, `source`, `flagged`, and `syllables.count` consistently, with syllable
+lists and pronunciation included when available.
+
 Users can open a keyboard-accessible modal from an editor line, inspect word
 counts, and flag a stored word for review.
 

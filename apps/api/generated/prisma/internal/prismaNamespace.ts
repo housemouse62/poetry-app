@@ -1733,7 +1733,8 @@ export const WordScalarFieldEnum = {
   source: 'source',
   flagged: 'flagged',
   syllableCount: 'syllableCount',
-  data: 'data'
+  data: 'data',
+  refreshedAt: 'refreshedAt'
 } as const
 
 export type WordScalarFieldEnum = (typeof WordScalarFieldEnum)[keyof typeof WordScalarFieldEnum]

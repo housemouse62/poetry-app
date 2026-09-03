@@ -11,6 +11,7 @@ const mockCherryResponse = {
   ok: true,
   json: async () => ({
     word: "cherry",
+    source: "api",
     results: [
       {
         definition:
@@ -99,6 +100,7 @@ const mockBlossomResponse = {
   ok: true,
   json: async () => ({
     word: "blossom",
+    source: "api",
     results: [
       {
         definition: "develop or come to a promising stage",
@@ -498,6 +500,38 @@ describe("PoetryLine", () => {
       const counter = screen.getByTestId("syllable-counter");
       expect(counter).toHaveAttribute("data-confidence", "verified");
     });
+  });
+
+  it("uses the normalized server syllable count instead of the estimator", async () => {
+    function TestWrapper() {
+      const [inputValue, setInputValue] = useState("");
+      return (
+        <PoetryLine
+          targetSyllables={5}
+          value={inputValue}
+          onChange={setInputValue}
+          showTarget={true}
+          placeholderText="line 1"
+        />
+      );
+    }
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        word: "fire",
+        source: "api",
+        flagged: false,
+        syllables: { count: 2, list: ["fi", "re"] },
+        data: { syllables: { count: 2, list: ["fi", "re"] } },
+      }),
+    });
+    renderWithRouter(<TestWrapper />);
+    await userEvent.setup().type(screen.getByPlaceholderText("line 1"), "fire ");
+    await waitFor(() => expect(screen.getByText("2/5")).toBeVisible());
+    expect(screen.getByTestId("syllable-counter")).toHaveAttribute(
+      "data-confidence",
+      "verified",
+    );
   });
 
   it("onSyllableChange is called with the correct count when syllables update", async () => {

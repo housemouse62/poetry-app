@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { getWordFromCache, saveWordToCache } from "./wordCache";
+import {
+  canonicalizeWord,
+  getWordFromCache,
+  saveWordToCache,
+} from "./wordCache";
 import { countSyllables } from "./syllableCounter";
 import { useAuth } from "../context/useAuth";
 
@@ -12,6 +16,7 @@ export const useWordData = (wordToFetch) => {
 
   useEffect(() => {
     if (!wordToFetch) return;
+    const canonicalWord = canonicalizeWord(wordToFetch);
 
     const fetchWordData = async () => {
       setLoading(true);
@@ -19,10 +24,10 @@ export const useWordData = (wordToFetch) => {
       const url = `${import.meta.env.VITE_API_URL}/word/`;
 
       // Check Cache for word
-      const cached = getWordFromCache(wordToFetch);
+      const cached = getWordFromCache(canonicalWord);
       if (Object.keys(cached).length > 0) {
         setWordData(cached);
-        setConfidence("verified");
+        setConfidence(cached.source === "api" ? "verified" : "estimated");
         setLoading(false);
         return;
       }
@@ -37,7 +42,7 @@ export const useWordData = (wordToFetch) => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            word: wordToFetch,
+            word: canonicalWord,
           }),
         });
 
@@ -47,20 +52,19 @@ export const useWordData = (wordToFetch) => {
 
         const data = await response.json();
         // Save to Cache
-        saveWordToCache(wordToFetch, data);
+        saveWordToCache(canonicalWord, data);
         setWordData(data);
-        setConfidence("verified");
+        setConfidence(data.source === "api" ? "verified" : "estimated");
       } catch (error) {
         setError(error.message);
-        const fallBackSyllables = countSyllables(wordToFetch);
+        const fallBackSyllables = countSyllables(canonicalWord);
 
         const fallbackData = {
-          word: wordToFetch,
+          word: canonicalWord,
           syllables: { count: fallBackSyllables }, // from countSyllables
           source: "fallback",
         };
         setWordData(fallbackData);
-        saveWordToCache(wordToFetch, fallbackData);
         setConfidence("estimated");
       } finally {
         setLoading(false);
