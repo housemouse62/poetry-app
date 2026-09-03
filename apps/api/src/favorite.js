@@ -17,6 +17,57 @@ favoriteRouter.get("/mine", verifyToken, async (req, res, next) => {
   }
 });
 
+// user can see their own favorites with poem data for collection rendering
+favoriteRouter.get("/mine/hydrated", verifyToken, async (req, res, next) => {
+  try {
+    const favorites = await prisma.favorite.findMany({
+      where: { userID: req.user.id },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+    });
+
+    const entries = await Promise.all(
+      favorites.map(async (favorite) => {
+        if (favorite.poemType !== "haiku" && favorite.poemType !== "limerick") {
+          return null;
+        }
+        const likeRelation =
+          favorite.poemType === "haiku" ? "haikuLikes" : "limerickLikes";
+        const poemClient =
+          favorite.poemType === "haiku" ? prisma.haiku : prisma.limerick;
+
+        const poem = await poemClient.findUnique({
+          where: { id: favorite.poemID },
+          include: {
+            _count: { select: { comments: true, [likeRelation]: true } },
+            [likeRelation]: { where: { userID: req.user.id } },
+          },
+        });
+
+        if (!poem || (!poem.published && poem.authorID !== req.user.id)) {
+          return null;
+        }
+
+        return {
+          favorite: {
+            id: favorite.id,
+            privacy: favorite.privacy,
+            createdAt: favorite.createdAt,
+          },
+          poem: {
+            ...poem,
+            poemType: favorite.poemType,
+            isFavorited: true,
+          },
+        };
+      }),
+    );
+
+    res.status(200).json(entries.filter(Boolean));
+  } catch (error) {
+    next(error);
+  }
+});
+
 // user can see someone elses public favorites
 favoriteRouter.get("/:userID", verifyToken, async (req, res, next) => {
   try {
@@ -84,6 +135,9 @@ favoriteRouter.patch(
   verifyToken,
   async (req, res, next) => {
     try {
+      if (req.body?.privacy !== "private" && req.body?.privacy !== "public") {
+        return res.status(400).json({ error: "Invalid Privacy" });
+      }
       const updatedFavorite = await prisma.favorite.update({
         where: {
           userID_poemID_poemType: {

@@ -4,7 +4,7 @@ import "./PoemCard.css";
 import { useAuth } from "../../context/useAuth";
 import CommentCard from "../CommentCard/CommentCard";
 
-function PoemCard({ poem, poemType }) {
+function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
   const { token } = useAuth();
   const [liked, setLiked] = useState(
     poem.haikuLikes?.length > 0 || poem.limerickLikes?.length > 0,
@@ -25,6 +25,8 @@ function PoemCard({ poem, poemType }) {
   const [error, setError] = useState(null);
   const [commentStatus, setCommentStatus] = useState("");
   const commentInputRef = useRef(null);
+  const likeButtonRef = useRef(null);
+  const likeRequestStartedRef = useRef(false);
   const commentsRequestRef = useRef({ id: 0, controller: null });
   const mountedRef = useRef(true);
   const commentsID = `comments-${poemType}-${poem.id}`;
@@ -37,6 +39,13 @@ function PoemCard({ poem, poemType }) {
       commentsRequestRef.current.controller?.abort();
     };
   }, []);
+
+  useEffect(() => {
+    if (!likePending && likeRequestStartedRef.current) {
+      likeRequestStartedRef.current = false;
+      likeButtonRef.current?.focus();
+    }
+  }, [likePending]);
 
   const request = async (url, options = {}) => {
     const response = await fetch(url, {
@@ -54,6 +63,7 @@ function PoemCard({ poem, poemType }) {
 
   const handleLike = async () => {
     if (likePending) return;
+    likeRequestStartedRef.current = true;
     setLikePending(true);
     setError(null);
     try {
@@ -75,6 +85,7 @@ function PoemCard({ poem, poemType }) {
 
   const handleFavorite = async () => {
     if (favoritePending) return;
+    const nextFavorited = !favorited;
     setFavoritePending(true);
     setError(null);
     try {
@@ -88,7 +99,8 @@ function PoemCard({ poem, poemType }) {
         },
       );
       if (!mountedRef.current) return;
-      setFavorited((current) => !current);
+      setFavorited(nextFavorited);
+      onFavoriteChange?.(nextFavorited);
     } catch (requestError) {
       if (!mountedRef.current) return;
       if (import.meta.env.DEV) console.error(requestError);
@@ -196,6 +208,7 @@ function PoemCard({ poem, poemType }) {
           </div>
           <div className="poetry-card-top-right">
             <button
+              ref={favoriteButtonRef}
               type="button"
               className="favorite-button"
               aria-pressed={favorited}
@@ -214,6 +227,7 @@ function PoemCard({ poem, poemType }) {
 
         <div className="poetry-card-buttons">
           <button
+            ref={likeButtonRef}
             type="button"
             aria-pressed={liked}
             aria-label={liked ? `Unlike poem: ${poem.title}` : `Like poem: ${poem.title}`}

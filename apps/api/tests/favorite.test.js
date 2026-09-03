@@ -113,6 +113,146 @@ describe("GET /favorite/mine", () => {
   });
 });
 
+describe("GET /favorite/mine/hydrated", () => {
+  test("returns private and public haiku and limerick entries newest first", async () => {
+    await request(app)
+      .post(`/limerick/${limerickID}/like`)
+      .set("Authorization", `Bearer ${authorToken}`);
+    const older = await prisma.favorite.create({
+      data: {
+        userID: authorID,
+        poemID: haikuID,
+        poemType: "haiku",
+        privacy: "private",
+        createdAt: new Date("2026-01-01T00:00:00.000Z"),
+      },
+    });
+    const newer = await prisma.favorite.create({
+      data: {
+        userID: authorID,
+        poemID: limerickID,
+        poemType: "limerick",
+        privacy: "public",
+        createdAt: new Date("2026-01-02T00:00:00.000Z"),
+      },
+    });
+
+    const res = await request(app)
+      .get("/favorite/mine/hydrated")
+      .set("Authorization", `Bearer ${authorToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+    expect(res.body.map((entry) => entry.favorite.id)).toEqual([
+      newer.id,
+      older.id,
+    ]);
+    expect(res.body.map((entry) => entry.favorite.privacy)).toEqual([
+      "public",
+      "private",
+    ]);
+    expect(res.body.map((entry) => entry.poem.poemType)).toEqual([
+      "limerick",
+      "haiku",
+    ]);
+    expect(res.body.every((entry) => entry.poem.isFavorited)).toBe(true);
+    expect(res.body[0].poem).toMatchObject({
+      id: limerickID,
+      title: testLimerick.title,
+      lineOne: testLimerick.lineOne,
+      lineTwo: testLimerick.lineTwo,
+      lineThree: testLimerick.lineThree,
+      lineFour: testLimerick.lineFour,
+      lineFive: testLimerick.lineFive,
+      screenname: TEST_USER.screenname,
+      poemType: "limerick",
+      isFavorited: true,
+      _count: { comments: 0, limerickLikes: 1 },
+      limerickLikes: [expect.objectContaining({ userID: authorID })],
+    });
+    expect(res.body[0].poem.createdAt).toEqual(expect.any(String));
+    expect(res.body[0].poem.author).toBeUndefined();
+    expect(res.body[1].poem).toMatchObject({
+      id: haikuID,
+      title: testHaiku.title,
+      lineOne: testHaiku.lineOne,
+      lineTwo: testHaiku.lineTwo,
+      lineThree: testHaiku.lineThree,
+      screenname: TEST_USER.screenname,
+      poemType: "haiku",
+      isFavorited: true,
+      _count: { comments: 0, haikuLikes: 0 },
+      haikuLikes: [],
+    });
+    expect(res.body[1].poem.createdAt).toEqual(expect.any(String));
+    expect(res.body[1].poem.author).toBeUndefined();
+  });
+
+  test("omits a favorite whose poem target no longer exists", async () => {
+    await prisma.favorite.create({
+      data: {
+        userID: authorID,
+        poemID: 999999,
+        poemType: "haiku",
+        privacy: "private",
+      },
+    });
+
+    const res = await request(app)
+      .get("/favorite/mine/hydrated")
+      .set("Authorization", `Bearer ${authorToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual([]);
+  });
+
+  test("omits another user's unpublished poem but includes the owner's unpublished poem", async () => {
+    const formerlyPublished = await request(app)
+      .post("/haiku")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ ...testHaiku, title: "Later unpublished" });
+    await request(app)
+      .post(`/favorite/haiku/${formerlyPublished.body.id}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    await prisma.haiku.update({
+      where: { id: formerlyPublished.body.id },
+      data: { published: false },
+    });
+
+    const ownUnpublished = await request(app)
+      .post("/limerick")
+      .set("Authorization", `Bearer ${otherToken}`)
+      .send({
+        ...testLimerick,
+        title: "Own unpublished favorite",
+        published: false,
+      });
+    await request(app)
+      .post(`/favorite/limerick/${ownUnpublished.body.id}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+
+    const res = await request(app)
+      .get("/favorite/mine/hydrated")
+      .set("Authorization", `Bearer ${otherToken}`);
+
+    expect(res.status).toBe(200);
+    expect(
+      res.body.some(
+        (entry) =>
+          entry.poem.poemType === "haiku" &&
+          entry.poem.id === formerlyPublished.body.id,
+      ),
+    ).toBe(false);
+    expect(
+      res.body.some(
+        (entry) =>
+          entry.poem.poemType === "limerick" &&
+          entry.poem.id === ownUnpublished.body.id,
+      ),
+    ).toBe(true);
+  });
+});
+
 // ─── GET /favorite/:userID ────────────────────────────────────────────────────
 
 describe("GET /favorite/:userID", () => {
@@ -272,6 +412,20 @@ describe("PATCH /favorite/:poemType/:poemID", () => {
       .send({ privacy: "public" });
 
     expect(res.status).toBe(404);
+  });
+
+  test("400 - rejects invalid privacy", async () => {
+    await request(app)
+      .post(`/favorite/haiku/${haikuID}`)
+      .set("Authorization", `Bearer ${authorToken}`);
+
+    const res = await request(app)
+      .patch(`/favorite/haiku/${haikuID}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ privacy: "friends" });
+
+    expect(res.status).toBe(400);
+    expect(res.body).toEqual({ error: "Invalid Privacy" });
   });
 
   test("401 - no token", async () => {
