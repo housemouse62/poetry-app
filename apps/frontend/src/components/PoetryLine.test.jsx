@@ -531,4 +531,104 @@ describe("PoetryLine", () => {
       expect(mockCallback).toHaveBeenCalledWith(2);
     });
   });
+
+  it("Escape from Confirm Flag closes only that dialog and restores the selected word", async () => {
+    const user = userEvent.setup();
+    render(
+      <PoetryLine
+        targetSyllables={5}
+        value="cherry"
+        onChange={() => {}}
+        showTarget={true}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "Flag a word in this line" }),
+    );
+    const selectedWord = screen.getByRole("button", { name: /cherry/ });
+    await user.click(selectedWord);
+    await user.keyboard("{Escape}");
+
+    expect(
+      screen.queryByRole("dialog", { name: "Confirm Flag" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Flag Word" })).toBeVisible();
+    expect(selectedWord).toHaveFocus();
+  });
+
+  it("Escape from the thank-you dialog returns focus to No without closing Confirm Flag", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+    render(
+      <PoetryLine
+        targetSyllables={5}
+        value="cherry"
+        onChange={() => {}}
+        showTarget={true}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "Flag a word in this line" }),
+    );
+    await user.click(screen.getByRole("button", { name: /cherry/ }));
+    const noButton = screen.getByRole("button", { name: "No" });
+    await user.click(noButton);
+    expect(
+      (await screen.findByText("Word Flagged. Thank you!")).closest(
+        '[role="dialog"]',
+      ),
+    ).toBeVisible();
+
+    await user.keyboard("{Escape}");
+
+    expect(
+      screen.queryByText("Word Flagged. Thank you!"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Confirm Flag" }).closest(
+        '[role="dialog"]',
+      ),
+    ).toBeVisible();
+    expect(noButton).toHaveFocus();
+  });
+
+  it("Thumbs Up closes the nested dialogs and restores the selected word", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: true,
+      json: async () => ({}),
+    });
+    render(
+      <PoetryLine
+        targetSyllables={5}
+        value="cherry"
+        onChange={() => {}}
+        showTarget={true}
+      />,
+    );
+
+    await user.click(
+      screen.getByRole("button", { name: "Flag a word in this line" }),
+    );
+    const selectedWord = screen.getByRole("button", { name: /cherry/ });
+    await user.click(selectedWord);
+    await user.click(screen.getByRole("button", { name: "No" }));
+    await user.click(
+      await screen.findByRole("button", { name: "Thumbs Up!" }),
+    );
+
+    expect(
+      screen.queryByText("Word Flagged. Thank you!"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("dialog", { name: "Confirm Flag" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Flag Word" })).toBeVisible();
+    expect(selectedWord).toHaveFocus();
+  });
 });

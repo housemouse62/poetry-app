@@ -5,6 +5,7 @@ export function useFocusTrap(ref, isOpen, onClose) {
 
   useEffect(() => {
     if (!isOpen) return;
+    const returnFocusTarget = document.activeElement;
     const dialog = ref.current;
     const focusable = dialog
       ? Array.from(
@@ -15,6 +16,8 @@ export function useFocusTrap(ref, isOpen, onClose) {
       : [];
     if (focusable.length) focusable[0].focus();
     const handleKeyDown = (e) => {
+      if (!dialog?.contains(document.activeElement)) return;
+
       if (e.key === "Escape") {
         close();
         return;
@@ -36,6 +39,15 @@ export function useFocusTrap(ref, isOpen, onClose) {
       }
     };
     document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      if (
+        returnFocusTarget?.isConnected &&
+        typeof returnFocusTarget.focus === "function" &&
+        !returnFocusTarget.hasAttribute?.("disabled")
+      ) {
+        returnFocusTarget.focus();
+      }
+    };
   }, [isOpen, ref]);
 }
