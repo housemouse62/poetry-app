@@ -23,6 +23,7 @@ function PoemCard({ poem, poemType }) {
   const [likePending, setLikePending] = useState(false);
   const [favoritePending, setFavoritePending] = useState(false);
   const [error, setError] = useState(null);
+  const [commentStatus, setCommentStatus] = useState("");
   const commentInputRef = useRef(null);
   const commentsRequestRef = useRef({ id: 0, controller: null });
   const mountedRef = useRef(true);
@@ -279,8 +280,26 @@ function PoemCard({ poem, poemType }) {
                 comment={comment}
                 poemType={poemType}
                 key={comment.id}
+                commentInputRef={commentInputRef}
+                onCommentUpdated={(updatedComment) =>
+                  setComments((current) =>
+                    current.map((item) =>
+                      item.id === updatedComment.id ? updatedComment : item,
+                    ),
+                  )
+                }
+                onCommentDeleted={(commentID) => {
+                  setComments((current) =>
+                    current.filter((item) => item.id !== commentID),
+                  );
+                  setCommentCount((current) => Math.max(0, current - 1));
+                  setCommentStatus("Comment deleted.");
+                }}
               />
             ))}
+          <p className="sr-only" role="status">
+            {commentStatus}
+          </p>
         </section>
       )}
 

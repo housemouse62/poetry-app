@@ -71,6 +71,10 @@ haikuReplyRouter.get("/:commentID", verifyToken, async (req, res, next) => {
       include: {
         _count: { select: { replyLikes: true } },
         author: { select: { screenname: true } },
+        replyLikes: {
+          where: { userID: req.user.id },
+          select: { id: true },
+        },
       },
     });
     res.status(200).json(commentReplies);

@@ -156,6 +156,24 @@ describe("POST /haikuComment/:poemID", () => {
 // ─── GET /haikuComment/:poemID ────────────────────────────────────────────────
 
 describe("GET /haikuComment/:poemID", () => {
+  test("includes only the current user's comment like for hydration", async () => {
+    const comment = await createComment(authorToken, haikuID, "Liked by reader");
+    await request(app)
+      .post(`/haikuComment/${comment.id}/like`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    await request(app)
+      .post(`/haikuComment/${comment.id}/like`)
+      .set("Authorization", `Bearer ${authorToken}`);
+
+    const res = await request(app)
+      .get(`/haikuComment/${haikuID}`)
+      .set("Authorization", `Bearer ${otherToken}`);
+    const hydrated = res.body.find((item) => item.id === comment.id);
+
+    expect(hydrated.commentLikes).toHaveLength(1);
+    expect(hydrated._count.commentLikes).toBe(2);
+  });
+
   test("owner can read comments on their own unpublished haiku", async () => {
     const poem = await request(app)
       .post("/haiku")

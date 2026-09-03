@@ -67,6 +67,10 @@ haikuCommentRouter.get("/:poemID", verifyToken, async (req, res, next) => {
       include: {
         _count: { select: { reply: true, commentLikes: true } },
         author: { select: { screenname: true } },
+        commentLikes: {
+          where: { userID: req.user.id },
+          select: { id: true },
+        },
       },
     });
     res.status(200).json(poemComments);
