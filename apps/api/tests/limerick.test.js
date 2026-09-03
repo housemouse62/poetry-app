@@ -71,6 +71,40 @@ afterAll(async () => {
   await cleanup();
 });
 
+describe("limerick draft lifecycle", () => {
+  const draft = {
+    title: "",
+    lineOne: "A beginning",
+    lineTwo: "",
+    lineThree: "",
+    lineFour: "",
+    lineFive: "",
+    lineOneSyllables: 0,
+    lineTwoSyllables: 0,
+    lineThreeSyllables: 0,
+    lineFourSyllables: 0,
+    lineFiveSyllables: 0,
+    published: false,
+  };
+
+  test("creates, protects, updates, lists, and publishes an owned draft", async () => {
+    const created = await request(app).post("/limerick").set("Authorization", `Bearer ${authorToken}`).send(draft);
+    expect(created.status).toBe(201);
+    expect((await request(app).post("/limerick").set("Authorization", `Bearer ${authorToken}`).send({ ...draft, lineOne: " " })).status).toBe(400);
+    const mine = await request(app).get("/limerick/mine").set("Authorization", `Bearer ${authorToken}`);
+    expect(mine.body.some((poem) => poem.id === created.body.id)).toBe(true);
+    const publicList = await request(app).get("/limerick").set("Authorization", `Bearer ${authorToken}`);
+    expect(publicList.body.some((poem) => poem.id === created.body.id)).toBe(false);
+    const userList = await request(app).get(`/limerick/user/${authorID}`).set("Authorization", `Bearer ${authorToken}`);
+    expect(userList.body.some((poem) => poem.id === created.body.id)).toBe(false);
+    expect((await request(app).get(`/limerick/${created.body.id}`).set("Authorization", `Bearer ${otherToken}`)).status).toBe(403);
+    expect((await request(app).patch(`/limerick/${created.body.id}`).set("Authorization", `Bearer ${authorToken}`).send({ lineTwo: "Still becoming" })).status).toBe(200);
+    expect((await request(app).patch(`/limerick/${created.body.id}`).set("Authorization", `Bearer ${otherToken}`).send({ lineTwo: "No" })).status).toBe(403);
+    expect((await request(app).patch(`/limerick/${created.body.id}`).set("Authorization", `Bearer ${authorToken}`).send({ published: true })).status).toBe(400);
+    expect((await request(app).patch(`/limerick/${created.body.id}`).set("Authorization", `Bearer ${authorToken}`).send(testLimerick)).status).toBe(200);
+  });
+});
+
 // ─── POST /limerick ───────────────────────────────────────────────────────────
 
 describe("POST /limerick", () => {

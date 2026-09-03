@@ -63,6 +63,74 @@ afterAll(async () => {
   await cleanup();
 });
 
+describe("haiku draft lifecycle", () => {
+  const draft = {
+    title: "",
+    lineOne: "A beginning",
+    lineTwo: "",
+    lineThree: "",
+    lineOneSyllables: 0,
+    lineTwoSyllables: 0,
+    lineThreeSyllables: 0,
+    published: false,
+  };
+
+  test("creates, protects, updates, lists, and publishes an owned draft", async () => {
+    const created = await request(app).post("/haiku").set("Authorization", `Bearer ${authorToken}`).send(draft);
+    expect(created.status).toBe(201);
+
+    const blank = await request(app).post("/haiku").set("Authorization", `Bearer ${authorToken}`).send({ ...draft, lineOne: "   " });
+    expect(blank.status).toBe(400);
+
+    const mine = await request(app).get("/haiku/mine").set("Authorization", `Bearer ${authorToken}`);
+    expect(mine.body.some((poem) => poem.id === created.body.id)).toBe(true);
+    const publicList = await request(app).get("/haiku").set("Authorization", `Bearer ${authorToken}`);
+    expect(publicList.body.some((poem) => poem.id === created.body.id)).toBe(false);
+    const userList = await request(app).get(`/haiku/user/${authorID}`).set("Authorization", `Bearer ${authorToken}`);
+    expect(userList.body.some((poem) => poem.id === created.body.id)).toBe(false);
+    expect((await request(app).get(`/haiku/${created.body.id}`).set("Authorization", `Bearer ${otherToken}`)).status).toBe(403);
+
+    expect((await request(app).patch(`/haiku/${created.body.id}`).set("Authorization", `Bearer ${authorToken}`).send({ lineTwo: "Still becoming" })).status).toBe(200);
+    expect((await request(app).patch(`/haiku/${created.body.id}`).set("Authorization", `Bearer ${otherToken}`).send({ lineTwo: "No" })).status).toBe(403);
+    expect((await request(app).patch(`/haiku/${created.body.id}`).set("Authorization", `Bearer ${authorToken}`).send({ published: true })).status).toBe(400);
+    expect((await request(app).patch(`/haiku/${created.body.id}`).set("Authorization", `Bearer ${authorToken}`).send(testHaiku)).status).toBe(200);
+  });
+
+  test("accepts integer strings consistently and rejects non-integer formats", async () => {
+    const created = await request(app)
+      .post("/haiku")
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({
+        ...testHaiku,
+        lineOneSyllables: "05",
+        lineTwoSyllables: "+7",
+        lineThreeSyllables: "5",
+      });
+
+    expect(created.status).toBe(201);
+    expect(created.body).toMatchObject({
+      lineOneSyllables: 5,
+      lineTwoSyllables: 7,
+      lineThreeSyllables: 5,
+    });
+
+    const updated = await request(app)
+      .patch(`/haiku/${created.body.id}`)
+      .set("Authorization", `Bearer ${authorToken}`)
+      .send({ lineOneSyllables: "6" });
+    expect(updated.status).toBe(200);
+    expect(updated.body.lineOneSyllables).toBe(6);
+
+    for (const malformed of ["5.0", "5e0", " 5 ", true]) {
+      const rejected = await request(app)
+        .patch(`/haiku/${created.body.id}`)
+        .set("Authorization", `Bearer ${authorToken}`)
+        .send({ lineOneSyllables: malformed });
+      expect(rejected.status).toBe(400);
+    }
+  });
+});
+
 // ─── POST /haiku ──────────────────────────────────────────────────────────────
 
 describe("POST /haiku", () => {

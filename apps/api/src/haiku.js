@@ -2,7 +2,10 @@ import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { createLimiter } from "../middleware/limiters.js";
-import { body, validationResult } from "express-validator";
+import {
+  poemFieldValidationError,
+  sendPoemValidationError,
+} from "./utils/poemValidation.js";
 
 const haikuRouter = Router();
 
@@ -11,25 +14,13 @@ haikuRouter.post(
   "/",
   verifyToken,
   createLimiter,
-  body("title")
-    .notEmpty()
-    .withMessage("Title cannot be empty")
-    .isLength({ max: 100 }),
-  body(["lineOne", "lineTwo", "lineThree"])
-    .notEmpty()
-    .withMessage("Line cannot be empty")
-    .isLength({ max: 100 })
-    .withMessage("Line cannot exceed 100 characters"),
-  body(["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables"])
-    .notEmpty()
-    .withMessage("Syllables cannot be empty")
-    .isInt({ min: 0, max: 9 })
-    .withMessage("Syllable count must be a number between 0 and 9"),
   async (req, res, next) => {
-    const formErrors = validationResult(req);
-    if (!formErrors.isEmpty()) {
-      return res.status(400).json(formErrors);
-    }
+    const validationError = poemFieldValidationError(
+      { ...req.body, published: req.body.published === true },
+      ["lineOne", "lineTwo", "lineThree"],
+      ["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables"],
+    );
+    if (validationError) return sendPoemValidationError(res, validationError);
     try {
       const newHaiku = await prisma.haiku.create({
         data: {
@@ -40,7 +31,7 @@ haikuRouter.post(
           lineOneSyllables: parseInt(req.body.lineOneSyllables),
           lineTwoSyllables: parseInt(req.body.lineTwoSyllables),
           lineThreeSyllables: parseInt(req.body.lineThreeSyllables),
-          published: req.body.published,
+          published: req.body.published === true,
           authorID: req.user.id,
           screenname: req.user.screenname,
         },
@@ -141,28 +132,7 @@ haikuRouter.patch(
   "/:id",
   verifyToken,
   createLimiter,
-  body("title")
-    .optional()
-    .notEmpty()
-    .withMessage("Title cannot be empty")
-    .isLength({ max: 100 }),
-  body(["lineOne", "lineTwo", "lineThree"])
-    .optional()
-    .notEmpty()
-    .withMessage("Line cannot be empty")
-    .isLength({ max: 100 })
-    .withMessage("Line cannot exceed 100 characters"),
-  body(["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables"])
-    .optional()
-    .notEmpty()
-    .withMessage("Syllables cannot be empty")
-    .isInt({ min: 0, max: 9 })
-    .withMessage("Syllable count must be a number between 0 and 9"),
   async (req, res, next) => {
-    const formErrors = validationResult(req);
-    if (!formErrors.isEmpty()) {
-      return res.status(400).json(formErrors);
-    }
     try {
       const haikuID = parseInt(req.params.id);
       if (isNaN(haikuID))
@@ -178,6 +148,13 @@ haikuRouter.patch(
       if (findHaiku.authorID !== req.user.id) {
         return res.status(403).json({ error: "Unauthorized User" });
       }
+
+      const validationError = poemFieldValidationError(
+        { ...findHaiku, ...req.body },
+        ["lineOne", "lineTwo", "lineThree"],
+        ["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables"],
+      );
+      if (validationError) return sendPoemValidationError(res, validationError);
 
       const updateData = {};
       if (req.body.title !== undefined) updateData.title = req.body.title;

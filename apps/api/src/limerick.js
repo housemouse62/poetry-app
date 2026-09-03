@@ -2,7 +2,10 @@ import { Router } from "express";
 import { prisma } from "../db/prismaClient.js";
 import verifyToken from "../middleware/verifyToken.js";
 import { createLimiter } from "../middleware/limiters.js";
-import { body, validationResult } from "express-validator";
+import {
+  poemFieldValidationError,
+  sendPoemValidationError,
+} from "./utils/poemValidation.js";
 
 const limerickRouter = Router();
 
@@ -11,31 +14,13 @@ limerickRouter.post(
   "/",
   verifyToken,
   createLimiter,
-  body("title")
-    .notEmpty()
-    .withMessage("Title cannot be empty")
-    .isLength({ max: 100 }),
-  body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
-    .notEmpty()
-    .withMessage("Line cannot be empty")
-    .isLength({ max: 100 })
-    .withMessage("Line cannot exceed 100 characters"),
-  body([
-    "lineOneSyllables",
-    "lineTwoSyllables",
-    "lineThreeSyllables",
-    "lineFourSyllables",
-    "lineFiveSyllables",
-  ])
-    .notEmpty()
-    .withMessage("Syllables cannot be empty")
-    .isInt({ min: 0, max: 9 })
-    .withMessage("Syllable count must be a number between 0 and 9"),
   async (req, res, next) => {
-    const formErrors = validationResult(req);
-    if (!formErrors.isEmpty()) {
-      return res.status(400).json(formErrors);
-    }
+    const validationError = poemFieldValidationError(
+      { ...req.body, published: req.body.published === true },
+      ["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"],
+      ["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables", "lineFourSyllables", "lineFiveSyllables"],
+    );
+    if (validationError) return sendPoemValidationError(res, validationError);
     try {
       const newlimerick = await prisma.limerick.create({
         data: {
@@ -54,7 +39,7 @@ limerickRouter.post(
           rhymeB: req.body.rhymeB,
           rhymeAVerified: req.body.rhymeAVerified,
           rhymeBVerified: req.body.rhymeBVerified,
-          published: req.body.published,
+          published: req.body.published === true,
           authorID: req.user.id,
           screenname: req.user.screenname,
         },
@@ -155,34 +140,7 @@ limerickRouter.patch(
   "/:id",
   verifyToken,
   createLimiter,
-  body("title")
-    .optional()
-    .notEmpty()
-    .withMessage("Title cannot be empty")
-    .isLength({ max: 100 }),
-  body(["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"])
-    .optional()
-    .notEmpty()
-    .withMessage("Line cannot be empty")
-    .isLength({ max: 100 })
-    .withMessage("Line cannot exceed 100 characters"),
-  body([
-    "lineOneSyllables",
-    "lineTwoSyllables",
-    "lineThreeSyllables",
-    "lineFourSyllables",
-    "lineFiveSyllables",
-  ])
-    .optional()
-    .notEmpty()
-    .withMessage("Syllables cannot be empty")
-    .isInt({ min: 0, max: 9 })
-    .withMessage("Syllable count must be a number between 0 and 9"),
   async (req, res, next) => {
-    const formErrors = validationResult(req);
-    if (!formErrors.isEmpty()) {
-      return res.status(400).json(formErrors);
-    }
     try {
       const limerickID = parseInt(req.params.id);
       if (isNaN(limerickID))
@@ -198,6 +156,13 @@ limerickRouter.patch(
       if (findlimerick.authorID !== req.user.id) {
         return res.status(403).json({ error: "Unauthorized User" });
       }
+
+      const validationError = poemFieldValidationError(
+        { ...findlimerick, ...req.body },
+        ["lineOne", "lineTwo", "lineThree", "lineFour", "lineFive"],
+        ["lineOneSyllables", "lineTwoSyllables", "lineThreeSyllables", "lineFourSyllables", "lineFiveSyllables"],
+      );
+      if (validationError) return sendPoemValidationError(res, validationError);
 
       const updateData = {};
       if (req.body.title !== undefined) updateData.title = req.body.title;

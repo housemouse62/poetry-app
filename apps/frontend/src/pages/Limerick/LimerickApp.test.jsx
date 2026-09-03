@@ -70,6 +70,13 @@ const mockApi = async (url, options = {}) => {
   if (url.endsWith("/limerick/mine") && method === "GET") {
     return { ok: true, status: 200, json: async () => [...mockLimericks] };
   }
+  if (/\/limerick\/\d+$/.test(url) && method === "PATCH") {
+    const id = Number(url.split("/").pop());
+    const update = JSON.parse(options.body);
+    const index = mockLimericks.findIndex((limerick) => limerick.id === id);
+    mockLimericks[index] = { ...mockLimericks[index], ...update };
+    return { ok: true, status: 200, json: async () => mockLimericks[index] };
+  }
   if (/\/limerick\/\d+$/.test(url) && method === "DELETE") {
     const id = Number(url.split("/").pop());
     mockLimericks = mockLimericks.filter((limerick) => limerick.id !== id);
@@ -92,7 +99,7 @@ describe("App Component", () => {
 
     fillCompleteLimerick();
 
-    const buttonNode = screen.getByRole("button", { name: /^save$/i });
+    const buttonNode = screen.getByRole("button", { name: /save draft/i });
     expect(buttonNode).toBeVisible();
   });
 
@@ -116,7 +123,7 @@ describe("App Component", () => {
 
     expect(mockLimericks).toHaveLength(0);
 
-    const buttonNode = screen.getByRole("button", { name: /^save$/i });
+    const buttonNode = screen.getByRole("button", { name: /save draft/i });
     await user.click(buttonNode);
 
     await waitFor(() => expect(mockLimericks).toHaveLength(1));
@@ -137,22 +144,22 @@ describe("App Component", () => {
 
     fillCompleteLimerick();
 
-    const buttonNode = screen.getByRole("button", { name: /^save$/i });
+    const buttonNode = screen.getByRole("button", { name: /save draft/i });
     await user.click(buttonNode);
 
     const saved = screen.getByText(/saved!/i);
     expect(saved).toBeVisible();
   });
 
-  it("clears the inputs fields after saving", async () => {
+  it("keeps the inputs after saving a draft", async () => {
     const user = userEvent.setup();
     renderWithRouter(<LimerickApp />);
     const [line1] = fillCompleteLimerick();
 
-    const buttonNode = screen.getByRole("button", { name: /^save$/i });
+    const buttonNode = screen.getByRole("button", { name: /save draft/i });
     await user.click(buttonNode);
 
-    expect(line1).toHaveValue("");
+    expect(line1).toHaveValue("There was an Old Man with a beard,");
   });
 
   it("clear button appears when the user types into one of the fields", async () => {
@@ -219,7 +226,7 @@ describe("App Component", () => {
     renderWithRouter(<LimerickApp />);
     fillCompleteLimerick();
 
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     const viewButtonNode = screen.getByRole("button", {
@@ -237,7 +244,7 @@ describe("App Component", () => {
 
     fillCompleteLimerick();
 
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     const viewButtonNode = screen.getByRole("button", {
@@ -256,7 +263,7 @@ describe("App Component", () => {
     fillCompleteLimerick();
 
     // Save Limerick
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     // View all saved limericks
@@ -288,7 +295,7 @@ describe("App Component", () => {
     fillCompleteLimerick();
 
     // Save Limerick
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     // View all saved limericks
@@ -313,7 +320,7 @@ describe("App Component", () => {
     fillCompleteLimerick();
 
     // Save Limerick
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     // View all saved limericks
@@ -340,7 +347,7 @@ describe("App Component", () => {
     fillCompleteLimerick();
 
     // Save Limerick
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     // View all saved limericks
@@ -368,7 +375,7 @@ describe("App Component", () => {
     fillCompleteLimerick();
 
     // Save Limerick
-    const saveButtonNode = screen.getByRole("button", { name: /^save$/i });
+    const saveButtonNode = screen.getByRole("button", { name: /^publish$/i });
     await user.click(saveButtonNode);
 
     // View all saved limericks
@@ -395,5 +402,121 @@ describe("App Component", () => {
 
     const example = screen.queryByText(/There was an Old Man in a tree/i);
     expect(example).not.toBeInTheDocument();
+  });
+  it("creates and updates one incomplete draft while retaining content and focus", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(<LimerickApp />);
+    const line = screen.getByPlaceholderText(/line 1/i);
+    const save = screen.getByRole("button", { name: /save draft/i });
+    expect(save).toBeDisabled();
+    await user.type(line, "A beginning");
+    await user.click(save);
+    await screen.findByText("Draft saved.");
+    expect(line).toHaveValue("A beginning");
+    expect(save).toHaveFocus();
+    await user.type(line, " grows");
+    await user.click(save);
+    await waitFor(() => expect(globalThis.fetch.mock.calls.some(([url, options]) => /\/limerick\/1$/.test(url) && options.method === "PATCH")).toBe(true));
+  });
+
+  it("restores every line of an untitled limerick draft", async () => {
+    const user = userEvent.setup();
+    mockLimericks.push({ id: 8, title: "", lineOne: "One", lineTwo: "Two", lineThree: "Three", lineFour: "Four", lineFive: "Five", published: false });
+    renderWithRouter(<LimerickApp />);
+    await user.click(screen.getByRole("button", { name: /view saved limericks/i }));
+    await user.click(screen.getByRole("button", { name: /resume draft/i }));
+    await waitFor(() => expect(screen.getByLabelText("Limerick title")).toHaveFocus());
+    ["One", "Two", "Three", "Four", "Five"].forEach((value, index) => {
+      expect(screen.getByPlaceholderText(new RegExp(`line ${index + 1}`, "i"))).toHaveValue(value);
+    });
+  });
+
+  it("publishes a saved draft by PATCHing the same record and resets the editor", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(<LimerickApp />);
+    await user.type(screen.getByLabelText("Limerick title"), "Ready poem");
+    const lines = fillCompleteLimerick();
+    await user.click(screen.getByRole("button", { name: /save draft/i }));
+    await screen.findByText("Draft saved.");
+    await user.click(screen.getByRole("button", { name: /^publish$/i }));
+    await screen.findByText(/limerick published/i);
+    expect(globalThis.fetch.mock.calls.some(([url, options]) => /\/limerick\/1$/.test(url) && options.method === "PATCH" && JSON.parse(options.body).published === true)).toBe(true);
+    lines.forEach((line) => expect(line).toHaveValue(""));
+  });
+
+  it("edits a published limerick without offering or performing an unpublish", async () => {
+    const user = userEvent.setup();
+    mockLimericks.push({
+      id: 14,
+      title: "Published limerick",
+      lineOne: "There was an Old Man with a beard,",
+      lineTwo: 'Who said, "It is just as I feared!',
+      lineThree: "Two Owls and a Hen,",
+      lineFour: "Four Larks and a Wren,",
+      lineFive: 'Have all built their nests in my beard!"',
+      published: true,
+      createdAt: new Date().toISOString(),
+      limerickLikes: [],
+      isFavorited: false,
+      _count: { comments: 0, limerickLikes: 0 },
+    });
+    renderWithRouter(<LimerickApp />);
+    await user.click(screen.getByRole("button", { name: /view saved limericks/i }));
+    await user.click(screen.getByRole("button", { name: /edit limerick/i }));
+    expect(screen.queryByRole("button", { name: /save draft/i })).not.toBeInTheDocument();
+    await user.clear(screen.getByLabelText("Limerick title"));
+    await user.type(screen.getByLabelText("Limerick title"), "Revised published limerick");
+    await user.click(screen.getByRole("button", { name: /update published poem/i }));
+    await waitFor(() => {
+      const call = globalThis.fetch.mock.calls.find(([url, options]) =>
+        /\/limerick\/14$/.test(url) && options.method === "PATCH",
+      );
+      expect(JSON.parse(call[1].body).published).toBe(true);
+    });
+  });
+
+  it("makes title and all five lines read-only while publish is pending", async () => {
+    let finishPublish;
+    globalThis.fetch.mockImplementation(async (url, options = {}) => {
+      if (url.endsWith("/limerick") && options.method === "POST") {
+        return new Promise((resolve) => { finishPublish = resolve; });
+      }
+      return mockApi(url, options);
+    });
+    const user = userEvent.setup();
+    renderWithRouter(<LimerickApp />);
+    const title = screen.getByLabelText("Limerick title");
+    await user.type(title, "Submitted limerick");
+    const lines = fillCompleteLimerick();
+    await user.click(screen.getByRole("button", { name: /^publish$/i }));
+    expect(title).toHaveAttribute("readonly");
+    lines.forEach((line) => expect(line).toHaveAttribute("readonly"));
+    await user.type(lines[4], " lost change");
+    expect(lines[4].value).not.toContain("lost change");
+    finishPublish({ ok: true, status: 201, json: async () => ({ id: 22 }) });
+    await screen.findByText(/limerick published/i);
+  });
+
+  it("keeps Save-draft-pending edits visible and dirty", async () => {
+    let finishSave;
+    globalThis.fetch.mockImplementation(async (url, options = {}) => {
+      if (url.endsWith("/limerick") && options.method === "POST") {
+        const submitted = JSON.parse(options.body);
+        return new Promise((resolve) => { finishSave = () => resolve({ ok: true, status: 201, json: async () => ({ id: 23, ...submitted }) }); });
+      }
+      return mockApi(url, options);
+    });
+    const user = userEvent.setup();
+    renderWithRouter(<LimerickApp />);
+    const title = screen.getByLabelText("Limerick title");
+    await user.type(title, "Version A");
+    await user.click(screen.getByRole("button", { name: /save draft/i }));
+    await user.type(title, " plus B");
+    finishSave();
+    await screen.findByText("Draft saved.");
+    expect(title).toHaveValue("Version A plus B");
+    const dirtyEvent = new Event("beforeunload", { cancelable: true });
+    window.dispatchEvent(dirtyEvent);
+    expect(dirtyEvent.defaultPrevented).toBe(true);
   });
 });
