@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useFocusTrap } from "../../utils/useFocusTrap";
 import html2canvas from "html2canvas";
 import formatDate from "../../utils/formatDate";
@@ -13,6 +13,8 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
   const dialogRef = useRef(null);
   const deleteDialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
+  const favoriteButtonRef = useRef(null);
+  const favoriteRequestStartedRef = useRef(false);
   const [likeHaikuState, setLikeHaikuState] = useState(
     haiku.haikuLikes.length > 0,
   );
@@ -20,12 +22,20 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
     haiku.isFavorited,
   );
   const [error, setError] = useState(null);
+  const [favoritePending, setFavoritePending] = useState(false);
   const { token } = useAuth();
 
   useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
   useFocusTrap(deleteDialogRef, showDeleteModal, () =>
     setShowDeleteModal(false),
   );
+
+  useEffect(() => {
+    if (!favoritePending && favoriteRequestStartedRef.current) {
+      favoriteRequestStartedRef.current = false;
+      favoriteButtonRef.current?.focus();
+    }
+  }, [favoritePending]);
 
   const shareAsImage = async (haikuId) => {
     // Find the specific card element
@@ -81,6 +91,10 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
   };
 
   const handleFavorite = async (id) => {
+    if (favoritePending) return;
+    favoriteRequestStartedRef.current = true;
+    setFavoritePending(true);
+    setError(null);
     const url = `${import.meta.env.VITE_API_URL}/favorite/haiku/${id}`;
     const method = favoriteHaikuState ? "DELETE" : "POST";
     try {
@@ -95,11 +109,13 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
       await response.json();
 
       if (response.ok) {
-        setFavoriteHaikuState(!favoriteHaikuState);
+        setFavoriteHaikuState((current) => !current);
       } else setError("Cannot favorite. Please try again.");
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
       setError("Something went wrong, please try again");
+    } finally {
+      setFavoritePending(false);
     }
   };
   return (
@@ -115,17 +131,17 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
           </div>
           <div className="card-top-right">
             <button
+              ref={favoriteButtonRef}
               className="favorite-button"
+              type="button"
               aria-pressed={favoriteHaikuState}
               aria-label={
                 favoriteHaikuState
                   ? `Remove ${haiku.title} from favorites`
                   : `Add ${haiku.title} to favorites`
               }
-              onClick={() => {
-                setFavoriteHaikuState(!favoriteHaikuState);
-                handleFavorite(haiku.id);
-              }}
+              disabled={favoritePending}
+              onClick={() => handleFavorite(haiku.id)}
             >
               {favoriteHaikuState ? "⭐" : "☆"}
             </button>
@@ -175,6 +191,11 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
             {likeHaikuState ? "❤️" : "♡"}
           </button>
         </div>
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
       </article>
       {showDownloadModal && (
         <div
@@ -214,11 +235,6 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
               >
                 Cancel
               </button>
-              {error && (
-                <p className="error-message" role="alert">
-                  {error}
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -258,11 +274,6 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
               >
                 Cancel
               </button>
-              {error && (
-                <p className="error-message" role="alert">
-                  {error}
-                </p>
-              )}
             </div>
           </div>
         </div>

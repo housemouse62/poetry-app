@@ -135,6 +135,61 @@ describe("PoemCard", () => {
     expect(button).not.toBeDisabled();
   });
 
+  test("keeps focus for successive keyboard like and unlike actions", async () => {
+    const user = userEvent.setup();
+    const pending = deferredResponse();
+    fetch
+      .mockReturnValueOnce(pending.promise)
+      .mockReturnValueOnce(response({ id: 1 }));
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    const likeButton = screen.getByRole("button", {
+      name: "Like poem: Still Water",
+    });
+    likeButton.focus();
+    await user.keyboard("{Enter}");
+    expect(likeButton).toBeDisabled();
+    await user.keyboard("{Enter}");
+    expect(fetch).toHaveBeenCalledTimes(1);
+
+    await act(() => pending.resolve({ id: 1 }));
+    const unlikeButton = screen.getByRole("button", {
+      name: "Unlike poem: Still Water",
+    });
+    expect(unlikeButton).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("1 like")).toBeInTheDocument();
+    expect(unlikeButton).toHaveFocus();
+
+    await user.keyboard("{Enter}");
+    expect(fetch).toHaveBeenCalledTimes(2);
+    const restoredLikeButton = await screen.findByRole("button", {
+      name: "Like poem: Still Water",
+    });
+    expect(restoredLikeButton).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByText("0 likes")).toBeInTheDocument();
+    expect(restoredLikeButton).toHaveFocus();
+  });
+
+  test("restores like-button focus and state after a failed request", async () => {
+    const user = userEvent.setup();
+    fetch.mockReturnValueOnce(response({ error: "failed" }, false));
+    render(<PoemCard poem={poem} poemType="haiku" />);
+
+    const button = screen.getByRole("button", {
+      name: "Like poem: Still Water",
+    });
+    button.focus();
+    await user.keyboard("{Enter}");
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Cannot update this like. Please try again.",
+    );
+    expect(button).toHaveAttribute("aria-pressed", "false");
+    expect(button).not.toBeDisabled();
+    expect(button).toHaveFocus();
+    expect(screen.getByText("0 likes")).toBeInTheDocument();
+  });
+
   test("ignores an older comment load after close and reopen", async () => {
     const user = userEvent.setup();
     const older = deferredResponse();

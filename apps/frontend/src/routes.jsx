@@ -9,6 +9,7 @@ import Poetry from "./pages/Poetry/Poetry.jsx";
 
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
+import Favorites from "./pages/Favorites/Favorites.jsx";
 
 const routes = [
   {
@@ -52,6 +53,11 @@ const routes = [
       {
         path: "/poems",
         element: <Poetry />,
+        errorElement: <ErrorPage />,
+      },
+      {
+        path: "/favorites",
+        element: <Favorites />,
         errorElement: <ErrorPage />,
       },
     ],

@@ -123,4 +123,24 @@ describe("Poetry-App", () => {
     });
     expect(helloWorld).toBeVisible();
   });
+
+  it("navigates from the dashboard to the protected favorites route", async () => {
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => [] });
+    const router = createMemoryRouter(routes, { initialEntries: ["/dashboard"] });
+    const user = userEvent.setup();
+    renderWithRouter(router);
+
+    await user.click(screen.getByRole("link", { name: "Favorites" }));
+    expect(
+      await screen.findByRole("heading", { name: "Your favorites" }),
+    ).toBeVisible();
+  });
+
+  it("redirects signed-out users away from favorites", async () => {
+    const router = createMemoryRouter(routes, { initialEntries: ["/favorites"] });
+    renderWithRouter(router, { auth: null });
+    expect(
+      await screen.findByRole("heading", { name: /user login/i }),
+    ).toBeVisible();
+  });
 });

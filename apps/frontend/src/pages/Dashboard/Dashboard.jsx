@@ -44,6 +44,9 @@ export default function Root() {
             >
               Profile
             </button>
+            <Link to="/favorites" className="profile-button-link">
+              Favorites
+            </Link>
           </nav>
           <div className="root-title-div">
             <h1 className="root-title">make poetry.</h1>

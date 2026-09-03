@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useFocusTrap } from "../../utils/useFocusTrap";
 import html2canvas from "html2canvas";
 import formatDate from "../../utils/formatDate";
@@ -13,6 +13,8 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
   const dialogRef = useRef(null);
   const deleteDialogRef = useRef(null);
   const downloadTriggerRef = useRef(null);
+  const favoriteButtonRef = useRef(null);
+  const favoriteRequestStartedRef = useRef(false);
   const [likeLimerickState, setLikeLimerickState] = useState(
     limerick.limerickLikes.length > 0,
   );
@@ -20,12 +22,20 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
     limerick.isFavorited,
   );
   const [error, setError] = useState(null);
+  const [favoritePending, setFavoritePending] = useState(false);
   const { token } = useAuth();
 
   useFocusTrap(dialogRef, showDownloadModal, () => setShowDownloadModal(false));
   useFocusTrap(deleteDialogRef, showDeleteModal, () =>
     setShowDeleteModal(false),
   );
+
+  useEffect(() => {
+    if (!favoritePending && favoriteRequestStartedRef.current) {
+      favoriteRequestStartedRef.current = false;
+      favoriteButtonRef.current?.focus();
+    }
+  }, [favoritePending]);
 
   const shareAsImage = async (limerickId) => {
     // Find the specific card element
@@ -82,6 +92,10 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
   };
 
   const handleFavorite = async (id) => {
+    if (favoritePending) return;
+    favoriteRequestStartedRef.current = true;
+    setFavoritePending(true);
+    setError(null);
     const url = `${import.meta.env.VITE_API_URL}/favorite/limerick/${id}`;
     const method = favoriteLimerickState ? "DELETE" : "POST";
     try {
@@ -95,11 +109,13 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
       await response.json();
 
       if (response.ok) {
-        setFavoriteLimerickState(!favoriteLimerickState);
+        setFavoriteLimerickState((current) => !current);
       } else setError("Cannot favorite. Please try again.");
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setFavoritePending(false);
     }
   };
   return (
@@ -121,12 +137,17 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
           </div>
           <div className="card-top-right">
             <button
+              ref={favoriteButtonRef}
               className="favorite-button"
-              aria-label="Favorite"
-              onClick={() => {
-                setFavoriteLimerickState(!favoriteLimerickState);
-                handleFavorite(limerick.id);
-              }}
+              type="button"
+              aria-pressed={favoriteLimerickState}
+              aria-label={
+                favoriteLimerickState
+                  ? `Remove ${limerick.title} from favorites`
+                  : `Add ${limerick.title} to favorites`
+              }
+              disabled={favoritePending}
+              onClick={() => handleFavorite(limerick.id)}
             >
               {favoriteLimerickState ? "⭐" : "☆"}
             </button>
@@ -171,6 +192,11 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
             {likeLimerickState ? "❤️" : "♡"}
           </button>
         </div>
+        {error && (
+          <p className="error-message" role="alert">
+            {error}
+          </p>
+        )}
       </article>
       {showDownloadModal && (
         <div
@@ -210,11 +236,6 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
               >
                 Cancel
               </button>
-              {error && (
-                <p className="error-message" role="alert">
-                  {error}
-                </p>
-              )}
             </div>
           </div>
         </div>
@@ -254,11 +275,6 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
               >
                 Cancel
               </button>
-              {error && (
-                <p className="error-message" role="alert">
-                  {error}
-                </p>
-              )}
             </div>
           </div>
         </div>
