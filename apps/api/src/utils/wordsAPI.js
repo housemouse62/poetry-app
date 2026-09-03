@@ -1,9 +1,11 @@
 export const fetchWordFromAPI = async (word) => {
   const apiKey = process.env.WORDS_API_KEY;
 
+  if (!apiKey) return { ok: false, kind: "configuration" };
+
   try {
     const response = await fetch(
-      `https://wordsapiv1.p.rapidapi.com/words/${word}`,
+      `https://wordsapiv1.p.rapidapi.com/words/${encodeURIComponent(word)}`,
       {
         method: "GET",
         headers: {
@@ -13,10 +15,11 @@ export const fetchWordFromAPI = async (word) => {
       },
     );
 
-    const data = await response.json();
-
-    return data;
+    if (!response.ok) {
+      return { ok: false, kind: "http", status: response.status };
+    }
+    return { ok: true, data: await response.json() };
   } catch (error) {
-    return null;
+    return { ok: false, kind: "network" };
   }
 };

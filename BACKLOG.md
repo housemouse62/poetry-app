@@ -29,13 +29,15 @@ Done when:
 
 ## Architecture and data quality
 
-### 2) Word-cache lifecycle and expiry policy
+### 2) Word-cache lifecycle and expiry policy — completed
 
 Issue: The repo already has two caching layers:
 - browser localStorage cache in [apps/frontend/src/utils/wordCache.js](apps/frontend/src/utils/wordCache.js)
 - server/database word table in [apps/api/prisma/schema.prisma](apps/api/prisma/schema.prisma) and [apps/api/src/word.js](apps/api/src/word.js)
 
-Neither layer currently shows an explicit expiry, invalidation, or versioning policy. This is not a missing architecture; it is a lifecycle and stale-data management gap.
+Both layers now use lazy, source-specific expiration. PostgreSQL records when a
+word was refreshed, and the browser cache uses a versioned envelope so old or
+malformed entries fail closed.
 
 Done when:
 - The project documents the intended cache lifecycle for browser and server caches.

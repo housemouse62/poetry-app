@@ -1,274 +1,50 @@
-import { saveWordToCache, getWordFromCache } from "./wordCache";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import { getWordFromCache, saveWordToCache } from "./wordCache";
+
+const day = 24 * 60 * 60 * 1000;
+const apiWord = { word: "hello", source: "api", syllables: { count: 2 } };
+const algorithmWord = { word: "hello", source: "algorithm", syllables: { count: 2 } };
 
 describe("wordCache", () => {
-  it("saves word data to localStorage", () => {
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
+  it("uses a versioned cache envelope and canonical key", () => {
+    saveWordToCache("  HELLO ", apiWord, 1000);
+    expect(JSON.parse(localStorage.getItem("wordCache"))).toEqual({
+      version: 2,
+      entries: { hello: { cachedAt: 1000, data: apiWord } },
     });
-
-    const stored = localStorage.getItem("wordCache");
-    const parsed = JSON.parse(stored);
-    console.log(parsed);
-    expect(parsed.hello).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
+    expect(getWordFromCache("Hello", 2000)).toEqual(apiWord);
   });
 
-  it("gets data for stored word from local storage", () => {
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    const hello = getWordFromCache("hello");
-    console.log("hello", hello);
-
-    expect(hello).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
+  it("invalidates a version mismatch and malformed JSON", () => {
+    localStorage.setItem("wordCache", JSON.stringify({ version: 1, entries: { hello: {} } }));
+    expect(getWordFromCache("hello")).toEqual({});
+    localStorage.setItem("wordCache", "not-json");
+    expect(getWordFromCache("hello")).toEqual({});
   });
 
-  it("stores two words and gets data for both words", () => {
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    saveWordToCache("flippant", {
-      word: "flippant",
-      results: [
-        {
-          definition: "showing inappropriate levity",
-          partOfSpeech: "adjective",
-          synonyms: ["light-minded"],
-          similarTo: ["frivolous"],
-          derivation: ["flippancy"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["flip", "pant"],
-      },
-      pronunciation: {
-        all: "'flɪpənt",
-      },
-      frequency: 2.33,
-    });
-
-    const hello = getWordFromCache("hello");
-    const flippant = getWordFromCache("flippant");
-    console.log("hello", hello);
-
-    expect(hello).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    expect(flippant).toEqual({
-      word: "flippant",
-      results: [
-        {
-          definition: "showing inappropriate levity",
-          partOfSpeech: "adjective",
-          synonyms: ["light-minded"],
-          similarTo: ["frivolous"],
-          derivation: ["flippancy"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["flip", "pant"],
-      },
-      pronunciation: {
-        all: "'flɪpənt",
-      },
-      frequency: 2.33,
-    });
+  it("keeps API entries for seven days and lazily removes expired entries", () => {
+    saveWordToCache("hello", apiWord, 1000);
+    expect(getWordFromCache("hello", 1000 + 7 * day - 1)).toEqual(apiWord);
+    expect(getWordFromCache("hello", 1000 + 7 * day)).toEqual({});
+    expect(JSON.parse(localStorage.getItem("wordCache")).entries.hello).toBeUndefined();
   });
 
-  it("doesn't overwrite exising word data when word exists in cache", () => {
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
-
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-    });
-
-    const hello = getWordFromCache("hello");
-
-    expect(hello).toEqual({
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
+  it("expires algorithm entries after one hour", () => {
+    saveWordToCache("hello", algorithmWord, 1000);
+    expect(getWordFromCache("hello", 1000 + 60 * 60 * 1000 - 1)).toEqual(algorithmWord);
+    expect(getWordFromCache("hello", 1000 + 60 * 60 * 1000)).toEqual({});
   });
 
-  it("returns '{}' when search for non-existinng word", () => {
-    saveWordToCache("hello", {
-      word: "hello",
-      results: [
-        {
-          definition: "an expression of greeting",
-          partOfSpeech: "noun",
-          synonyms: ["hi", "how-do-you-do", "howdy", "hullo"],
-          typeOf: ["greeting", "salutation"],
-          examples: ["every morning they exchanged polite hellos"],
-        },
-      ],
-      syllables: {
-        count: 2,
-        list: ["hel", "lo"],
-      },
-      pronunciation: {
-        all: "hɛ'loʊ",
-      },
-      frequency: 5.83,
-    });
+  it("replaces existing data after a refresh", () => {
+    saveWordToCache("hello", apiWord, 1000);
+    const refreshed = { ...apiWord, syllables: { count: 3 } };
+    saveWordToCache("HELLO", refreshed, 2000);
+    expect(getWordFromCache("hello", 2001)).toEqual(refreshed);
+  });
 
-    const goodbye = getWordFromCache("goodbye");
-
-    expect(goodbye).toEqual({});
+  it("does not persist fallback or malformed entries", () => {
+    saveWordToCache("hello", { ...apiWord, source: "fallback" });
+    saveWordToCache("broken", { source: "api", syllables: { count: 0 } });
+    expect(localStorage.getItem("wordCache")).toBeNull();
   });
 });

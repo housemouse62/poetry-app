@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useWordData } from "../utils/useWordData";
-import { getWordFromCache } from "../utils/wordCache";
+import { canonicalizeWord, getWordFromCache } from "../utils/wordCache";
 import { countSyllables } from "../utils/syllableCounter";
 import { useAuth } from "../context/useAuth";
 import "./PoetryLine.css";
@@ -48,16 +48,16 @@ function PoetryLine({
 
   if (words.length <= 0) {
     confidence = "neutral";
-  } else
+  } else {
+    confidence = "verified";
     for (const word of words) {
       const cached = getWordFromCache(word);
-      if (cached?.source === "fallback") {
+      if (cached?.source !== "api") {
         confidence = "estimated";
         break;
-      } else if (cached?.syllables) {
-        confidence = "verified";
       }
     }
+  }
   const onSyllableChangeRef = useRef(onSyllableChange);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ function PoetryLine({
           const lastWord = words[words.length - 1];
 
           if (lastWord) {
-            const cleanWord = lastWord.trim();
+            const cleanWord = canonicalizeWord(lastWord);
             setCurrentWord(cleanWord);
           }
         }
@@ -154,7 +154,7 @@ function PoetryLine({
   };
 
   const handleFlaggedWord = async (word) => {
-    const url = `${import.meta.env.VITE_API_URL}/word/${word}/flag`;
+    const url = `${import.meta.env.VITE_API_URL}/word/${encodeURIComponent(canonicalizeWord(word))}/flag`;
     try {
       const response = await fetch(url, {
         method: "PATCH",

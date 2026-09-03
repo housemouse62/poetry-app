@@ -51,7 +51,10 @@ English syllable counting is notoriously hard for rule-based algorithms. The app
 | [WordsAPI](https://www.wordsapi.com/) via RapidAPI | Fetched on spacebar press | Green — **verified** |
 | `countSyllables()` regex fallback | API unavailable or word not cached | Yellow — **estimated** |
 
-Words are cached in `localStorage` after the first fetch, so the API is only called once per unique word. A word flagging flow lets users report incorrect syllable counts directly from the editor.
+WordsAPI results are cached in `localStorage` for 7 days and server-estimated
+results for 1 hour. Transient browser fallbacks are not persisted. A word
+flagging flow lets users report incorrect syllable counts directly from the
+editor.
 
 ### Word Flagging
 - Flag button on each line opens a modal showing every word with its syllable count
@@ -122,16 +125,16 @@ DATABASE_URL=your_postgres_connection_string
 JWT_SECRET=your_jwt_secret
 CORS_ORIGIN=http://localhost:5173
 PORT=3000
-RAPID_API_KEY=your_rapidapi_key
+WORDS_API_KEY=your_rapidapi_key
 ```
 
 **`apps/frontend/.env`**
 ```env
 VITE_API_URL=http://localhost:3000
-VITE_WORDS_API_KEY=your_rapidapi_key
 ```
 
-> The frontend works without a Words API key — syllable counting falls back to the local estimator, shown with a yellow confidence indicator.
+> The WordsAPI key is server-side only. The frontend works when the API has no
+> WordsAPI key by using estimated syllable data.
 
 ### Run both apps
 

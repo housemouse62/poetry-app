@@ -7,7 +7,7 @@ Goal: get this app shareable.
 ## Quick Wins
 
 - [x] Remove all `console.log` calls (HaikuApp.jsx, HaikuLine.jsx, WordFind.js, haikuStorage.js, limericksStorage.js)
-- [x] Add a `.env.example` file documenting `VITE_WORDS_API_KEY`
+- [x] Keep WordsAPI credentials server-side as `WORDS_API_KEY`
 - [x] Deduplicate `syllableCounter.js` — move one shared copy to `src/utils/`, delete the two page-level copies
 - [x] Build `PoetryLine` shared component — refactor HaikuApp and LimerickApp to use it
 - [x] Limerick CSS integration into PoetryLine.css — inline syllable counter, A/B border colors
@@ -26,9 +26,9 @@ Goal: get this app shareable.
 ## Architecture
 
 - [ ] Fix Limerick completion check — `LimerickApp.jsx` calls `countSyllables()` on every render for all 5 lines; adopt the `onSyllableChange` callback pattern used in HaikuApp
-- [ ] Add a TTL or cache version to the word cache — entries currently live in `localStorage` forever and can go stale silently
+- [x] Add source-specific TTLs and a versioned browser word cache
 - [ ] Merge `haikuStorage.js` and `limericksStorage.js` into a single generic `poemStorage(type)` factory
-- [ ] Consider a backend proxy for the WordsAPI key — `VITE_` prefix exposes it in the client bundle (low priority until public)
+- [x] Proxy WordsAPI through the backend so the key is never exposed in a `VITE_` variable
 - [ ] Draft/save modal — save in-progress poem, return to edit later; `lines` state is already serializable
 
 ---

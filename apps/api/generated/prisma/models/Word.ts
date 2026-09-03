@@ -42,6 +42,7 @@ export type WordMinAggregateOutputType = {
   source: string | null
   flagged: boolean | null
   syllableCount: number | null
+  refreshedAt: Date | null
 }
 
 export type WordMaxAggregateOutputType = {
@@ -50,6 +51,7 @@ export type WordMaxAggregateOutputType = {
   source: string | null
   flagged: boolean | null
   syllableCount: number | null
+  refreshedAt: Date | null
 }
 
 export type WordCountAggregateOutputType = {
@@ -59,6 +61,7 @@ export type WordCountAggregateOutputType = {
   flagged: number
   syllableCount: number
   data: number
+  refreshedAt: number
   _all: number
 }
 
@@ -79,6 +82,7 @@ export type WordMinAggregateInputType = {
   source?: true
   flagged?: true
   syllableCount?: true
+  refreshedAt?: true
 }
 
 export type WordMaxAggregateInputType = {
@@ -87,6 +91,7 @@ export type WordMaxAggregateInputType = {
   source?: true
   flagged?: true
   syllableCount?: true
+  refreshedAt?: true
 }
 
 export type WordCountAggregateInputType = {
@@ -96,6 +101,7 @@ export type WordCountAggregateInputType = {
   flagged?: true
   syllableCount?: true
   data?: true
+  refreshedAt?: true
   _all?: true
 }
 
@@ -192,6 +198,7 @@ export type WordGroupByOutputType = {
   flagged: boolean
   syllableCount: number
   data: runtime.JsonValue
+  refreshedAt: Date
   _count: WordCountAggregateOutputType | null
   _avg: WordAvgAggregateOutputType | null
   _sum: WordSumAggregateOutputType | null
@@ -224,6 +231,7 @@ export type WordWhereInput = {
   flagged?: Prisma.BoolFilter<"Word"> | boolean
   syllableCount?: Prisma.IntFilter<"Word"> | number
   data?: Prisma.JsonFilter<"Word">
+  refreshedAt?: Prisma.DateTimeFilter<"Word"> | Date | string
 }
 
 export type WordOrderByWithRelationInput = {
@@ -233,6 +241,7 @@ export type WordOrderByWithRelationInput = {
   flagged?: Prisma.SortOrder
   syllableCount?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  refreshedAt?: Prisma.SortOrder
 }
 
 export type WordWhereUniqueInput = Prisma.AtLeast<{
@@ -245,6 +254,7 @@ export type WordWhereUniqueInput = Prisma.AtLeast<{
   flagged?: Prisma.BoolFilter<"Word"> | boolean
   syllableCount?: Prisma.IntFilter<"Word"> | number
   data?: Prisma.JsonFilter<"Word">
+  refreshedAt?: Prisma.DateTimeFilter<"Word"> | Date | string
 }, "id" | "word">
 
 export type WordOrderByWithAggregationInput = {
@@ -254,6 +264,7 @@ export type WordOrderByWithAggregationInput = {
   flagged?: Prisma.SortOrder
   syllableCount?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  refreshedAt?: Prisma.SortOrder
   _count?: Prisma.WordCountOrderByAggregateInput
   _avg?: Prisma.WordAvgOrderByAggregateInput
   _max?: Prisma.WordMaxOrderByAggregateInput
@@ -271,6 +282,7 @@ export type WordScalarWhereWithAggregatesInput = {
   flagged?: Prisma.BoolWithAggregatesFilter<"Word"> | boolean
   syllableCount?: Prisma.IntWithAggregatesFilter<"Word"> | number
   data?: Prisma.JsonWithAggregatesFilter<"Word">
+  refreshedAt?: Prisma.DateTimeWithAggregatesFilter<"Word"> | Date | string
 }
 
 export type WordCreateInput = {
@@ -279,6 +291,7 @@ export type WordCreateInput = {
   flagged?: boolean
   syllableCount: number
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Date | string
 }
 
 export type WordUncheckedCreateInput = {
@@ -288,6 +301,7 @@ export type WordUncheckedCreateInput = {
   flagged?: boolean
   syllableCount: number
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Date | string
 }
 
 export type WordUpdateInput = {
@@ -296,6 +310,7 @@ export type WordUpdateInput = {
   flagged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   syllableCount?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WordUncheckedUpdateInput = {
@@ -305,6 +320,7 @@ export type WordUncheckedUpdateInput = {
   flagged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   syllableCount?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WordCreateManyInput = {
@@ -314,6 +330,7 @@ export type WordCreateManyInput = {
   flagged?: boolean
   syllableCount: number
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Date | string
 }
 
 export type WordUpdateManyMutationInput = {
@@ -322,6 +339,7 @@ export type WordUpdateManyMutationInput = {
   flagged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   syllableCount?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WordUncheckedUpdateManyInput = {
@@ -331,6 +349,7 @@ export type WordUncheckedUpdateManyInput = {
   flagged?: Prisma.BoolFieldUpdateOperationsInput | boolean
   syllableCount?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  refreshedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WordCountOrderByAggregateInput = {
@@ -340,6 +359,7 @@ export type WordCountOrderByAggregateInput = {
   flagged?: Prisma.SortOrder
   syllableCount?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  refreshedAt?: Prisma.SortOrder
 }
 
 export type WordAvgOrderByAggregateInput = {
@@ -353,6 +373,7 @@ export type WordMaxOrderByAggregateInput = {
   source?: Prisma.SortOrder
   flagged?: Prisma.SortOrder
   syllableCount?: Prisma.SortOrder
+  refreshedAt?: Prisma.SortOrder
 }
 
 export type WordMinOrderByAggregateInput = {
@@ -361,6 +382,7 @@ export type WordMinOrderByAggregateInput = {
   source?: Prisma.SortOrder
   flagged?: Prisma.SortOrder
   syllableCount?: Prisma.SortOrder
+  refreshedAt?: Prisma.SortOrder
 }
 
 export type WordSumOrderByAggregateInput = {
@@ -377,6 +399,7 @@ export type WordSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   flagged?: boolean
   syllableCount?: boolean
   data?: boolean
+  refreshedAt?: boolean
 }, ExtArgs["result"]["word"]>
 
 export type WordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -386,6 +409,7 @@ export type WordSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   flagged?: boolean
   syllableCount?: boolean
   data?: boolean
+  refreshedAt?: boolean
 }, ExtArgs["result"]["word"]>
 
 export type WordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -395,6 +419,7 @@ export type WordSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   flagged?: boolean
   syllableCount?: boolean
   data?: boolean
+  refreshedAt?: boolean
 }, ExtArgs["result"]["word"]>
 
 export type WordSelectScalar = {
@@ -404,9 +429,10 @@ export type WordSelectScalar = {
   flagged?: boolean
   syllableCount?: boolean
   data?: boolean
+  refreshedAt?: boolean
 }
 
-export type WordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "source" | "flagged" | "syllableCount" | "data", ExtArgs["result"]["word"]>
+export type WordOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "word" | "source" | "flagged" | "syllableCount" | "data" | "refreshedAt", ExtArgs["result"]["word"]>
 
 export type $WordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Word"
@@ -418,6 +444,7 @@ export type $WordPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     flagged: boolean
     syllableCount: number
     data: runtime.JsonValue
+    refreshedAt: Date
   }, ExtArgs["result"]["word"]>
   composites: {}
 }
@@ -847,6 +874,7 @@ export interface WordFieldRefs {
   readonly flagged: Prisma.FieldRef<"Word", 'Boolean'>
   readonly syllableCount: Prisma.FieldRef<"Word", 'Int'>
   readonly data: Prisma.FieldRef<"Word", 'Json'>
+  readonly refreshedAt: Prisma.FieldRef<"Word", 'DateTime'>
 }
     
 
