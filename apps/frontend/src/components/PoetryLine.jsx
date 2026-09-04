@@ -15,6 +15,7 @@ function PoetryLine({
   borderColor,
   showTarget,
   rhymeInfo,
+  readOnly = false,
 }) {
   const [currentWord, setCurrentWord] = useState(null);
   const [showFlagModal, setShowFlagModal] = useState(false);
@@ -120,6 +121,7 @@ function PoetryLine({
       aria-label={rhymeInfo}
       placeholder={placeholderText}
       value={value}
+      readOnly={readOnly}
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={(e) => {
         if (e.key === " ") {

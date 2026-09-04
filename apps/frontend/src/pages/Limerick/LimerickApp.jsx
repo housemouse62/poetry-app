@@ -1,11 +1,13 @@
 // LimerickApp.jsx
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { countSyllables } from "../../utils/syllableCounter";
 import "./LimerickApp.css";
 import { useNavigate } from "react-router";
 import PoetryLine from "../../components/PoetryLine";
 import { useAuth } from "../../context/useAuth";
 import LimerickCard from "../../components/LimerickCard/LimerickCard";
+import DiscardDraftDialog from "../../components/DiscardDraftDialog.jsx";
+import { useUnsavedChanges } from "../../utils/useUnsavedChanges.js";
 
 function LimerickApp() {
   const navigate = useNavigate();
@@ -19,12 +21,9 @@ function LimerickApp() {
   });
 
   const [error, setError] = useState(null);
-  const [editingLimerick, setEditingLimerick] = useState(null);
-  const [editID, setEditID] = useState(null);
   const [saved, setSaved] = useState(false);
   const [showLimericks, setShowLimericks] = useState(false);
   const [savedLimericks, setSavedLimericks] = useState("");
-  const [isFading, setIsFading] = useState(false);
   const [showExample, setShowExample] = useState(false);
   const [syllableCounts, setSyllablesCounts] = useState({
     line1: 0,
@@ -34,10 +33,23 @@ function LimerickApp() {
     line5: 0,
   });
   const [title, setTitle] = useState("");
-  const [published, setPublished] = useState(false);
+  const [activeDraftID, setActiveDraftID] = useState(null);
+  const [editingPublished, setEditingPublished] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [status, setStatus] = useState("");
+  const [discardDraft, setDiscardDraft] = useState(null);
+  const discardTriggerRef = useRef(null);
+  const titleRef = useRef(null);
+  const editorHeadingRef = useRef(null);
+  const saveButtonRef = useRef(null);
+  const publishButtonRef = useRef(null);
+  const mutationPendingRef = useRef(false);
 
-  const { user, token } = useAuth();
+  const { token } = useAuth();
   const targetSyllables = ["7 - 10", "7 - 10", "5-8", "5-8", "7 - 10"];
+  const snapshot = JSON.stringify({ title, lines });
+  const { markSaved } = useUnsavedChanges(snapshot);
+  const hasContent = [title, ...Object.values(lines)].some((value) => value.trim());
 
   // Check if Limericks is complete
   const isComplete =
@@ -61,61 +73,55 @@ function LimerickApp() {
     }));
   };
 
-  const saveLimerick = async () => {
-    const url = `${import.meta.env.VITE_API_URL}/limerick`;
+  const poemPayload = (shouldPublish) => ({
+    title, lineOne: lines.line1, lineTwo: lines.line2, lineThree: lines.line3,
+    lineFour: lines.line4, lineFive: lines.line5,
+    lineOneSyllables: syllableCounts.line1, lineTwoSyllables: syllableCounts.line2,
+    lineThreeSyllables: syllableCounts.line3, lineFourSyllables: syllableCounts.line4,
+    lineFiveSyllables: syllableCounts.line5,
+    rhymeA: null, rhymeB: null, rhymeAVerified: false, rhymeBVerified: false,
+    published: shouldPublish,
+  });
+
+  const saveLimerick = async (shouldPublish) => {
+    if (mutationPendingRef.current || (!shouldPublish && !hasContent) || (shouldPublish && !isComplete)) return;
+    mutationPendingRef.current = true;
+    const action = shouldPublish ? "publish" : "save";
+    const wasEditingPublished = editingPublished;
+    const buttonRef = shouldPublish ? publishButtonRef : saveButtonRef;
+    const url = `${import.meta.env.VITE_API_URL}/limerick${activeDraftID ? `/${activeDraftID}` : ""}`;
+    setPendingAction(action); setError(null); setStatus("");
     try {
       const response = await fetch(url, {
-        method: "POST",
+        method: activeDraftID ? "PATCH" : "POST",
         headers: {
           "Content-type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          title: title,
-          lineOne: lines.line1,
-          lineTwo: lines.line2,
-          lineThree: lines.line3,
-          lineFour: lines.line4,
-          lineFive: lines.line5,
-          lineOneSyllables: syllableCounts.line1,
-          lineTwoSyllables: syllableCounts.line2,
-          lineThreeSyllables: syllableCounts.line3,
-          lineFourSyllables: syllableCounts.line4,
-          lineFiveSyllables: syllableCounts.line5,
-          rhymeA: null, // change this once word api is wired up
-          rhymeB: null, // change this once word api is wired up
-          rhymeAVerified: false, // change this once word api is wired up
-          rhymeBVerified: false, // change this once word api is wired up
-          published: published,
-          authorID: user.id,
-          screenname: user.screenname,
-        }),
+        body: JSON.stringify(poemPayload(shouldPublish)),
       });
       const nextresponse = await response.json();
-
-      if (nextresponse.id) {
-        setSaved(true);
-        setTitle("");
-        setLines({
-          line1: "",
-          line2: "",
-          line3: "",
-          line4: "",
-          line5: "",
-        });
-        setTimeout(() => {
-          setIsFading(true); //Start Fade Out
-          setTimeout(() => {
-            setSaved(false); //Actually remove it
-            setIsFading(false);
-            setPublished(false);
-          }, 500);
-        }, 2000);
-        setError(null);
-      } else setError("Failed to save limerick. Please try again.");
+      if (!response.ok || !nextresponse.id) throw new Error("request failed");
+      if (shouldPublish) {
+        const emptyLines = { line1: "", line2: "", line3: "", line4: "", line5: "" };
+        setTitle(""); setLines(emptyLines); setActiveDraftID(null);
+        setEditingPublished(false);
+        markSaved(JSON.stringify({ title: "", lines: emptyLines }));
+        setStatus(wasEditingPublished ? "Published limerick updated. View it in Published poems." : "Limerick published. View it in Published poems.");
+      } else {
+        setActiveDraftID(nextresponse.id); markSaved(snapshot); setStatus("Draft saved.");
+      }
+      setSaved(true);
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
-      setError("Something went wrong. Please try again.");
+      setError(shouldPublish ? "Failed to publish limerick. Please try again." : "Failed to save draft. Please try again.");
+    } finally {
+      mutationPendingRef.current = false;
+      setPendingAction(null);
+      setTimeout(() => {
+        if (shouldPublish && !titleRef.current?.value) editorHeadingRef.current?.focus();
+        else buttonRef.current?.focus();
+      }, 0);
     }
   };
 
@@ -157,67 +163,48 @@ function LimerickApp() {
       await response.json();
 
       if (response.ok) {
-        fetchMyLimericks();
+        setSavedLimericks((current) => current.filter((limerick) => limerick.id !== id));
         setShowLimericks(true);
         setShowExample(false);
         setError(null);
+        return true;
       } else setError("Cannot delete. Please try again.");
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
       setError("Something went wrong. Please try again.");
     }
+    return false;
   };
 
-  const editLimerick = async (id) => {
-    const url = `${import.meta.env.VITE_API_URL}/limerick/${id}`;
-    try {
-      const response = await fetch(url, {
-        method: "PATCH",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: title,
-          lineOne: lines.line1,
-          lineTwo: lines.line2,
-          lineThree: lines.line3,
-          lineFour: lines.line4,
-          lineFive: lines.line5,
-          lineOneSyllables: syllableCounts.line1,
-          lineTwoSyllables: syllableCounts.line2,
-          lineThreeSyllables: syllableCounts.line3,
-          lineFourSyllables: syllableCounts.line4,
-          lineFiveSyllables: syllableCounts.line5,
-          rhymeA: null, // change this once word api is wired up
-          rhymeB: null, // change this once word api is wired up
-          rhymeAVerified: false, // change this once word api is wired up
-          rhymeBVerified: false, // change this once word api is wired up
-          published: published,
-        }),
-      });
-      const nextresponse = await response.json();
+  const openLimerickForEditing = (limerick, isPublished = false) => {
+    const nextLines = { line1: limerick.lineOne, line2: limerick.lineTwo, line3: limerick.lineThree, line4: limerick.lineFour, line5: limerick.lineFive };
+    setShowLimericks(false); setActiveDraftID(limerick.id); setEditingPublished(isPublished);
+    setLines(nextLines); setTitle(limerick.title);
+    markSaved(JSON.stringify({ title: limerick.title, lines: nextLines })); setStatus("Draft resumed.");
+    setTimeout(() => {
+      if (!limerick.title.trim()) titleRef.current?.focus();
+      else {
+        const values = [limerick.lineOne, limerick.lineTwo, limerick.lineThree, limerick.lineFour, limerick.lineFive];
+        const firstIncomplete = values.findIndex((line) => !line.trim());
+        if (firstIncomplete >= 0) document.querySelectorAll(".LimerickForm .line-input")[firstIncomplete]?.focus();
+        else editorHeadingRef.current?.focus();
+      }
+    }, 0);
+  };
 
-      if (nextresponse.id) {
-        fetchMyLimericks();
-        setShowLimericks(true);
-        setShowExample(false);
-        setTitle("");
-        setLines({
-          line1: "",
-          line2: "",
-          line3: "",
-          line4: "",
-          line5: "",
-        });
-        setEditID(null);
-        setEditingLimerick(null);
-        setError(null);
-      } else setError("Cannot update. Please try again.");
-    } catch (error) {
-      if (import.meta.env.DEV) console.error(error);
-      setError("Something went wrong. Please try again.");
-    }
+  const confirmDiscard = async () => {
+    const draft = discardDraft;
+    const drafts = savedLimericks.filter((poem) => !poem.published);
+    const index = drafts.findIndex((poem) => poem.id === draft.id);
+    const deleted = await deleteLimerick(draft.id);
+    if (!deleted) return;
+    setDiscardDraft(null);
+    const remaining = drafts.filter((poem) => poem.id !== draft.id);
+    setTimeout(() => {
+      const targetIndex = Math.min(index, remaining.length - 1);
+      if (targetIndex >= 0) document.querySelector(`[data-limerick-draft-index="${targetIndex}"] button`)?.focus();
+      else document.getElementById("limerick-drafts-heading")?.focus();
+    }, 0);
   };
 
   return (
@@ -253,34 +240,31 @@ function LimerickApp() {
             {savedLimericks.length <= 0 ? (
               <p>No saved limericks, waiting for words of wisdom</p>
             ) : (
-              savedLimericks.map((l) => (
-                <LimerickCard
-                  key={l.id}
-                  limerick={l}
-                  onEdit={() => {
-                    setShowLimericks(false);
-                    setEditingLimerick(true);
-                    setEditID(l.id);
-                    setLines({
-                      line1: `${l.lineOne}`,
-                      line2: `${l.lineTwo}`,
-                      line3: `${l.lineThree}`,
-                      line4: `${l.lineFour}`,
-                      line5: `${l.lineFive}`,
-                    });
-                    setTitle(l.title);
-                    setPublished(l.published);
-                  }}
-                  onDelete={() => deleteLimerick(l.id)}
-                />
-              ))
+              <>
+                <section aria-labelledby="limerick-drafts-heading">
+                  <h3 id="limerick-drafts-heading" tabIndex="-1">Drafts</h3>
+                  {savedLimericks.filter((l) => !l.published).length === 0 ? <p>No drafts.</p> : savedLimericks.filter((l) => !l.published).map((l, index) => (
+                    <article key={l.id} data-limerick-draft-index={index} className="limerick-card">
+                      <h4>{l.title.trim() || "Untitled draft"}</h4><p>Draft</p>
+                      <button type="button" onClick={() => openLimerickForEditing(l)}>Resume draft</button>
+                      <button type="button" onClick={(event) => { discardTriggerRef.current = event.currentTarget; setDiscardDraft(l); }}>Discard draft</button>
+                    </article>
+                  ))}
+                </section>
+                <section aria-labelledby="published-limericks-heading">
+                  <h3 id="published-limericks-heading">Published poems</h3>
+                  {savedLimericks.filter((l) => l.published).length === 0 ? <p>No published poems.</p> : savedLimericks.filter((l) => l.published).map((l) => (
+                    <LimerickCard key={l.id} limerick={l} onEdit={() => openLimerickForEditing(l, true)} onDelete={() => deleteLimerick(l.id)} />
+                  ))}
+                </section>
+              </>
             )}
           </div>
         )}
         {!showLimericks && (
           <div className="LimerickForm">
             <header>
-              <h1 className="limerick-h1">
+              <h1 className="limerick-h1" ref={editorHeadingRef} tabIndex="-1">
                 <span aria-hidden="true">🎭</span> Let's Limerick!{" "}
                 <span aria-hidden="true">🍀</span>
               </h1>
@@ -302,6 +286,8 @@ function LimerickApp() {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Title"
                 aria-label="Limerick title"
+                ref={titleRef}
+                readOnly={pendingAction === "publish"}
               />
             </div>
             <PoetryLine
@@ -316,6 +302,7 @@ function LimerickApp() {
               borderColor={"A"}
               showTarget={false}
               placeholderText={`Line 1 (${targetSyllables[0]} syllables)`}
+              readOnly={pendingAction === "publish"}
             />
             <PoetryLine
               rhymeInfo="Line 2, rhymes with lines 1 and 5"
@@ -329,6 +316,7 @@ function LimerickApp() {
               borderColor={"A"}
               showTarget={false}
               placeholderText={`Line 2 (${targetSyllables[1]} syllables)`}
+              readOnly={pendingAction === "publish"}
             />
             <PoetryLine
               rhymeInfo="Line 3, rhymes with line 4"
@@ -342,6 +330,7 @@ function LimerickApp() {
               borderColor={"B"}
               showTarget={false}
               placeholderText={`Line 3 (${targetSyllables[2]} syllables)`}
+              readOnly={pendingAction === "publish"}
             />
             <PoetryLine
               rhymeInfo="Line 4, rhymes with line 3"
@@ -355,6 +344,7 @@ function LimerickApp() {
               borderColor={"B"}
               showTarget={false}
               placeholderText={`Line 4 (${targetSyllables[3]} syllables)`}
+              readOnly={pendingAction === "publish"}
             />
             <PoetryLine
               rhymeInfo="Line 5, rhymes with lines 1 and 2"
@@ -368,10 +358,11 @@ function LimerickApp() {
               borderColor={"A"}
               showTarget={false}
               placeholderText={`Line 5 (${targetSyllables[4]} syllables)`}
+              readOnly={pendingAction === "publish"}
             />
             {(isComplete || saved) && (
               <div
-                className={`limerick-complete-message ${isFading ? "fade-out" : ""}`}
+                className="limerick-complete-message"
                 role="status"
                 aria-live="polite"
                 aria-atomic="true"
@@ -399,39 +390,31 @@ function LimerickApp() {
             {/* button row */}
           </div>
         )}
-        {!showLimericks && (
-          <div className="published-checkbox">
-            <input
-              id="published"
-              type="checkbox"
-              name="published"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-            />
-            <label htmlFor="published" className="check-box" />
-            <span>Publish</span>
-          </div>
-        )}
+        {status && <p role="status" aria-live="polite">{status}</p>}
+        {showLimericks && error && <p className="error-message" role="alert">{error}</p>}
         <div className="limerick-button-row">
           {/* Save Button */}
-          {!isComplete && !saved && (
+          {!hasContent && (
             <span id="save-limerick-help" className="sr-only">
-              Complete all five lines with correct syllable counts to save
+              Enter a title or at least one line to save a draft
             </span>
           )}
           {!showLimericks && (
-            <button
-              disabled={!isComplete || saved}
+            <>
+            {!editingPublished && <button
+              ref={saveButtonRef}
+              disabled={!hasContent || Boolean(pendingAction)}
               className="save-limerick-btn"
-              aria-describedby={
-                !isComplete && !saved ? "save-limerick-help" : undefined
-              }
-              onClick={() => {
-                editingLimerick ? editLimerick(editID) : saveLimerick();
-              }}
+              aria-describedby={!hasContent ? "save-limerick-help" : undefined}
+              onClick={() => saveLimerick(false)}
             >
-              {editingLimerick ? "Update" : "Save"}
+              {pendingAction === "save" ? "Saving draft…" : "Save draft"}
+            </button>}
+            <button ref={publishButtonRef} type="button" disabled={!isComplete || Boolean(pendingAction)} aria-describedby={!isComplete ? "publish-limerick-help" : undefined} onClick={() => saveLimerick(true)}>
+              {pendingAction === "publish" ? (editingPublished ? "Updating…" : "Publishing…") : (editingPublished ? "Update published poem" : "Publish")}
             </button>
+            {!isComplete && <span id="publish-limerick-help" className="sr-only">Complete all five lines with valid syllable counts to publish</span>}
+            </>
           )}
           {/* View Limericks/Hide Limericks button */}
           <button
@@ -504,6 +487,7 @@ function LimerickApp() {
           </div>
         )}
       </main>
+      <DiscardDraftDialog draft={discardDraft} poemType="limerick" onCancel={() => { setDiscardDraft(null); setTimeout(() => discardTriggerRef.current?.focus(), 0); }} onConfirm={confirmDiscard} />
     </div>
   );
 }
