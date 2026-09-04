@@ -1,50 +1,7 @@
-# Poetry App — Punch List
+# Frontend punch list — archived
 
-Goal: get this app shareable.
+This historical punch list is no longer the source of current work. Its completed accessibility, word-data, shared-line, and integration tasks are represented in the current codebase.
 
----
+Several remaining ideas became obsolete as the architecture evolved: local browser poem storage was removed in favor of authenticated server-backed drafts, and persistent word caching now exists in PostgreSQL with source-specific expiration.
 
-## Quick Wins
-
-- [x] Remove all `console.log` calls (HaikuApp.jsx, HaikuLine.jsx, WordFind.js, haikuStorage.js, limericksStorage.js)
-- [x] Keep WordsAPI credentials server-side as `WORDS_API_KEY`
-- [x] Deduplicate `syllableCounter.js` — move one shared copy to `src/utils/`, delete the two page-level copies
-- [x] Build `PoetryLine` shared component — refactor HaikuApp and LimerickApp to use it
-- [x] Limerick CSS integration into PoetryLine.css — inline syllable counter, A/B border colors
-- [x] Accessibility audit and fixes (sr-only global, landmark roles, dialog focus return, contrast, aria-hidden on progress bar, heading semantics, page title)
-
----
-
-## Testing Gaps
-
-- [x] Add tests for `src/pages/Limerick/syllableCounter.js` (resolves itself once deduplicated)
-- [x] Add tests for `LimerickLine.jsx` (HaikuLine is tested, LimerickLine is not)
-- [x] Extract the `confidence` calculation in `HaikuLine.jsx` to a pure function so it can be unit tested independently
-
----
-
-## Architecture
-
-- [ ] Fix Limerick completion check — `LimerickApp.jsx` calls `countSyllables()` on every render for all 5 lines; adopt the `onSyllableChange` callback pattern used in HaikuApp
-- [x] Add source-specific TTLs and a versioned browser word cache
-- [ ] Merge `haikuStorage.js` and `limericksStorage.js` into a single generic `poemStorage(type)` factory
-- [x] Proxy WordsAPI through the backend so the key is never exposed in a `VITE_` variable
-- [ ] Draft/save modal — save in-progress poem, return to edit later; `lines` state is already serializable
-
----
-
-## Biggest Unlock
-
-- [x] Bring `useWordData` (API-backed syllable counting) to the Limerick editor — it currently uses only the `countSyllables` fallback; all the infrastructure already exists
-
----
-
-## Roadmap (post-shareable)
-
-- [ ] Add more poetry forms — architecture is ready (sonnet, villanelle, pantoum)
-- [ ] Database migration for persistent, cross-user word cache
-- [ ] SSML-based aural scansion engine (text-to-speech with metrical stress)
-- [ ] Haptic rhythm feedback on mobile
-- [ ] Voice-to-meter composition
-- [ ] User authentication + persistent poem ownership
-- [ ] Social features (following poets, curated feeds)
+Use the repository [README](../../README.md) for current frontend setup and behavior, [BACKLOG.md](../../BACKLOG.md) for current engineering priorities, and [MASTER_PLAN.md](../../MASTER_PLAN.md) for the broader roadmap.
