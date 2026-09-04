@@ -4,6 +4,7 @@ import html2canvas from "html2canvas";
 import formatDate from "../../utils/formatDate";
 import "./HaikuCard.css";
 import { useAuth } from "../../context/useAuth";
+import SavedPoemCardShell from "../SavedPoemCardShell";
 
 function HaikuCard({ haiku, onEdit, onDelete }) {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
@@ -120,34 +121,18 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
   };
   return (
     <>
-      <article key={haiku.id} className="haiku-card" data-haiku-id={haiku.id}>
-        <div className="card-top">
-          <div className="card-top-left">
-            <p className="haiku-title">{haiku.title}</p>
-            <p className="haiku-line">{haiku.lineOne}</p>
-            <p className="haiku-line">{haiku.lineTwo}</p>
-            <p className="haiku-line">{haiku.lineThree}</p>
-            <p className="haiku-date">{formatDate(haiku.createdAt)}</p>
-          </div>
-          <div className="card-top-right">
-            <button
-              ref={favoriteButtonRef}
-              className="favorite-button"
-              type="button"
-              aria-pressed={favoriteHaikuState}
-              aria-label={
-                favoriteHaikuState
-                  ? `Remove ${haiku.title} from favorites`
-                  : `Add ${haiku.title} to favorites`
-              }
-              disabled={favoritePending}
-              onClick={() => handleFavorite(haiku.id)}
-            >
-              {favoriteHaikuState ? "⭐" : "☆"}
-            </button>
-          </div>
-        </div>
-        <div className="haiku-card-buttons">
+      <SavedPoemCardShell
+        cardClassName="haiku-card"
+        cardDataAttributes={{ "data-haiku-id": haiku.id }}
+        title={haiku.title}
+        isFavorited={favoriteHaikuState}
+        favoritePending={favoritePending}
+        favoriteButtonRef={favoriteButtonRef}
+        onFavorite={() => handleFavorite(haiku.id)}
+        actionsClassName="haiku-card-buttons"
+        error={error}
+        actions={
+          <>
           <button
             aria-label={`Edit haiku: ${haiku.title}`}
             className="edit-haiku-btn"
@@ -190,13 +175,15 @@ function HaikuCard({ haiku, onEdit, onDelete }) {
           >
             {likeHaikuState ? "❤️" : "♡"}
           </button>
-        </div>
-        {error && (
-          <p className="error-message" role="alert">
-            {error}
-          </p>
-        )}
-      </article>
+          </>
+        }
+      >
+        <p className="haiku-title">{haiku.title}</p>
+        <p className="haiku-line">{haiku.lineOne}</p>
+        <p className="haiku-line">{haiku.lineTwo}</p>
+        <p className="haiku-line">{haiku.lineThree}</p>
+        <p className="haiku-date">{formatDate(haiku.createdAt)}</p>
+      </SavedPoemCardShell>
       {showDownloadModal && (
         <div
           className="haiku-dialog-container"
