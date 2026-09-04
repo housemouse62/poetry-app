@@ -241,7 +241,7 @@ describe("CommentCard", () => {
       }),
     );
     expect(onCommentUpdated).toHaveBeenCalled();
-    expect(editButton).toHaveFocus();
+    await waitFor(() => expect(editButton).toHaveFocus());
   });
 
   test("merges a successful edit into the newest item received while pending", async () => {
