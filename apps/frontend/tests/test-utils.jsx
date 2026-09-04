@@ -4,6 +4,7 @@ import {
 } from "@testing-library/react";
 import { RouterProvider } from "react-router";
 import { AuthProvider } from "../src/context/AuthContext";
+import RouteLoading from "../src/components/RouteLoading";
 
 export const authenticatedTestUser = {
   id: 1,
@@ -37,7 +38,11 @@ export function render(
 
   return testingLibraryRender(
     <AuthProvider>
-      {router ? <RouterProvider router={router} /> : ui}
+      {router ? (
+        <RouterProvider router={router} fallbackElement={<RouteLoading />} />
+      ) : (
+        ui
+      )}
     </AuthProvider>,
     renderOptions,
   );

@@ -6,33 +6,34 @@ import userEvent from "@testing-library/user-event";
 import routes from "./routes";
 
 describe("Poetry-App", () => {
-  it("the home route (/) renders the dashboard component with an <h2>hello world. we do poetry.</h2>", () => {
+  it("the home route (/) renders an accessible loading state, then the home page", async () => {
     // Create a test router starting at "/"
     const router = createMemoryRouter(routes, { initialEntries: ["/"] });
 
     renderWithRouter(router);
 
-    const helloWorld = screen.getByRole("heading", {
+    expect(screen.getByRole("status")).toHaveTextContent("Loading page…");
+    const helloWorld = await screen.findByRole("heading", {
       name: /make poetry./i,
       level: 1,
     });
     expect(helloWorld).toBeVisible();
   });
 
-  it("the haiku route (/haiku) renders", () => {
+  it("the haiku route (/haiku) renders", async () => {
     // Create a test router starting at "/haiku"
     const router = createMemoryRouter(routes, { initialEntries: ["/haiku"] });
 
     renderWithRouter(router);
 
-    const doyou = screen.getByRole("heading", {
+    const doyou = await screen.findByRole("heading", {
       name: /Do You Do Haiku/i,
       level: 1,
     });
     expect(doyou).toBeVisible();
   });
 
-  it("the limerick route (/limerick) renders", () => {
+  it("the limerick route (/limerick) renders", async () => {
     // Create a test router starting at "/haiku"
     const router = createMemoryRouter(routes, {
       initialEntries: ["/limerick"],
@@ -40,7 +41,7 @@ describe("Poetry-App", () => {
 
     renderWithRouter(router);
 
-    const limerick = screen.getByRole("heading", {
+    const limerick = await screen.findByRole("heading", {
       name: /Let's Limerick/i,
       level: 1,
     });
@@ -53,15 +54,17 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     renderWithRouter(router);
 
-    const makePoetryButton = screen.getByText("make poetry", {
+    const makePoetryButton = await screen.findByText("make poetry", {
       selector: "button",
     });
     await user.click(makePoetryButton);
 
-    const haikuLink = screen.getByRole("link", { name: /open haiku editor/i });
+    const haikuLink = await screen.findByRole("link", {
+      name: /open haiku editor/i,
+    });
     await user.click(haikuLink);
 
-    const doyou = screen.getByRole("heading", {
+    const doyou = await screen.findByRole("heading", {
       name: /Do You Do Haiku/i,
       level: 1,
     });
@@ -74,17 +77,17 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     renderWithRouter(router);
 
-    const makePoetryButton = screen.getByText("make poetry", {
+    const makePoetryButton = await screen.findByText("make poetry", {
       selector: "button",
     });
     await user.click(makePoetryButton);
 
-    const limerickLink = screen.getByRole("link", {
+    const limerickLink = await screen.findByRole("link", {
       name: /open limerick editor/i,
     });
     await user.click(limerickLink);
 
-    const doyou = screen.getByRole("heading", {
+    const doyou = await screen.findByRole("heading", {
       name: /Let's Limerick!/i,
       level: 1,
     });
@@ -106,18 +109,22 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     renderWithRouter(router);
 
-    const makePoetryButton = screen.getByText("make poetry", {
+    const makePoetryButton = await screen.findByText("make poetry", {
       selector: "button",
     });
     await user.click(makePoetryButton);
 
-    const haikuLink = screen.getByRole("link", { name: /open haiku editor/i });
+    const haikuLink = await screen.findByRole("link", {
+      name: /open haiku editor/i,
+    });
     await user.click(haikuLink);
 
-    const backButton = screen.getByRole("button", { name: /dashboard/i });
+    const backButton = await screen.findByRole("button", {
+      name: /dashboard/i,
+    });
     await user.click(backButton);
 
-    const helloWorld = screen.getByRole("heading", {
+    const helloWorld = await screen.findByRole("heading", {
       name: "make poetry.",
       level: 1,
     });
@@ -130,7 +137,9 @@ describe("Poetry-App", () => {
     const user = userEvent.setup();
     renderWithRouter(router);
 
-    await user.click(screen.getByRole("link", { name: "Favorites" }));
+    await user.click(
+      await screen.findByRole("link", { name: "Favorites" }),
+    );
     expect(
       await screen.findByRole("heading", { name: "Your favorites" }),
     ).toBeVisible();
