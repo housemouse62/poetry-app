@@ -1,5 +1,4 @@
 import { Link } from "react-router";
-import { useWordData } from "../../utils/useWordData";
 import { useAuth } from "../../context/useAuth";
 import { useNavigate } from "react-router";
 
@@ -8,7 +7,6 @@ import "./Dashboard.css";
 export default function Root() {
   const { logout } = useAuth();
   const navigate = useNavigate();
-  useWordData("");
 
   return (
     <>
