@@ -4,6 +4,7 @@ import html2canvas from "html2canvas";
 import formatDate from "../../utils/formatDate";
 import "./LimerickCard.css";
 import { useAuth } from "../../context/useAuth";
+import SavedPoemCardShell from "../SavedPoemCardShell";
 
 function LimerickCard({ limerick, onEdit, onDelete }) {
   const [showDownloadModal, setShowDownloadModal] = useState(false);
@@ -120,40 +121,18 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
   };
   return (
     <>
-      <article
-        key={limerick.id}
-        className="limerick-card"
-        data-limerick-id={limerick.id}
-      >
-        <div className="card-top">
-          <div className="card-top-left">
-            <p className="limerick-title">{limerick.title}</p>
-            <p className="limerick-line">{limerick.lineOne}</p>
-            <p className="limerick-line">{limerick.lineTwo}</p>
-            <p className="limerick-line">{limerick.lineThree}</p>
-            <p className="limerick-line">{limerick.lineFour}</p>
-            <p className="limerick-line">{limerick.lineFive}</p>
-            <p className="limerick-date">{formatDate(limerick.createdAt)}</p>
-          </div>
-          <div className="card-top-right">
-            <button
-              ref={favoriteButtonRef}
-              className="favorite-button"
-              type="button"
-              aria-pressed={favoriteLimerickState}
-              aria-label={
-                favoriteLimerickState
-                  ? `Remove ${limerick.title} from favorites`
-                  : `Add ${limerick.title} to favorites`
-              }
-              disabled={favoritePending}
-              onClick={() => handleFavorite(limerick.id)}
-            >
-              {favoriteLimerickState ? "⭐" : "☆"}
-            </button>
-          </div>
-        </div>
-        <div className="limerick-card-buttons">
+      <SavedPoemCardShell
+        cardClassName="limerick-card"
+        cardDataAttributes={{ "data-limerick-id": limerick.id }}
+        title={limerick.title}
+        isFavorited={favoriteLimerickState}
+        favoritePending={favoritePending}
+        favoriteButtonRef={favoriteButtonRef}
+        onFavorite={() => handleFavorite(limerick.id)}
+        actionsClassName="limerick-card-buttons"
+        error={error}
+        actions={
+          <>
           <button
             aria-label={`Edit limerick: ${limerick.title}`}
             className="edit-limerick-btn"
@@ -191,13 +170,17 @@ function LimerickCard({ limerick, onEdit, onDelete }) {
           >
             {likeLimerickState ? "❤️" : "♡"}
           </button>
-        </div>
-        {error && (
-          <p className="error-message" role="alert">
-            {error}
-          </p>
-        )}
-      </article>
+          </>
+        }
+      >
+        <p className="limerick-title">{limerick.title}</p>
+        <p className="limerick-line">{limerick.lineOne}</p>
+        <p className="limerick-line">{limerick.lineTwo}</p>
+        <p className="limerick-line">{limerick.lineThree}</p>
+        <p className="limerick-line">{limerick.lineFour}</p>
+        <p className="limerick-line">{limerick.lineFive}</p>
+        <p className="limerick-date">{formatDate(limerick.createdAt)}</p>
+      </SavedPoemCardShell>
       {showDownloadModal && (
         <div
           className="limerick-dialog-container"
