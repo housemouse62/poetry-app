@@ -1,38 +1,16 @@
-Auth
+# Integration checklist — completed historical work
 
-Register form → POST /users/create
-Login form → POST /users/login
-Store JWT token (replace localStorage word cache pattern)
-Send token with every authenticated request
-Logout (clear token)
-Profile update form → PATCH /users/profile
+This file records the original frontend/API integration scope. The listed work is now implemented; it is not the current backlog.
 
-Haiku
+Current engineering priorities are tracked in [BACKLOG.md](BACKLOG.md), broader product plans in [MASTER_PLAN.md](MASTER_PLAN.md), and authoritative setup/runtime instructions in [README.md](README.md).
 
-Save haiku → POST /haiku (replace localStorage save)
-Load user's haikus → GET /haiku/mine (replace localStorage load)
-Edit haiku → PATCH /haiku/:id
-Delete haiku → DELETE /haiku/:id
-Public feed → GET /haiku
-Single haiku view → GET /haiku/:id
+Completed integration includes:
 
-Limerick
-
-Same as haiku above
-
-Words
-
-Word lookup → POST /word (replace/integrate with existing wordCache)
-Flag word → PATCH /word/:word/flag
-
-Social
-
-Like/unlike poems, comments, replies
-Comments → full CRUD
-Replies → full CRUD
-Favorites → add/remove/view
-
-Routing
-
-Protected routes (redirect to login if no token)
-Public routes (feed, individual poems)
+- JWT registration, login, authenticated requests, logout, and profile updates
+- Server-backed haiku and limerick create/read/update/delete flows
+- Authenticated server-backed draft save, resume, discard, and publication
+- PostgreSQL-backed word lookup and flagging with server-only WordsAPI credentials
+- Poem, comment, and reply likes
+- Comment and reply creation, reading, editing, and deletion
+- Favorite creation, removal, collection browsing, and privacy controls
+- Protected frontend routes and authenticated feed access

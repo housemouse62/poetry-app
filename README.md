@@ -7,6 +7,11 @@ The project treats accessibility as part of the creative experience: poetic
 structure is communicated through text, live status, and non-color cues as
 well as visual layout.
 
+This README documents current repository behavior. Future product ideas such
+as spoken/prosody-aware reading, haptics, native apps, widgets, and additional
+poetry collections are roadmap work described in [MASTER_PLAN.md](MASTER_PLAN.md),
+not current application features.
+
 ## Screenshots
 
 ![Make Poetry editor](apps/frontend/src/assets/make%20poetry%20screen%201.png)
@@ -33,7 +38,8 @@ authentication.
 
 - Three-line editor with 5–7–5 completion targets
 - Per-line syllable count and progress feedback
-- Create, view, edit, delete, publish/unpublish, and download saved haikus as
+- Save, resume, update, and discard authenticated server-backed drafts
+- Publish completed poems, edit or delete published poems, and download them as
   PNG images with `html2canvas`
 - Like and favorite saved poems
 - Show or hide an example haiku
@@ -44,7 +50,8 @@ authentication.
   5–8 for lines 3 and 4
 - AABBA rhyme relationships represented with visual styling, accessible
   labels, and screen-reader text
-- Create, view, edit, delete, publish/unpublish, and download saved limericks
+- Save, resume, update, and discard authenticated server-backed drafts
+- Publish completed poems, edit or delete published poems, and download them
 - Like and favorite saved poems
 - Show or hide an example limerick
 
@@ -91,16 +98,15 @@ poem's publication visibility.
 - The feed UI displays and creates comments and one level of replies for both
   poem types.
 - Comments and replies are limited to 600 characters and reject blank content.
-- The API supports creating, reading, editing, deleting, liking, and unliking
-  comments and replies. The feed UI currently exposes viewing and creation,
-  not edit/delete or comment/reply likes.
+- The API and feed UI support creating, reading, editing, deleting, liking, and
+  unliking comments and replies, subject to ownership rules.
 - Poems can be liked once per user and unliked.
 - Favorites support haiku and limerick targets and `private` or `public`
   privacy. The API can list a user's own favorites, list another user's public
   favorites, change privacy, and remove favorites.
-- Current frontend favorite actions omit a privacy value, so the API default
-  creates private favorites. There is not yet a dedicated favorites collection
-  page or privacy control in the frontend.
+- New favorites are private by default. The authenticated `/favorites` page
+  lists the current user's favorites and provides private/public privacy
+  controls and removal.
 
 ### Syllable counting and word flagging
 
@@ -158,19 +164,28 @@ application has completed a formal accessibility audit.
 
 ### Prerequisites
 
-- Node.js 18 or newer
+- Node.js 24 is recommended and is used by CI and Codespaces. Although the root
+  package currently declares Node.js 18 or newer, the installed Vite 7 and
+  Prisma 7 toolchain requires Node.js 20.19+ or 22.12+; Node.js 18 is not a
+  viable development runtime for the current dependency set.
 - npm 11 (the root package declares `npm@11.11.0`)
 - PostgreSQL
-- Optional: a RapidAPI key for WordsAPI. Without one, syllable lookup falls
-  back to the local estimator.
+- Optional: a RapidAPI key for WordsAPI. It is used only by the API; without
+  one, syllable lookup falls back to the local estimator.
 
 ### Install
 
-From the repository root:
+Install from the repository root. The root `package-lock.json` is authoritative
+for the npm workspace, CI, Codespaces, and Railway builds:
 
 ```bash
-npm install
+npm ci
 ```
+
+Use `npm install` when intentionally changing dependencies. Do not create or
+maintain a separate `apps/api/package-lock.json`. A tracked
+`apps/frontend/package-lock.json` exists historically, but workspace installs,
+CI, Codespaces, and Railway use the root lockfile.
 
 ### Environment variables
 
@@ -196,10 +211,20 @@ The RapidAPI credential is read by the API and should not be placed in a
 
 ### Prepare the databases
 
-Apply the Prisma migrations to the development database:
+Create separate development and test databases in your local PostgreSQL
+instance. For the example URLs above:
+
+```bash
+createdb make_poetry
+createdb make_poetry_test
+```
+
+Generate the Prisma client and apply checked-in migrations to the development
+database:
 
 ```bash
 cd apps/api
+npx prisma generate --schema=prisma/schema.prisma
 npx prisma migrate deploy --schema=prisma/schema.prisma
 ```
 
@@ -221,15 +246,35 @@ From the repository root, start both workspaces through Turborepo:
 npm run dev
 ```
 
-Or run one application:
+Or run one workspace from the repository root:
 
 ```bash
-cd apps/api && npm run dev
-cd apps/frontend && npm run dev
+npm run dev --workspace=api
+npm run dev --workspace=poetry-app
 ```
 
 With the example environment above, the API listens on port 3000 and Vite
 normally serves the frontend on port 5173.
+
+### Codespaces and devcontainers
+
+The checked-in devcontainer uses Node.js 24 and PostgreSQL 16. On creation,
+`.devcontainer/setup-codespaces.sh`:
+
+- installs the workspace from the root lockfile with `npm ci`
+- creates `apps/api/.env` and `apps/frontend/.env` when needed
+- creates the development and test databases
+- generates a local JWT secret when one is absent
+- applies Prisma migrations to both databases
+- configures the frontend/API origins for Codespaces port forwarding
+
+`WORDS_API_KEY` is left empty unless a developer supplies it. The post-start
+script attempts to make ports 3000 and 5173 public when GitHub policy and
+authentication permit it; failure is nonfatal.
+
+Git LFS is not configured or installed by the current devcontainer, and the
+repository has no tracked `.gitattributes` LFS rules. Git LFS automation is
+deferred; a normal checkout does not currently require it.
 
 ## Tests and checks
 
@@ -241,6 +286,7 @@ and rate limiters skip only under `NODE_ENV=test`.
 
 ```bash
 cd apps/api
+NODE_ENV=test npx prisma migrate deploy --schema=prisma/schema.prisma
 NODE_ENV=test npm test -- --run
 ```
 
@@ -268,6 +314,22 @@ npm run build
 ```
 
 The root package does not currently define a combined test command.
+
+### Continuous integration
+
+GitHub Actions runs on pushes and pull requests to `main` using Node.js 24 and
+PostgreSQL 16. The workflow installs once from the monorepo root with `npm ci`
+and the root `package-lock.json`, then:
+
+1. lints the frontend
+2. checks API JavaScript syntax
+3. runs frontend tests
+4. builds the frontend
+5. applies Prisma migrations to the CI test database
+6. runs the API integration suite
+
+The API test runner disables file parallelism because test files share one
+PostgreSQL database.
 
 ## Project structure
 
@@ -310,6 +372,7 @@ poetry-app/
 │       │   │   ├── Register/          # Account creation
 │       │   │   ├── Dashboard/         # Composition navigation
 │       │   │   ├── Profile/           # Profile and account management
+│       │   │   ├── Favorites/         # Favorite collection and privacy
 │       │   │   ├── HaikuApp/          # Haiku editor
 │       │   │   ├── Limerick/           # Limerick editor
 │       │   │   └── Poetry/            # Published poetry feed
@@ -317,6 +380,9 @@ poetry-app/
 │       │   └── utils/                  # Syllables, words, cache, focus, dates
 │       └── tests/test-utils.jsx        # Shared render/provider helpers
 ├── AGENTS.md                           # Repository guidance for agents
+├── BACKLOG.md                          # Current engineering backlog
+├── MASTER_PLAN.md                      # Broader product roadmap
+├── package-lock.json                   # Authoritative workspace lockfile
 ├── package.json                        # Workspace scripts and metadata
 ├── README.md                           # Project documentation
 └── turbo.json                          # Turborepo task configuration
@@ -324,17 +390,23 @@ poetry-app/
 
 ## Deployment
 
-The repository does not currently include provider-specific deployment
-configuration, so no hosting provider is assumed here.
+The current API deployment is configured in Railway's service settings rather
+than a checked-in `railway.toml`, `railway.json`, or `Procfile`. Railway builds
+from the monorepo root and uses the root `package-lock.json`.
 
 ### API
 
-- Install dependencies from the monorepo root.
+- Set the Railway service root/build context to the monorepo root.
+- Install with `npm ci` from that root; do not add an
+  `apps/api/package-lock.json`.
 - Set `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN`, `PORT`, and optionally
   `WORDS_API_KEY` in the runtime environment.
-- Apply checked-in Prisma migrations to the production database.
-- Start with `npm run start --workspace=api` (equivalent to
-  `cd apps/api && npm start`).
+- Generate Prisma Client with
+  `npm exec --workspace=api -- prisma generate --schema=prisma/schema.prisma`
+  when required by the Railway build flow.
+- Apply checked-in migrations with
+  `npm exec --workspace=api -- prisma migrate deploy --schema=prisma/schema.prisma`.
+- Start with the workspace-aware command `npm run start --workspace=api`.
 
 ### Frontend
 
@@ -354,10 +426,6 @@ Set the API's `CORS_ORIGIN` to the deployed frontend origin.
 - Limerick rhyme relationships are guidance only; rhyme is not automatically
   verified.
 - The feed requires authentication even though it contains published poems.
-- Comment/reply editing, deletion, and likes exist in the API but are not yet
-  exposed in the feed UI.
-- Favorite collection browsing and privacy controls exist in the API but do
-  not yet have a dedicated frontend page.
 
 ## License
 
