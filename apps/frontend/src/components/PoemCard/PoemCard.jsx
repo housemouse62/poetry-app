@@ -3,6 +3,7 @@ import formatDate from "../../utils/formatDate";
 import "./PoemCard.css";
 import { useAuth } from "../../context/useAuth";
 import CommentCard from "../CommentCard/CommentCard";
+import { authenticatedJsonRequest } from "../../utils/authenticatedJsonRequest";
 
 function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
   const { token } = useAuth();
@@ -48,17 +49,7 @@ function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
   }, [likePending]);
 
   const request = async (url, options = {}) => {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        ...options.headers,
-      },
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "Request failed");
-    return result;
+    return authenticatedJsonRequest(url, token, options);
   };
 
   const handleLike = async () => {

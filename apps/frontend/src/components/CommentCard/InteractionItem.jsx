@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import formatDate from "../../utils/formatDate";
+import { authenticatedJsonRequest } from "../../utils/authenticatedJsonRequest";
 
 function InteractionItem({
   item,
@@ -81,16 +82,7 @@ function InteractionItem({
   }, [likePending]);
 
   const request = async (url, options = {}) => {
-    const response = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || "Request failed");
-    return result;
+    return authenticatedJsonRequest(url, token, options);
   };
 
   const saveEdit = async (event) => {
@@ -296,4 +288,3 @@ function InteractionItem({
 }
 
 export default InteractionItem;
-
