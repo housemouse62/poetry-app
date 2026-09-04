@@ -1,30 +1,29 @@
-import Home from "./pages/Home/Home.jsx";
-import Dashboard from "./pages/Dashboard/Dashboard.jsx";
-import Register from "./pages/Register/Register.jsx";
-import Login from "./pages/Login/Login.jsx";
-import HaikuApp from "./pages/HaikuApp/HaikuApp";
-import LimerickApp from "./pages/Limerick/LimerickApp";
 import ErrorPage from "./errorPage";
-import Poetry from "./pages/Poetry/Poetry.jsx";
-
 import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
-import Profile from "./pages/Profile/Profile.jsx";
-import Favorites from "./pages/Favorites/Favorites.jsx";
+import RouteLoading from "./components/RouteLoading.jsx";
+
+const lazyRoute = (loadModule) => async () => {
+  const { default: Component } = await loadModule();
+  return { Component };
+};
 
 const routes = [
   {
     path: "/",
-    element: <Home />,
+    lazy: lazyRoute(() => import("./pages/Home/Home.jsx")),
+    HydrateFallback: RouteLoading,
     errorElement: <ErrorPage />,
   },
   {
     path: "/register",
-    element: <Register />,
+    lazy: lazyRoute(() => import("./pages/Register/Register.jsx")),
+    HydrateFallback: RouteLoading,
     errorElement: <ErrorPage />,
   },
   {
     path: "/login",
-    element: <Login />,
+    lazy: lazyRoute(() => import("./pages/Login/Login.jsx")),
+    HydrateFallback: RouteLoading,
     errorElement: <ErrorPage />,
   },
   {
@@ -32,32 +31,38 @@ const routes = [
     children: [
       {
         path: "/dashboard",
-        element: <Dashboard />,
+        lazy: lazyRoute(() => import("./pages/Dashboard/Dashboard.jsx")),
+        HydrateFallback: RouteLoading,
         errorElement: <ErrorPage />,
       },
       {
         path: "/profile",
-        element: <Profile />,
+        lazy: lazyRoute(() => import("./pages/Profile/Profile.jsx")),
+        HydrateFallback: RouteLoading,
         errorElement: <ErrorPage />,
       },
       {
         path: "/haiku",
-        element: <HaikuApp />,
+        lazy: lazyRoute(() => import("./pages/HaikuApp/HaikuApp.jsx")),
+        HydrateFallback: RouteLoading,
         errorElement: <ErrorPage />,
       },
       {
         path: "/limerick",
-        element: <LimerickApp />,
+        lazy: lazyRoute(() => import("./pages/Limerick/LimerickApp.jsx")),
+        HydrateFallback: RouteLoading,
         errorElement: <ErrorPage />,
       },
       {
         path: "/poems",
-        element: <Poetry />,
+        lazy: lazyRoute(() => import("./pages/Poetry/Poetry.jsx")),
+        HydrateFallback: RouteLoading,
         errorElement: <ErrorPage />,
       },
       {
         path: "/favorites",
-        element: <Favorites />,
+        lazy: lazyRoute(() => import("./pages/Favorites/Favorites.jsx")),
+        HydrateFallback: RouteLoading,
         errorElement: <ErrorPage />,
       },
     ],
