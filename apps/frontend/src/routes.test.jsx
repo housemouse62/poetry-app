@@ -20,6 +20,40 @@ describe("Poetry-App", () => {
     expect(helloWorld).toBeVisible();
   });
 
+  it("shows login and registration actions to signed-out visitors", async () => {
+    const router = createMemoryRouter(routes, { initialEntries: ["/"] });
+    renderWithRouter(router, { auth: null });
+
+    expect(await screen.findByRole("button", { name: "log in" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "register" })).toBeVisible();
+    expect(screen.queryByRole("button", { name: "profile" })).not.toBeInTheDocument();
+  });
+
+  it("shows profile and working logout actions to signed-in visitors", async () => {
+    const user = userEvent.setup();
+    const router = createMemoryRouter(routes, { initialEntries: ["/"] });
+    renderWithRouter(router);
+
+    expect(await screen.findByRole("button", { name: "Profile" })).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "log out" }));
+    expect(await screen.findByRole("button", { name: "log in" })).toBeVisible();
+    expect(localStorage.getItem("token")).toBeNull();
+  });
+
+  it("opens the public About page from the labelled help control", async () => {
+    const user = userEvent.setup();
+    const router = createMemoryRouter(routes, { initialEntries: ["/"] });
+    renderWithRouter(router, { auth: null });
+
+    await user.click(
+      await screen.findByRole("link", { name: "About make poetry" }),
+    );
+    expect(
+      await screen.findByRole("heading", { name: "about make poetry." }),
+    ).toBeVisible();
+    expect(screen.getByText(/future roadmap work/)).toBeVisible();
+  });
+
   it("the haiku route (/haiku) renders", async () => {
     // Create a test router starting at "/haiku"
     const router = createMemoryRouter(routes, { initialEntries: ["/haiku"] });
@@ -138,11 +172,36 @@ describe("Poetry-App", () => {
     renderWithRouter(router);
 
     await user.click(
-      await screen.findByRole("link", { name: "Favorites" }),
+      await screen.findByRole("link", { name: /favorites/i }),
     );
     expect(
       await screen.findByRole("heading", { name: "Your favorites" }),
     ).toBeVisible();
+  });
+
+  it("uses the requested three-item dashboard navigation", async () => {
+    const router = createMemoryRouter(routes, { initialEntries: ["/dashboard"] });
+    renderWithRouter(router);
+
+    const navigation = await screen.findByRole("navigation", {
+      name: "Page navigation",
+    });
+    expect(navigation).toHaveTextContent("profile");
+    expect(navigation).toHaveTextContent("read poetry");
+    expect(navigation).toHaveTextContent("favorites");
+    expect(screen.queryByRole("button", { name: /logout/i })).not.toBeInTheDocument();
+  });
+
+  it("keeps logout available from the Profile page", async () => {
+    const user = userEvent.setup();
+    const router = createMemoryRouter(routes, { initialEntries: ["/profile"] });
+    renderWithRouter(router);
+
+    await user.click(await screen.findByRole("button", { name: "log out" }));
+    expect(
+      await screen.findByRole("heading", { name: "user login" }),
+    ).toBeVisible();
+    expect(localStorage.getItem("token")).toBeNull();
   });
 
   it("redirects signed-out users away from favorites", async () => {

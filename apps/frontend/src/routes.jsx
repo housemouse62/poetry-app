@@ -27,6 +27,12 @@ const routes = [
     errorElement: <ErrorPage />,
   },
   {
+    path: "/about",
+    lazy: lazyRoute(() => import("./pages/About/About.jsx")),
+    HydrateFallback: RouteLoading,
+    errorElement: <ErrorPage />,
+  },
+  {
     element: <ProtectedRoute />,
     children: [
       {

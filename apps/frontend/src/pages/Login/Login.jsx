@@ -59,7 +59,7 @@ function Login() {
             <form className="login-form" onSubmit={handleSubmit}>
               <div className="form-fields">
                 <div className="login-user">
-                  <h1>User Login</h1>
+                  <h1>user login</h1>
                 </div>
                 <div className="form-field">
                   <label className="form-label">
@@ -94,15 +94,15 @@ function Login() {
                   </label>
                 </div>
               </div>
+              {error && (
+                <p className="error-message" role="alert">
+                  {error}
+                </p>
+              )}
               <button type="submit" className="form-button login-button">
                 Log In
               </button>
             </form>
-            {error && (
-              <p className="error-message" role="alert">
-                {error}
-              </p>
-            )}
             <div className="register-link">
               <p>Not a registered user?</p>
               <Link className="create-link" to="/register">

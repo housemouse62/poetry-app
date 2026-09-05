@@ -1,17 +1,22 @@
 import { Link } from "react-router";
 import { useNavigate, useLocation } from "react-router";
+import { useAuth } from "../../context/useAuth";
 
 import "./Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, logout } = useAuth();
   const message = location.state?.message;
 
   return (
     <>
       <div className="root-app">
         <main className="root-container">
+          <Link className="about-link" to="/about" aria-label="About make poetry">
+            <span aria-hidden="true">?</span>
+          </Link>
           <div className="home-title-div">
             <h1 className="home-title">make poetry.</h1>
           </div>
@@ -28,24 +33,38 @@ export default function Home() {
               </button>
             </div>
             <div className="button-cards">
-              <button
-                className="home-link-button login"
-                aria-label="Login"
-                onClick={() => {
-                  navigate("/login");
-                }}
-              >
-                Login
-              </button>
-              <button
-                className="home-link-button register"
-                aria-label="Register"
-                onClick={() => {
-                  navigate("/register");
-                }}
-              >
-                Register
-              </button>
+              {user ? (
+                <>
+                  <button
+                    className="home-link-button login"
+                    aria-label="Profile"
+                    onClick={() => navigate("/profile")}
+                  >
+                    profile
+                  </button>
+                  <button
+                    className="home-link-button register"
+                    onClick={logout}
+                  >
+                    log out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="home-link-button login"
+                    onClick={() => navigate("/login")}
+                  >
+                    log in
+                  </button>
+                  <button
+                    className="home-link-button register"
+                    onClick={() => navigate("/register")}
+                  >
+                    register
+                  </button>
+                </>
+              )}
             </div>
             <div className="dashboard-link">
               <button

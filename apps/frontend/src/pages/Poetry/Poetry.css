@@ -17,10 +17,14 @@
 }
 
 .poetry-feed { display: flex; flex-direction: column; }
+.feed-nav { display: flex; justify-content: space-between; gap: 16px; }
+.feed-nav a { color: #3212a0; font-weight: bold; text-decoration: none; }
+.feed-nav a:hover { text-decoration: underline; }
 .read-title-div { display: flex; justify-content: flex-end; margin-bottom: 15px; }
-.drop-downs { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+.filter-divider { margin: 0 0 16px; border: 0; border-top: 1px solid #c9bce9; }
+.drop-downs { display: flex; justify-content: center; gap: 12px; margin-bottom: 15px; }
 .drop-downs label { display: flex; flex-direction: column; gap: 4px; font-size: 0.85rem; font-weight: 600; }
-.drop-downs select { max-width: 100%; }
+.drop-downs select { max-width: 100%; padding: 7px 28px 7px 9px; border: 1px solid #7667a8; border-radius: 6px; background-color: white; color: #1f1733; font: inherit; }
 .poetry-divider { width: 80%; margin: 0 auto; }
 .feed-status { margin: 24px 0; text-align: center; }
 .feed-pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; }
@@ -30,6 +34,7 @@
 .poetry-app button:focus-visible,
 .poetry-app select:focus-visible,
 .poetry-app textarea:focus-visible { outline: 3px solid #4b21c6; outline-offset: 3px; }
+.feed-nav a:focus-visible { outline: 3px solid #4b21c6; outline-offset: 3px; }
 
 @media (max-width: 520px) {
   .poetry-app { padding: 10px; }

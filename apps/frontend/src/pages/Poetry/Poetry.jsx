@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./Poetry.css";
 import { useAuth } from "../../context/useAuth";
 import PoemCard from "../../components/PoemCard/PoemCard.jsx";
+import { Link } from "react-router";
 
 function Poetry() {
   const { token } = useAuth();
@@ -69,11 +70,19 @@ function Poetry() {
   return (
     <main className="poetry-app">
       <section className="poetry-container" aria-labelledby="poetry-title">
+        <nav className="feed-nav" aria-label="Page navigation">
+          <Link to="/dashboard">dashboard</Link>
+          <Link to="/favorites">
+            <span aria-hidden="true">★</span> favorites
+          </Link>
+        </nav>
         <div className="read-title-div">
           <h1 id="poetry-title" className="poetry-feed-title">
             read poetry.
           </h1>
         </div>
+
+        <hr className="filter-divider" />
 
         <div className="drop-downs" aria-label="Filter poems">
           <label>
@@ -101,8 +110,6 @@ function Poetry() {
             </select>
           </label>
         </div>
-
-        <hr className="poetry-divider" />
 
         <div aria-live="polite" aria-busy={loading}>
           {loading && <p className="feed-status">Loading poems…</p>}

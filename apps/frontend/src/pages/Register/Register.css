@@ -88,6 +88,12 @@ label
   font-weight: bold;
 }
 
+.password-requirements {
+  max-width: 24rem;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
 .register-user {
   display: flex;
   gap: 5px;

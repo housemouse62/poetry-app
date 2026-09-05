@@ -205,13 +205,16 @@ function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
               aria-pressed={favorited}
               aria-label={
                 favorited
-                  ? `Remove ${poem.title} from favorites`
-                  : `Add ${poem.title} to favorites`
+                  ? `Remove from favorites: ${poem.title}`
+                  : `Favorite poem: ${poem.title}`
               }
               disabled={favoritePending}
               onClick={handleFavorite}
             >
-              {favorited ? "⭐" : "☆"}
+              <span aria-hidden="true">{favorited ? "⭐" : "☆"}</span>
+              <span className="favorite-tooltip" aria-hidden="true">
+                {favorited ? "Remove favorite" : "Favorite poem"}
+              </span>
             </button>
           </div>
         </div>
@@ -238,8 +241,7 @@ function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
             aria-controls={commentsID}
             onClick={toggleComments}
           >
-            {showComments ? "Hide" : "Show"} {commentCount}{" "}
-            {commentCount === 1 ? "comment" : "comments"}
+            {showComments ? "Hide comments" : "Comments"} ({commentCount})
           </button>
         </div>
 
@@ -256,25 +258,6 @@ function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
           id={commentsID}
           aria-label={`Comments on ${poem.title}`}
         >
-          <form className="comment-form" onSubmit={createComment}>
-            <label htmlFor={`comment-input-${poemType}-${poem.id}`}>
-              Add a comment
-            </label>
-            <textarea
-              id={`comment-input-${poemType}-${poem.id}`}
-              ref={commentInputRef}
-              value={commentBody}
-              maxLength={600}
-              onChange={(event) => setCommentBody(event.target.value)}
-            />
-            <button
-              type="submit"
-              disabled={!commentBody.trim() || commentSubmitting}
-            >
-              {commentSubmitting ? "Posting…" : "Post comment"}
-            </button>
-          </form>
-
           {commentsLoading && <p role="status">Loading comments…</p>}
           {!commentsLoading && commentsLoaded && comments.length === 0 && (
             <p>No comments yet. Start the conversation.</p>
@@ -302,6 +285,24 @@ function PoemCard({ poem, poemType, favoriteButtonRef, onFavoriteChange }) {
                 }}
               />
             ))}
+          <form className="comment-form" onSubmit={createComment}>
+            <label htmlFor={`comment-input-${poemType}-${poem.id}`}>
+              Add a comment
+            </label>
+            <textarea
+              id={`comment-input-${poemType}-${poem.id}`}
+              ref={commentInputRef}
+              value={commentBody}
+              maxLength={600}
+              onChange={(event) => setCommentBody(event.target.value)}
+            />
+            <button
+              type="submit"
+              disabled={!commentBody.trim() || commentSubmitting}
+            >
+              {commentSubmitting ? "Posting…" : "Post comment"}
+            </button>
+          </form>
           <p className="sr-only" role="status">
             {commentStatus}
           </p>

@@ -3,17 +3,33 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, test } from "vitest";
 import { render } from "../../../tests/test-utils";
 import Poetry from "./Poetry";
+import { MemoryRouter } from "react-router";
 
 const response = (body, ok = true) =>
   Promise.resolve({ ok, json: () => Promise.resolve(body) });
 
 describe("Poetry feed", () => {
+  const renderPoetry = () =>
+    render(
+      <MemoryRouter>
+        <Poetry />
+      </MemoryRouter>,
+    );
+
   test("renders loading and empty states", async () => {
     fetch.mockReturnValueOnce(
       response({ paginated: [], totalPages: 0, totalPoems: 0 }),
     );
-    render(<Poetry />);
+    renderPoetry();
 
+    expect(screen.getByRole("link", { name: "dashboard" })).toHaveAttribute(
+      "href",
+      "/dashboard",
+    );
+    expect(screen.getByRole("link", { name: /favorites/ })).toHaveAttribute(
+      "href",
+      "/favorites",
+    );
     expect(screen.getByText("Loading poems…")).toBeInTheDocument();
     expect(
       await screen.findByText("No published poems match these filters."),
@@ -29,7 +45,7 @@ describe("Poetry feed", () => {
       .mockReturnValueOnce(
         response({ paginated: [], totalPages: 2, totalPoems: 21 }),
       );
-    render(<Poetry />);
+    renderPoetry();
 
     await user.click(await screen.findByRole("button", { name: "Next" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
@@ -49,7 +65,7 @@ describe("Poetry feed", () => {
       .mockReturnValueOnce(
         response({ paginated: [], totalPages: 1, totalPoems: 0 }),
       );
-    render(<Poetry />);
+    renderPoetry();
 
     await user.click(await screen.findByRole("button", { name: "Next" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
@@ -61,7 +77,7 @@ describe("Poetry feed", () => {
 
   test("shows a request error without stale poems", async () => {
     fetch.mockReturnValueOnce(response({ error: "failed" }, false));
-    render(<Poetry />);
+    renderPoetry();
     expect(
       await screen.findByRole("alert", { name: "" }),
     ).toHaveTextContent("Cannot show poems. Please try again.");
@@ -74,7 +90,7 @@ describe("Poetry feed", () => {
       .mockReturnValueOnce(
         response({ paginated: [], totalPages: 0, totalPoems: 0 }),
       );
-    render(<Poetry />);
+    renderPoetry();
 
     await user.click(await screen.findByRole("button", { name: "Try again" }));
     expect(

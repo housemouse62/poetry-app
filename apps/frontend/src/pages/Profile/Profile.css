@@ -38,6 +38,7 @@ body {
 .profile-nav {
   display: flex;
   justify-content: start;
+  gap: 10px;
   width: 100%;
   margin-bottom: 30px;
 }

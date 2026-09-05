@@ -13,7 +13,7 @@ function Profile() {
   const [nameState, setNameState] = useState("");
   const [screennameState, setScreennameState] = useState("");
   const [, setError] = useState(null);
-  const { login, user, token } = useAuth();
+  const { login, logout, user, token } = useAuth();
   const navigate = useNavigate();
 
   function handleUpdateSubmit(e) {
@@ -104,6 +104,15 @@ function Profile() {
               }}
             >
               Dashboard
+            </button>
+            <button
+              className="dashboard-button"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+            >
+              log out
             </button>
           </nav>
           <h1 className="profile-info-title">Profile Info:</h1>

@@ -108,8 +108,8 @@ describe("Favorites", () => {
     const user = userEvent.setup();
     fetch.mockReturnValueOnce(response([entry(1, "haiku"), entry(2, "limerick")])).mockReturnValue(response({ id: 1 }));
     renderFavorites();
-    await user.click(await screen.findByRole("button", { name: "Remove Still Water from favorites" }));
-    const remaining = await screen.findByRole("button", { name: "Remove A Bright Fellow from favorites" });
+    await user.click(await screen.findByRole("button", { name: "Remove from favorites: Still Water" }));
+    const remaining = await screen.findByRole("button", { name: "Remove from favorites: A Bright Fellow" });
     expect(remaining).toHaveFocus();
   });
 
@@ -117,8 +117,8 @@ describe("Favorites", () => {
     const user = userEvent.setup();
     fetch.mockReturnValueOnce(response([entry(1, "haiku"), entry(2, "limerick")])).mockReturnValue(response({ id: 2 }));
     renderFavorites();
-    await user.click(await screen.findByRole("button", { name: "Remove A Bright Fellow from favorites" }));
-    const remaining = await screen.findByRole("button", { name: "Remove Still Water from favorites" });
+    await user.click(await screen.findByRole("button", { name: "Remove from favorites: A Bright Fellow" }));
+    const remaining = await screen.findByRole("button", { name: "Remove from favorites: Still Water" });
     expect(remaining).toHaveFocus();
   });
 
@@ -126,7 +126,7 @@ describe("Favorites", () => {
     const user = userEvent.setup();
     fetch.mockReturnValueOnce(response([entry(1, "haiku")])).mockReturnValueOnce(response({ id: 1 }));
     renderFavorites();
-    await user.click(await screen.findByRole("button", { name: "Remove Still Water from favorites" }));
+    await user.click(await screen.findByRole("button", { name: "Remove from favorites: Still Water" }));
     expect(await screen.findByText("You have no favorites yet.")).toBeInTheDocument();
     await waitFor(() => expect(screen.getByRole("heading", { name: "Your favorites" })).toHaveFocus());
   });

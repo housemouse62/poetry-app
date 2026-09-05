@@ -1,0 +1,36 @@
+.about-app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #514ed2 0%, #7fa67f 100%);
+  font-family: Georgia, sans-serif;
+}
+
+.about-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 28px;
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.about-card h1 {
+  margin: 22px 0;
+}
+
+.about-card p + p {
+  margin-top: 16px;
+}
+
+.about-back-link {
+  color: #3212a0;
+  font-weight: bold;
+}
+
+.about-back-link:focus-visible {
+  outline: 3px solid #4b21c6;
+  outline-offset: 3px;
+}

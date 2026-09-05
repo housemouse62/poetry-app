@@ -55,6 +55,7 @@ body {
   border-bottom: 1px solid rgb(69, 22, 158);
   cursor: pointer;
   transition: background-color 0.2s;
+  text-decoration: none;
 }
 
 .profile-button-link:hover {
@@ -78,6 +79,7 @@ body {
   border-bottom: 1px solid rgb(69, 22, 158);
   cursor: pointer;
   transition: background-color 0.2s;
+  text-decoration: none;
 }
 
 .feed-button:hover {
@@ -89,26 +91,10 @@ body {
   outline-offset: 2px;
 }
 
-.logout-button {
-  background-color: rgb(244, 8, 8);
-  font-size: 16px;
-  font-family: Georgia, sans-serif;
-  font-weight: bold;
-  color: rgb(5, 4, 4);
-  padding: 5px 20px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.logout-button:hover {
-  background-color: rgb(209, 38, 38);
-}
-
-.logout-button:focus-visible {
-  outline: 3px solid rgb(244, 8, 8);
-  outline-offset: 2px;
+.favorites-link {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
 }
 
 .poem-cards {

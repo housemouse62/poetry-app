@@ -1,49 +1,24 @@
 import { Link } from "react-router";
-import { useAuth } from "../../context/useAuth";
-import { useNavigate } from "react-router";
 
 import "./Dashboard.css";
 
 export default function Root() {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
   return (
     <>
       <div className="root-app">
         <main className="root-container">
           <nav aria-label="Page navigation" className="dashboard-nav">
-            <button
-              className="logout-button"
-              aria-label="Logout"
-              onClick={() => {
-                logout();
-                navigate("/login");
-              }}
+            <Link className="profile-button-link" to="/profile">
+              profile
+            </Link>
+            <Link className="feed-button" to="/poems">
+              read poetry
+            </Link>
+            <Link
+              to="/favorites"
+              className="profile-button-link favorites-link"
             >
-              Logout
-            </button>
-            <button
-              className="feed-button"
-              aria-label="Open poems feed"
-              onClick={() => {
-                navigate("/poems");
-              }}
-            >
-              read poetry.
-            </button>
-
-            <button
-              className="profile-button-link"
-              aria-label="Profile"
-              onClick={() => {
-                navigate("/profile");
-              }}
-            >
-              Profile
-            </button>
-            <Link to="/favorites" className="profile-button-link">
-              Favorites
+              <span aria-hidden="true">★</span> favorites
             </Link>
           </nav>
           <div className="root-title-div">

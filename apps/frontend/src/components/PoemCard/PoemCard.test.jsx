@@ -36,7 +36,7 @@ describe("PoemCard", () => {
     fetch.mockReturnValueOnce(response([]));
     render(<PoemCard poem={poem} poemType="haiku" />);
 
-    const toggle = screen.getByRole("button", { name: "Show 0 comments" });
+    const toggle = screen.getByRole("button", { name: "Comments (0)" });
     await user.click(toggle);
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     expect(await screen.findByLabelText("Add a comment")).toBeInTheDocument();
@@ -58,7 +58,7 @@ describe("PoemCard", () => {
       .mockReturnValueOnce(response([createdComment]));
     render(<PoemCard poem={poem} poemType="haiku" />);
 
-    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await user.click(screen.getByRole("button", { name: "Comments (0)" }));
     await screen.findByText("No comments yet. Start the conversation.");
     await user.type(screen.getByLabelText("Add a comment"), "Lovely poem");
     await user.click(screen.getByRole("button", { name: "Post comment" }));
@@ -69,7 +69,7 @@ describe("PoemCard", () => {
       body: JSON.stringify({ commentbody: "Lovely poem" }),
     });
     await waitFor(() =>
-      expect(screen.getByRole("button", { name: "Hide 1 comment" })).toBeInTheDocument(),
+      expect(screen.getByRole("button", { name: "Hide comments (1)" })).toBeInTheDocument(),
     );
   });
 
@@ -81,7 +81,7 @@ describe("PoemCard", () => {
     render(<PoemCard poem={poem} poemType="haiku" />);
 
     const addButton = screen.getByRole("button", {
-      name: "Add Still Water to favorites",
+      name: "Favorite poem: Still Water",
     });
     expect(addButton).toHaveAttribute("aria-pressed", "false");
     await user.click(addButton);
@@ -91,14 +91,14 @@ describe("PoemCard", () => {
     });
 
     const removeButton = await screen.findByRole("button", {
-      name: "Remove Still Water from favorites",
+      name: "Remove from favorites: Still Water",
     });
     expect(removeButton).toHaveAttribute("aria-pressed", "true");
     await user.click(removeButton);
     expect(fetch.mock.calls[1][1].method).toBe("DELETE");
     expect(
       await screen.findByRole("button", {
-        name: "Add Still Water to favorites",
+        name: "Favorite poem: Still Water",
       }),
     ).toHaveAttribute("aria-pressed", "false");
   });
@@ -110,7 +110,7 @@ describe("PoemCard", () => {
     render(<PoemCard poem={poem} poemType="haiku" />);
 
     const button = screen.getByRole("button", {
-      name: "Add Still Water to favorites",
+      name: "Favorite poem: Still Water",
     });
     await user.click(button);
     expect(button).toBeDisabled();
@@ -125,7 +125,7 @@ describe("PoemCard", () => {
     render(<PoemCard poem={poem} poemType="haiku" />);
 
     const button = screen.getByRole("button", {
-      name: "Add Still Water to favorites",
+      name: "Favorite poem: Still Water",
     });
     await user.click(button);
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -199,9 +199,9 @@ describe("PoemCard", () => {
       .mockReturnValueOnce(newer.promise);
     render(<PoemCard poem={poem} poemType="haiku" />);
 
-    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
-    await user.click(screen.getByRole("button", { name: "Hide 0 comments" }));
-    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await user.click(screen.getByRole("button", { name: "Comments (0)" }));
+    await user.click(screen.getByRole("button", { name: "Hide comments (0)" }));
+    await user.click(screen.getByRole("button", { name: "Comments (0)" }));
     await act(() => newer.resolve([]));
     expect(await screen.findByText("No comments yet. Start the conversation.")).toBeInTheDocument();
     await act(() => older.resolve([{ id: 99, commentbody: "Stale" }]));
@@ -225,7 +225,7 @@ describe("PoemCard", () => {
       .mockReturnValueOnce(refresh.promise);
     render(<PoemCard poem={poem} poemType="haiku" />);
 
-    await user.click(screen.getByRole("button", { name: "Show 0 comments" }));
+    await user.click(screen.getByRole("button", { name: "Comments (0)" }));
     await user.type(screen.getByLabelText("Add a comment"), "Newest comment");
     await user.click(screen.getByRole("button", { name: "Post comment" }));
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
@@ -256,7 +256,7 @@ describe("PoemCard", () => {
       />,
     );
 
-    await user.click(screen.getByRole("button", { name: "Show 1 comment" }));
+    await user.click(screen.getByRole("button", { name: "Comments (1)" }));
     await screen.findByText("Delete this comment");
     const deleteButton = screen.getByRole("button", {
       name: "Delete comment by testuser",
@@ -271,7 +271,7 @@ describe("PoemCard", () => {
     await user.click(screen.getByRole("button", { name: "Confirm delete" }));
 
     expect(screen.queryByText("Delete this comment")).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Hide 0 comments" })).toBeVisible();
+    expect(screen.getByRole("button", { name: "Hide comments (0)" })).toBeVisible();
     expect(screen.getByLabelText("Add a comment")).toHaveFocus();
     expect(screen.getByRole("status")).toHaveTextContent("Comment deleted.");
   });
